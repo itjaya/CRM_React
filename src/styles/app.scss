@@ -1,0 +1,124 @@
+/*!
+ *
+ * Angle - Bootstrap Admin Template
+ *
+ * Version: 4.5
+ * Author: @themicon_co
+ * Website: http://themicon.co
+ * License: https://wrapbootstrap.com/help/licenses
+ *
+ */
+
+// Bootstrap
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+// Variables
+@import "app/common/variables";
+// Layout
+@import "app/layout/layout";
+@import "app/layout/layout-extra";
+@import "app/layout/layout-animation";
+@import "app/layout/top-navbar";
+@import "app/layout/sidebar";
+@import "app/layout/offsidebar";
+@import "app/layout/user-block";
+@import "app/layout/settings";
+// Common
+@import "app/common/page-loader";
+@import "app/common/typo";
+@import "app/common/bootstrap-reset";
+@import "app/common/bootstrap-custom";
+@import "app/common/button-extra";
+@import "app/common/placeholder";
+@import "app/common/cards";
+@import "app/common/circles";
+@import "app/common/dropdown-extra";
+@import "app/common/half-float";
+@import "app/common/animate";
+@import "app/common/slim-scroll";
+@import "app/common/inputs";
+@import "app/common/utils";
+@import "app/common/print";
+// Elements
+@import "app/elements/nestable";
+@import "app/elements/notify";
+@import "app/elements/spinner";
+// Charts
+@import "app/charts/radial-bar";
+@import "app/charts/chart-flot";
+@import "app/charts/chart-easypie";
+// Form elements
+@import "app/forms/form-validation";
+@import "app/forms/form-tags";
+@import "app/forms/form-datepicker";
+@import "app/forms/form-wizard";
+@import "app/forms/form-imgcrop";
+@import "app/forms/dropzone";
+@import "app/forms/plugins";
+// Tables
+@import "app/tables/datatable";
+@import "app/tables/table-extras";
+// Maps
+@import "app/maps/gmap";
+@import "app/maps/vector-map";
+// Extras
+@import "app/extras/timeline";
+@import "app/extras/todo";
+@import "app/extras/calendar";
+@import "app/extras/mailbox";
+@import "app/extras/plans";
+
+.wizard > .steps .current a, .wizard > .steps .current a:hover, .wizard > .steps .current a:active {
+    background: #23b7e5 !important;
+}
+.moving-tab {
+    display: none !important;
+}
+.tab-content {
+    /* padding: 10px 20px; */
+    // padding: 10px 0px !important; 
+    border-style: none !important;
+    border-width: 0 1px 1px 1px;
+    border-color: #dde6e9;
+}
+.card-footer {
+    padding: 0.75rem 1.25rem;
+    background-color:#fff !important;
+    border-top: none !important;
+ }
+ .btn-previous {
+ background-color: #ff902b !important;
+ color:#fff !important;
+ }.btn-next{
+    background-color: #5d9cec !important;
+    color:#fff !important;
+ }
+ .btn-finish{
+    background-color: #00ab44 !important;
+    color: #fff !important;
+ }
+ .card {
+ 
+    box-shadow: none !important;
+ 
+ }
+ .error {  
+    color:#f05050;  /* red */
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #23b7e5 !important;
+}
+
+.list-group-item.active {
+    background: #23b7e5 !important;
+}
+.mt-4, .my-4 {
+    margin-top: 12.5rem !important;
+ }
+//  .wrapper {
+//     background-color: #1fc8db;
+//     background-image: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+//  }
