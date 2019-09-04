@@ -4,10 +4,15 @@ import settingsReducer from './settings.reducer.js';
 import themesReducer from './themes.reducers.js';
 import userReducer from './userReducer';
 import orgReducer from './orgReducer';
+import vendorReducer from "./vendor";
+import clientReducer from "./client";
+
 
 export default combineReducers({
     settings: settingsReducer,
     theme: themesReducer,
     user: userReducer,
-    organization: orgReducer
+    organization: orgReducer,
+    vendorReducer : vendorReducer,
+    clientReducer : clientReducer
 });

@@ -7,3 +7,21 @@ fieldset {
 .invalid-feedback {
     font-size: 100% !important;
 }
+/* .rbc-active {
+    background-color: #5d9cec !important;
+} */
+.rbc-toolbar button.rbc-active {
+    background-image: none;
+    box-shadow: none !important;
+    background-color: #5d9cec !important;
+    border-color: none !important;
+}
+.rbc-toolbar button:active{
+
+    background-color: #5d9cec !important;
+
+}
+th{
+    text-transform: uppercase;
+    font-weight: 600
+}
