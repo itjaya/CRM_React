@@ -17,11 +17,17 @@ let handleAuth = new Auth();
 class Header extends Component {
 
     state = {
-        redirect : false
+        redirect : false,
+        organizations: [],
+        orgName : ""
     }
 
     componentDidMount() {
         HeaderRun();
+        let user = this.props.user.userLogin.userData;
+        let orgs = user.organization
+        this.setState({ organizations: orgs, orgName : orgs[0].value })
+        
     }
 
     toggleUserblock = e => {
@@ -61,11 +67,12 @@ class Header extends Component {
         this.setState({ redirect : true })
     }
 
+
     render() {
         if (this.state.redirect) {
             return <Redirect to={{ pathname: "/login" }} />
         }
-      
+        let orgArray = [];
         return (
             <header className="topnavbar-wrapper">
                 { /* START Top Navbar */ }
@@ -95,6 +102,7 @@ class Header extends Component {
                             <a href=""  className="nav-link sidebar-toggle d-md-none" onClick={ this.toggleAside }>
                                 <em className="fas fa-bars"></em>
                             </a>
+
                         </li>
                         { /* START User avatar toggle */ }
                         {/* <li className="nav-item d-none d-md-block">
@@ -113,6 +121,8 @@ class Header extends Component {
                     </ul>
                     { /* END Left navbar */ }
                     { /* START Right Navbar */ }
+                    <div style = {{ color : "#fff"}}>{this.state.orgName}</div>
+
                     <ul className="navbar-nav flex-row">
                         { /* Toggle icon */ }
                         <UncontrolledDropdown nav inNavbar className="dropdown-list">
@@ -124,29 +134,22 @@ class Header extends Component {
                             <DropdownMenu right className="dropdown-menu-right animated">
                                 <DropdownItem>
                                     { /* START list group */ }
-                                    <ListGroup>
-                                       <ListGroupItem action tag="a" href="" onClick={e => e.preventDefault()}>
-                                          <div className="media">
-                                             <div className="align-self-start mr-2">
-                                                <em className="far fa-building text-info"></em>
-                                             </div>
-                                             <div className="media-body">
-                                                <p className="m-0">Organization1</p>
-                                             </div>
-                                          </div>
-                                       </ListGroupItem>
-                                       <ListGroupItem action tag="a" href="" onClick={e => e.preventDefault()}>
-                                          <div className="media">
-                                             <div className="align-self-start mr-2">
-                                                <em className="far fa-building text-warning"></em>
-                                             </div>
-                                             <div className="media-body">
-                                                <p className="m-0">Organization2</p>
-                                             </div>
-                                          </div>
-                                       </ListGroupItem>
-                               
-                                    </ListGroup>
+                                    {this.state.organizations.map(org => {
+                                          return (
+                                            <ListGroup>
+                                            <ListGroupItem action tag="a" href="" onClick={e => e.preventDefault()}>
+                                               <div className="media">
+                                                  <div className="align-self-start mr-2">
+                                                     <em className="far fa-building text-info"></em>
+                                                  </div>
+                                                  <div className="media-body">
+                                                     <p className="m-0">{org.value}</p>
+                                                  </div>
+                                               </div>
+                                            </ListGroupItem>
+                                         </ListGroup>
+                                          )  
+                                    })}
                                     { /* END list group */ }
                                 </DropdownItem>
                             </DropdownMenu>
@@ -196,11 +199,11 @@ class Header extends Component {
                         </UncontrolledDropdown>
                         { /* END Alert menu */ }
                         { /* START Offsidebar button */ }
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <a className="nav-link" href="" onClick={this.toggleOffsidebar}>
                                 <em className="icon-notebook"></em>
                             </a>
-                        </li>
+                        </li> */}
                         { /* END Offsidebar menu */ }
                     </ul>
                     { /* END Right Navbar */ }
@@ -227,10 +230,18 @@ Header.propTypes = {
     settings: PropTypes.object
 };
 
-const mapStateToProps = state => ({ settings: state.settings })
-const mapDispatchToProps = dispatch => ({   
+const mapStateToProps = state => {   
+    return { 
+    settings: state.settings,
+    user : state.user 
+}}
+
+
+const mapDispatchToProps = dispatch => (
+    {   
         actions: bindActionCreators(actions, dispatch),
-        onUserLogOut: (event) => dispatch(userActions.userLogOut(event)) }
+        onUserLogOut: (event) => dispatch(userActions.userLogOut(event)) 
+    }
 )
 
 export default connect(

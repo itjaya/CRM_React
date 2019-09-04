@@ -4,3 +4,6 @@ fieldset {
 .rbc-time-view {
     display: none !important;
 }
+.invalid-feedback {
+    font-size: 100% !important;
+}

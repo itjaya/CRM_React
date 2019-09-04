@@ -6,12 +6,20 @@ import {
     ModalBody,
     Button, Col, Input
 } from 'reactstrap';
+import $ from 'jquery';
 import { connect } from 'react-redux';
+import Select from 'react-select'
+
+
 import ContentWrapper from '../Layout/ContentWrapper';
 import DataTable from '../Tables/Datatable';
 import FormValidator from '../Forms/FormValidator';
+import 'jquery-validation/dist/jquery.validate.js';
+
+
 import * as userActions from '../../store/actions/userActions';
-import $ from 'jquery';
+import * as orgActions from '../../store/actions/orgActions';
+
 
 class ManageConsultant extends Component {
 
@@ -19,11 +27,17 @@ class ManageConsultant extends Component {
         super(props);
         this.state = {
             modal: false,
+            organizations: [],
+            style: { display: "none" },
+            userRole: "",
+            selectedOptionMulti: [],
+            colorError: false,
+            selectError: false,
+            selectedOption: '',
             userForm: {
                 firstName: '',
                 lastName: '',
                 email: '',
-                role: '',
                 password: '',
                 password2: '',
             }
@@ -64,41 +78,89 @@ class ManageConsultant extends Component {
 
     onSubmit = e => {
         e.preventDefault()
-        const form = e.target;
-        const inputs = [...form.elements].filter(i => ['INPUT', 'SELECT'].includes(i.nodeName))
-        const { errors, hasError } = FormValidator.bulkValidate(inputs)
-        this.setState({
-            [form.name]: {
-                ...this.state[form.name],
-                errors
-            }
-        });
-        if(!hasError) {
-            console.log("state", this.state.userForm)
-            this.props.userRegister(this.state.userForm)
-            this.setState({ modal : !this.state.modal })
-            this.refreshData();
-        }
-        // console.log(hasError ? 'Form has errors. Check!' : 'Form Submitted!')
+        const form = $(this.refs.userForm)
+    
+            if(form.valid()) {
+                if(this.state.selectedOptionMulti.length === 0){
+                    this.setState({selectError : true })
+                }
+                if(Object.keys(this.state.selectedOption).length === 0){
+                    this.setState({ colorError : true })
+                }
+                else{
+                    let obj = {
+                        data  : this.state.userForm,
+                        organization : this.state.selectedOptionMulti,
+                        role : this.state.selectedOption
+                    }
+                    this.props.userRegister(obj)
+                    this.setState({ modal: !this.state.modal })
+                    setTimeout(() => {
+                        this.refreshData();
+                    }, 2000);
+                }
+              }
+              else{
+                if(this.state.selectedOptionMulti.length === 0){    
+                    this.setState({selectError : true })
+                }
+                if(Object.keys(this.state.selectedOption).length === 0){
+                    this.setState({ colorError : true})
+                }
+    
+              }
     }
 
     refreshData = () => {
         this.props.getUsers();
+        if (this.state.userRole === "superAdmin") {
+            this.props.onGetOrganizations();
+        }
     }
 
-    componentDidMount () {
+    async componentDidMount() {
+        let userData = await JSON.parse(sessionStorage.getItem('userData'))
+        let userRole = userData.userData.role
+        if (userRole === "superAdmin") {
+            this.setState({ style: { display: "flex" }, userRole: userRole })
+        }
         this.refreshData();
     }
 
-    componentDidUpdate () {
-        if(this.props.allUsers && this.props.allUsers.length > 0) {
+    handleChangeSelectMulti = (selectedOptionMulti) => {
+        this.setState({ selectedOptionMulti : selectedOptionMulti, selectError : false });
+    }
+
+    handleChangeSelect = (selectedOption) => {        
+        this.setState({ selectedOption :  selectedOption,colorError : false });
+    }
+
+    componentDidUpdate(prevProps) {
+
+        if (this.props.allUsers && this.props.allUsers.length > 0) {
             $().ready(() => {
                 $("#usersTable").DataTable();
             })
         }
+        if (prevProps.orgData !== this.props.orgData) {
+            let orgArray = [];
+            this.props.orgData.orgData.map((org) => {
+               return orgArray.push({
+                    label: org.organizationName,
+                    value: org.organizationName
+                })
+            })
+            this.setState({ organizations: orgArray })
+        }
     }
     render() {
-       
+        const roles = [
+            { label : "Admin", value : "admin"},
+            { label : "Manager", value : "manager"},
+            { label : "User", value : "user"},
+        ]
+        let array = [];
+
         return (
             <div>
                 <ContentWrapper>
@@ -109,48 +171,49 @@ class ManageConsultant extends Component {
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>
-                            <div style={{ float: "right" }}>
-                                            <Button color="primary" onClick={this.toggleModal}>Add User</Button>
-                                        </div><br /><br /><br />
-                                        <table className="table table-striped my-4 w-100" id = "usersTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>S.No</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th className="sort-alpha">Email Id</th>
-                                                    <th>Role</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {this.props.allUsers.map((user, i) => {
-                                                    return (
-                                                        <tr className="gradeX" key={i}>
-                                                            <td>{i + 1}</td>
-                                                            <td>{user.firstName}</td>
-                                                            <td>{user.lastName}</td>
-                                                            <td>{user.email}</td>
-                                                            <td>{user.role}</td>
-                                                            <td><Link to={{ pathname: "/viewConsultant" }}>View</Link></td>
-                                                        </tr>
-                                                    )
+                                <div style={{ float: "right" }}>
+                                    <Button color="primary" onClick={this.toggleModal}>Add User</Button>
+                                </div><br /><br /><br />
+                                <table className="table table-striped my-4 w-100" id="usersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th style={this.state.style}>Organization</th>
+                                            <th className="sort-alpha">Email Id</th>
+                                            <th>Role</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.props.allUsers.map((user, i) => {
+                                            array = [];
+                                            if(user.organization.length > 0) {
+                                                {user.organization.map((org) => {
+                                                    return array.push(org.value)
                                                 })}
-
-                                            </tbody>
-                                        </table>
-                                {/* DATATABLE DEMO 1 */}
-                                {/* <Card>
-                                    <CardBody>
-                                  
-                                    </CardBody>
-                                </Card> */}
+                                            }
+                                            return (
+                                                <tr className="gradeX" key={i}>
+                                                    <td>{i + 1}</td>
+                                                    <td>{user.firstName}</td>
+                                                    <td>{user.lastName}</td>
+                                                    <td style={this.state.style}>{array.join(", ")}</td>                                                    
+                                                    <td>{user.email}</td>
+                                                    <td>{user.role.value}</td>
+                                                    <td><Link to={{ pathname: "/viewConsultant" }}>View</Link></td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
                             </Container>
                         </CardBody>
                         <Modal isOpen={this.state.modal} toggle={this.toggleModal} size="lg">
                             <ModalHeader toggle={this.toggleModal}><strong>ADD USER</strong></ModalHeader>
                             <ModalBody>
-                                <form onSubmit={this.onSubmit} name="userForm">
+                                <form onSubmit={this.onSubmit} name="userForm" ref ="userForm" >
                                     {/* <legend className="mb-4">Personal Details</legend> */}
                                     <div className="form-group row align-items-center">
                                         <label className="col-md-4 col-form-label">First Name</label>
@@ -160,8 +223,9 @@ class ManageConsultant extends Component {
                                                 invalid={this.hasError('userForm', 'firstName', 'required')}
                                                 onChange={this.validateOnChange}
                                                 data-validate='["required"]'
-                                                placeholder = "Enter Firstname"
+                                                placeholder="Enter Firstname"
                                                 value={this.state.userForm.firstName}
+                                                className = "required"
                                             />
                                             <span className="invalid-feedback">Field is required</span>
                                         </Col>
@@ -174,31 +238,43 @@ class ManageConsultant extends Component {
                                                 invalid={this.hasError('userForm', 'lastName', 'required')}
                                                 onChange={this.validateOnChange}
                                                 data-validate='["required"]'
-                                                placeholder = "Enter Lastname"
+                                                placeholder="Enter Lastname"
                                                 value={this.state.userForm.lastName}
+                                                className = "required"
+
                                             />
                                             <span className="invalid-feedback">Field is required</span>
                                         </Col>
                                     </div>
+
                                     <div className="form-group row align-items-center">
                                         <label className="col-md-4 col-form-label">Role</label>
                                         <Col md={8}>
-                                            <Input
-                                                type="select"
+                                            <Select
                                                 name="role"
-                                                invalid={this.hasError('userForm', 'role', 'required')}
-                                                onChange={this.validateOnChange}
-                                                placeholder="Select user role"
-                                                data-validate='["required"]'
-                                                value={this.state.userForm.role}
-                                            >
-                                            <option>Select user role</option>
-                                            <option defaultValue="Admin">Admin</option>
-                                            <option defaultValue="Manager">Manager</option>
-                                            <option defaultValue="Consultant">Consultant</option>
-                                            <option defaultValue="Employee">Employee</option>
-                                            </Input>
-                                            <span className="invalid-feedback">Field is required</span>
+                                                placeholder = "Select user role"
+                                                value={this.state.selectedOption}
+                                                onChange={this.handleChangeSelect}
+                                                options={roles}
+                                            />
+                                            {this.state.colorError ? <label style={{color : "#f05050"}}>This field is required</label> : ""}                                      
+                                        </Col>
+                                    </div>
+                                    <div className="form-group row align-items-center" >
+                                        <label className="col-md-4 col-form-label">Organization</label>
+                                        <Col md={8}>
+                                            <Select
+                                                name="organization"
+                                                placeholder = "Select organization"
+                                                isMulti
+                                                value={this.state.selectedOptionMulti}
+                                                onChange={this.handleChangeSelectMulti}
+                                                options={this.state.organizations}
+                                                className = "required"
+                                            />
+                                            {/* <label className=""> {this.state.selectError}</label>     */}
+                                            {this.state.selectError ? <label style={{color : "#f05050"}}>This field is required</label> : ""}                                      
+                                
                                         </Col>
                                     </div>
                                     <div className="form-group row align-items-center">
@@ -209,8 +285,10 @@ class ManageConsultant extends Component {
                                                 invalid={this.hasError('userForm', 'email', 'required') || this.hasError('userForm', 'email', 'email')}
                                                 onChange={this.validateOnChange}
                                                 data-validate='["required", "email"]'
-                                                placeholder = "Enter Email Id"
-                                                value={this.state.userForm.email} />
+                                                placeholder="Enter Email Id"
+                                                value={this.state.userForm.email} 
+                                                className = "required"
+                                                />
                                             {this.hasError('userForm', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
                                             {this.hasError('userForm', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>}
                                         </Col>
@@ -224,10 +302,12 @@ class ManageConsultant extends Component {
                                                 invalid={this.hasError('userForm', 'password', 'required')}
                                                 onChange={this.validateOnChange}
                                                 data-validate='["required"]'
-                                                placeholder = "Enter Password"
-                                                value={this.state.userForm.password} />
+                                                placeholder="Enter Password"
+                                                value={this.state.userForm.password}
+                                                className = "required"
+                                                />
                                             <span className="invalid-feedback">Field is required</span>
-                                           
+
                                         </Col>
                                     </div>
                                     <div className="form-group row align-items-center">
@@ -238,15 +318,15 @@ class ManageConsultant extends Component {
                                                 invalid={this.hasError('userForm', 'password2', 'equalto')}
                                                 onChange={this.validateOnChange}
                                                 data-validate='["equalto"]'
-                                                placeholder = "Confirm Password"
+                                                placeholder="Confirm Password"
                                                 value={this.state.userForm.password2}
                                                 data-param="id-password"
-                                                />
-                                        <span className="invalid-feedback">Field must be equal to previous</span>
+                                                className = "required"
+                                            />
+                                            <span className="invalid-feedback">Field must be equal to previous</span>
                                         </Col>
                                     </div>
-
-                                    <div style = {{ float : "right"}}>
+                                    <div style={{ float: "right" }}>
                                         <Button color="success" type="submit" >Save</Button>{' '}
                                         <Button color="danger" onClick={this.toggleModal}>Cancel</Button>
                                     </div>
@@ -261,16 +341,20 @@ class ManageConsultant extends Component {
 }
 const mapStateToProps = state => {
     return {
-        allUsers : state.user.allUsers,
-        loading : state.user.userLoading
+        allUsers: state.user.allUsers,
+        loading: state.user.userLoading,
+        orgData: state.organization
+
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        userRegister :  (event) => dispatch(userActions.userRegister(event)),
-        getUsers : (event) => dispatch(userActions.getUsers(event))
+        userRegister: (event) => dispatch(userActions.userRegister(event)),
+        getUsers: (event) => dispatch(userActions.getUsers(event)),
+        onGetOrganizations: (event) => dispatch(orgActions.getOrganization(event))
+
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (ManageConsultant);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageConsultant);

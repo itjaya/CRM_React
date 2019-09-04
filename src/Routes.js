@@ -19,6 +19,7 @@ const Widgets = lazy(() => import('./components/Widgets/Widgets'));
 
 const AddOrganization = lazy(() => import('./components/Organizations/AddOrganization'));
 const ManageOrganizations = lazy(() => import('./components/Organizations/ManageOrganization'));
+const ViewOrganization = lazy(() => import('./components/Organizations/ViewOrganization'));
 
 const AddVendor = lazy(() => import('./components/Vendors/AddVendor'));
 const ManageVendors = lazy(() => import('./components/Vendors/ManageVendors'));
@@ -111,6 +112,7 @@ const Routes = ({ location }) => {
                                         {/* Organizations */}
                                         <Route path="/addOrganization" component={waitFor(AddOrganization)}/>
                                         <Route path="/manageOrganizations" component={waitFor(ManageOrganizations)}/>
+                                        <Route path="/viewOrganization" component={waitFor(ViewOrganization)}/>
 
                                         {/* Vendors */}
                                         <Route path="/addVendor" component={waitFor(AddVendor)} />
@@ -125,8 +127,8 @@ const Routes = ({ location }) => {
                                         <Route path="/manageProjects" component={waitFor(ManageProjects)} />
 
                                         {/* Consultants */}
-                                        <Route path="/manageConsultant" component={waitFor(ManageConsultant)} />
-                                        <Route path="/viewConsultant" component={waitFor(ViewConsultant)} />
+                                        <Route path="/manageUsers" component={waitFor(ManageConsultant)} />
+                                        <Route path="/viewUser" component={waitFor(ViewConsultant)} />
 
                                         {/* Timesheets */}
                                         <Route path="/timesheets" component={waitFor(Timesheets)} />

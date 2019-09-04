@@ -11,7 +11,6 @@ class Auth {
     login = (loginInfo) => {
          return (
             $.post(url.url + "userLogin", loginInfo, (result) => {
-                // console.log("result", result)
                 if(result.condition) {
                     sessionStorage.setItem("loggedIn", true)
                     sessionStorage.setItem("userData", JSON.stringify(result))

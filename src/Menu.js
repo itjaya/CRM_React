@@ -51,12 +51,12 @@ const Menu = [
             }
         ]
     },
-    // {
-    //     name: 'Global Settings',
-    //     icon: 'fas fa-cog',
-    //     path: '/settings',
-    //     translate: 'sidebar.nav.element.GLOBAL SETTINGS'
-    // },
+    {
+        name: 'Users',
+        icon: 'fas fa-users',
+        path: '/manageUsers',
+        translate: 'sidebar.nav.element.USERS'
+    },
    
     // {
     //     name: 'Elements',

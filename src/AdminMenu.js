@@ -80,7 +80,7 @@ const AdminMenu = [
         name: 'Users',
         icon: 'fas fa-users',
         translate: 'sidebar.nav.element.CONSULTANTS',
-        path: '/manageConsultant'
+        path: '/manageUsers'
     },
     // {
     //     name: 'Users',

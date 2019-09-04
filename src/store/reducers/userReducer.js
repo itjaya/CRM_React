@@ -3,9 +3,11 @@ import { USER_ADD_START, USER_ADD_SUCCESS,
         GET_USERS_START, GET_USERS_SUCCESS, USER_LOGOUT 
 } from '../actions/userActions';
 
+let user = JSON.parse(sessionStorage.getItem('userData'));
+
 const intialState = {
 
-    userLogin: {},
+    userLogin: user ? user : {},
     userRegister: {},
     allUsers : [],
     userLoading: false,

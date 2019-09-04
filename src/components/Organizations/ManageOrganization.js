@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Card, CardBody, Button } from 'reactstrap';
+import { Container, Card, CardBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
@@ -58,7 +58,7 @@ class ManageOrganization extends Component {
                                                     <td>{org.orgEmail}</td>
                                                     <td>{org.personName}</td>
                                                     <td>{org.orgPhNo}</td>
-                                                    <td><Link to={{ pathname: "/viewConsultant" }}>View</Link></td>
+                                                    <td><Link to={{ pathname: "/viewOrganization" }}>View</Link></td>
                                                 </tr>
                                             )
                                         })}

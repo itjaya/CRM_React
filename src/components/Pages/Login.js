@@ -88,13 +88,13 @@ class Login extends Component {
     }
 
     render() {
-        if(this.state.redirectCondition && this.state.userRole === "Admin") {
+        if(this.state.redirectCondition && this.state.userRole.value === "admin") {
             return <Redirect to = {{ pathname :"/dashboardv2" }}/>
         }
         else if(this.state.redirectCondition && this.state.userRole === "superAdmin") {
             return <Redirect to = {{ pathname :"/dashboardv1" }}/>
         }
-        else if(this.state.redirectCondition && this.state.userRole === "user") {
+        else if(this.state.redirectCondition && this.state.userRole.value === "user") {
             return <Redirect to = {{ pathname :"/dashboardv3" }}/>
         }
         return (

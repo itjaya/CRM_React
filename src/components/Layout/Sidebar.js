@@ -73,7 +73,7 @@ class Sidebar extends Component {
         if(user.userData.role === "superAdmin") {
             this.setState({ menu : Menu })
         }
-        else if(user.userData.role === "Admin") {
+        else if(user.userData.role.value === "admin") {
             this.setState({ menu : AdminMenu })
         }
     }
