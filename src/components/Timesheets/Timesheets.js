@@ -80,15 +80,16 @@ class Timesheets extends Component {
                                 <div className="row">
                                     <FormGroup className="col-lg-6">
                                         <label className="form-control-label" htmlFor="input-Sun">Project</label>
-                                        <select class="custom-select">
+                                        <select className="custom-select">
                                             <option>Open this select menu</option>
                                             <option>One</option>
                                             <option>Two</option>
                                             <option>Three</option>
-                                        </select>                                    </FormGroup>
+                                        </select>                                    
+                                        </FormGroup>
                                     <FormGroup className="col-lg-6">
                                         <label className="form-control-label" htmlFor="input-Sun">Job Title</label>
-                                        <select class="custom-select">
+                                        <select className="custom-select">
                                             <option>Open this select menu</option>
                                             <option>One</option>
                                             <option>Two</option>
@@ -168,8 +169,8 @@ class Timesheets extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="form-group col-lg-12">
-                                            <label class="">Description:</label>
-                                            <textarea class="form-control" cols="5" placeholder="Short description.." spellcheck="false"></textarea></div>
+                                            <label className="">Description:</label>
+                                            <textarea className="form-control" cols="5" placeholder="Short description.." ></textarea></div>
 
                                     </div>
                                 </div>
