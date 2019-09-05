@@ -13,7 +13,7 @@ import SidebarUserBlock from './SidebarUserBlock';
 
 import Menu from '../../Menu.js';
 import AdminMenu from '../../AdminMenu';
-
+import userMenu from "../../userMenu"
 /** Component to display headings on sidebar */
 const SidebarItemHeader = ({item}) => (
     <li className="nav-heading">
@@ -75,6 +75,9 @@ class Sidebar extends Component {
         }
         else if(user.userData.role.value === "admin") {
             this.setState({ menu : AdminMenu })
+        }
+        else{
+            this.setState({ menu : userMenu })
         }
     }
 

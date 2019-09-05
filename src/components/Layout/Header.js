@@ -34,6 +34,7 @@ class Header extends Component {
             this.setState({ organizations: orgs, orgName : orgs[0].value })
             this.props.onGetOrganizationByName(orgs[0].value)
         }
+        
     }
 
     toggleUserblock = e => {

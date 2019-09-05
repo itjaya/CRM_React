@@ -283,6 +283,10 @@ class DashboardV2 extends Component {
                     </div>
                 </div>
                 <div className="unwrap">
+                        <small>Workreport !</small>
+                    </div>
+                   
+               <div className="unwrap">
                     {/* START chart */}
                     <div className="card">
                         <div className="card-header">
@@ -293,20 +297,20 @@ class DashboardV2 extends Component {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Projects</p>
+                                    <p>Organizations</p>
                                     <div className="h1">25</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Teammates</p>
+                                    <p>Projects</p>
                                     <div className="h1">85</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Hours</p>
+                                    <p>Vendors</p>
                                     <div className="h1">380</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Budget</p>
-                                    <div className="h1 text-truncate">$ 10,000.00</div>
+                                    <p>Clients</p>
+                                    <div className="h1 text-truncate">200</div>
                                 </div>
                             </div>
                         </div>

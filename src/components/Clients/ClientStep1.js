@@ -108,9 +108,7 @@ class ClientStep1 extends Component {
                   <Col md={5}>
                     <Input type="text"
                       name="clientName"
-                      // invalid={this.hasError('clientStep1', 'text', 'required')}
                       onChange={this.validateOnChange}
-                      // data-validate='["required"]'
                       className = "required"
                       value={this.state.clientStep1.clientName}
                     />
@@ -120,13 +118,10 @@ class ClientStep1 extends Component {
                   <Col md={5}>
                     <Input type="text"
                       name="website"
-                      // invalid={this.hasError('clientStep1', 'text', 'required')}
                       onChange={this.validateOnChange}
-                      // data-validate='["required"]'
                       className = "required"
                       value={this.state.clientStep1.website}
                     />
-                    {/* <span className="invalid-feedback">Field is required</span> */}
                   </Col>
                 </div>
               </fieldset>
@@ -136,9 +131,7 @@ class ClientStep1 extends Component {
                   <Col md={5}>
                     <Input type="email"
                       name="email"
-                      // invalid={this.hasError('clientStep1', 'email', 'required') || this.hasError('clientStep1', 'email', 'email')}
                       onChange={this.validateOnChange}
-                      // data-validate='["required", "email"]'
                       className = "required"
                        value={this.state.clientStep1.email} 
                         />
@@ -147,7 +140,7 @@ class ClientStep1 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Contact Number</label>
                   <Col md={5}>
-                    <Input type="contactNumber"
+                    <Input type="tel"
                       name="contactNumber"
                       // invalid={this.hasError('clientStep1', 'email', 'required') || this.hasError('clientStep1', 'email', 'email')}
                       onChange={this.validateOnChange}
@@ -163,7 +156,7 @@ class ClientStep1 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Street Address</label>
                   <Col md={5}>
-                    <Input type="streetAddres"
+                    <Input type="text"
                       name="streetAddres"
                       // invalid={this.hasError('clientStep1', 'number', 'number')}
                       onChange={this.validateOnChange}
@@ -175,7 +168,7 @@ class ClientStep1 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Country</label>
                   <Col md={5}>
-                    <Input type="country"
+                    <Input type="text"
                       name="country"
                       // invalid={this.hasError('clientStep1', 'number', 'number')}
                       onChange={this.validateOnChange}
@@ -191,7 +184,7 @@ class ClientStep1 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">State</label>
                   <Col md={5}>
-                    <Input type="state"
+                    <Input type="text"
                       name="state"
                       // invalid={this.hasError('clientStep1', 'integer', 'integer')}
                       onChange={this.validateOnChange}
@@ -203,7 +196,7 @@ class ClientStep1 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">City</label>
                   <Col md={5}>
-                    <Input type="city"
+                    <Input type="text"
                       name="city"
                       // invalid={this.hasError('clientStep1', 'integer', 'integer')}
                       onChange={this.validateOnChange}
@@ -219,7 +212,7 @@ class ClientStep1 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Zipcode</label>
                   <Col md={5}>
-                    <Input type="zipcode"
+                    <Input type="number"
                       name="zipcode"
                       // invalid={this.hasError('clientStep1', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
@@ -231,7 +224,7 @@ class ClientStep1 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Fax</label>
                   <Col md={5}>
-                    <Input type="fax"
+                    <Input type="text"
                       name="fax"
                       // invalid={this.hasError('clientStep1', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
@@ -240,34 +233,6 @@ class ClientStep1 extends Component {
                       value={this.state.clientStep1.fax} 
                       />
                     <span className="invalid-feedback">Field must be alpha numeric</span>
-                  </Col>
-                </div>
-              </fieldset>
-              <fieldset>
-                <div className="form-group row align-items-center">
-                  <label className="col-md-1 col-form-label">Url</label>
-                  <Col md={5}>
-                    <Input type="url"
-                      name="url"
-                      // invalid={this.hasError('clientStep1', 'url', 'url')}
-                      onChange={this.validateOnChange}
-                      // data-validate='["url"]'
-                      className = "required"
-                      value={this.state.clientStep1.url}
-                       />
-                    <span className="invalid-feedback">Field must be valid url</span>
-                  </Col>
-                  <label className="col-md-1 col-form-label">Url</label>
-                  <Col md={5}>
-                    <Input type="url1"
-                      name="url1"
-                      // invalid={this.hasError('clientStep1', 'url', 'url')}
-                      onChange={this.validateOnChange}
-                      // data-validate='["url"]'
-                      className = "required"
-                      value={this.state.clientStep1.url1} 
-                      />
-                    <span className="invalid-feedback">Field must be valid url</span>
                   </Col>
                 </div>
               </fieldset>
