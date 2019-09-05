@@ -278,118 +278,14 @@ class DashboardV2 extends Component {
             <ContentWrapper>
                 <div className="content-heading">
                     <div>Dashboard
-                        <small><Trans i18nKey='dashboard.WELCOME'></Trans></small>
+                        <small>Workreport !</small>
                     </div>
-                    { /* START Language list */ }
-                    <div className="ml-auto">
-                        <Dropdown isOpen={this.state.dropdownTranslateOpen} toggle={this.toggleDDTranslate}>
-                            <DropdownToggle>
-                                English
-                            </DropdownToggle>
-                            <DropdownMenu className="dropdown-menu-right-forced animated fadeInUpShort">
-                                <DropdownItem onClick={() => this.changeLanguage('en')}>English</DropdownItem>
-                                <DropdownItem onClick={() => this.changeLanguage('es')}>Spanish</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
-                    { /* END Language list */ }
+                   
                 </div>
-                <Row>
-                    <Col xl={ 4 }>
-                        { /* START List group */ }
-                        <div className="list-group mb-3">
-                            <div className="list-group-item">
-                                <div className="d-flex align-items-center py-3">
-                                    <div className="w-50 px-3">
-                                        <p className="m-0 lead">1204</p>
-                                        <p className="m-0 text-sm">Commits this month</p>
-                                    </div>
-                                    <div className="w-50 px-3 text-center">
-                                      
-                                      
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="list-group-item">
-                                <div className="d-flex align-items-center py-3">
-                                    <div className="w-50 px-3">
-                                        <p className="m-0 lead">$ 3,200.00</p>
-                                        <p className="m-0 text-sm">Available budget</p>
-                                    </div>
-                                    <div className="w-50 px-3 text-center">
-                                 
-                                 
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="list-group-item">
-                                <div className="d-flex align-items-center py-3">
-                                    <div className="w-50 px-3">
-                                        <p className="m-0 lead">67</p>
-                                        <p className="m-0 text-sm">New followers</p>
-                                    </div>
-                                    <div className="w-50 px-3 text-center">
-                                        <div className="d-flex align-items-center flex-wrap justify-content-center">
-                                            <BSTooltip placement="top" content="Katie">
-                                                <img src="img/user/02.jpg" alt="Follower" className="circle thumb24 mx-1" />
-                                            </BSTooltip>
-                                            <BSTooltip placement="top" content="Cody">
-                                                <img src="img/user/01.jpg" alt="Follower" className="circle thumb24 mx-1" />
-                                            </BSTooltip>
-                                            <BSTooltip placement="top" content="Tamara">
-                                                <img src="img/user/03.jpg" alt="Follower" className="circle thumb24 mx-1" />
-                                            </BSTooltip>
-                                            <BSTooltip placement="top" content="Gene">
-                                                <img src="img/user/04.jpg" alt="Follower" className="circle thumb24 mx-1" />
-                                            </BSTooltip>
-                                            <BSTooltip placement="top" content="Marsha">
-                                                <img src="img/user/04.jpg" alt="Follower" className="circle thumb24 mx-1" />
-                                            </BSTooltip>
-                                            <BSTooltip placement="top" content="Robin">
-                                                <img src="img/user/09.jpg" alt="Follower" className="circle thumb24 mx-1" />
-                                            </BSTooltip>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        { /* END List group */ }
-                    </Col>
-                    <Col xl={ 8 }>
-                        { /* START bar chart */ }
-                        <div className="card" id="cardChart3">
-                            <div className="card-header">
-                                <Dropdown className="float-right" isOpen={this.state.dropdownCardOpen} toggle={this.toggleDD}>
-                                    <DropdownToggle className="btn-sm">Monthly</DropdownToggle>
-                                    <DropdownMenu className="dropdown-menu-right-forced fadeInLeft animated">
-                                        <DropdownItem>Daily</DropdownItem>
-                                        <DropdownItem>Monthly</DropdownItem>
-                                        <DropdownItem>Yearly</DropdownItem>
-                                    </DropdownMenu>
-                                </Dropdown>
-                                <div className="card-title">Projects Hours</div>
-                            </div>
-                            <div className="card-body">
-                            </div>
-                        </div>
-                        { /* END bar chart */ }
-                    </Col>
-                </Row>
-                <div className="unwrap my-3">
+               <div className="unwrap">
                     {/* START chart */}
                     <div className="card">
                         <div className="card-header">
-                            {/* START button group */}
-                            <Dropdown className="float-right" isOpen={this.state.dropdownChartOpen} toggle={this.toggleDDChart}>
-                                <DropdownToggle className="btn-sm">All time</DropdownToggle>
-                                <DropdownMenu className="dropdown-menu-right-forced fadeInLeft animated">
-                                    <DropdownItem>Daily</DropdownItem>
-                                    <DropdownItem>Monthly</DropdownItem>
-                                    <DropdownItem>All time</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                            {/* END button group */}
                             <div className="card-title">Overall progress</div>
                         </div>
                         <div className="card-body">
@@ -397,20 +293,20 @@ class DashboardV2 extends Component {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Projects</p>
+                                    <p>Organizations</p>
                                     <div className="h1">25</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Teammates</p>
+                                    <p>Projects</p>
                                     <div className="h1">85</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Hours</p>
+                                    <p>Vendors</p>
                                     <div className="h1">380</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
-                                    <p>Budget</p>
-                                    <div className="h1 text-truncate">$ 10,000.00</div>
+                                    <p>Clients</p>
+                                    <div className="h1 text-truncate">200</div>
                                 </div>
                             </div>
                         </div>

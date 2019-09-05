@@ -112,7 +112,7 @@ class ClientStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Name</label>
                   <Col md={5}>
-                    <Input type="name"
+                    <Input type="text"
                       name="contactName"
                       // invalid={this.hasError('clientStep2', 'text', 'required')}
                       onChange={this.validateOnChange}
@@ -125,7 +125,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Designation</label>
                   <Col md={5}>
-                    <Input type="designation"
+                    <Input type="text"
                       name="designation"
                       // invalid={this.hasError('clientStep2', 'text', 'required')}
                       onChange={this.validateOnChange}
@@ -141,7 +141,7 @@ class ClientStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Office Number</label>
                   <Col md={5}>
-                    <Input type="officeNumber"
+                    <Input type="tel"
                       name="officeNumber"
                       // invalid={this.hasError('clientStep2', 'email', 'required') || this.hasError('clientStep2', 'email', 'email')}
                       onChange={this.validateOnChange}
@@ -154,7 +154,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Mobile Number</label>
                   <Col md={5}>
-                    <Input type="mobileNumber"
+                    <Input type="tel"
                       name="mobileNumber"
                       // invalid={this.hasError('clientStep2', 'email', 'required') || this.hasError('clientStep2', 'email', 'email')}
                       onChange={this.validateOnChange}
@@ -183,7 +183,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Owner</label>
                   <Col md={5}>
-                    <Input type="owner"
+                    <Input type="text"
                       name="owner"
                       // invalid={this.hasError('clientStep2', 'number', 'number')}
                       onChange={this.validateOnChange}
@@ -199,7 +199,7 @@ class ClientStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Street Address</label>
                   <Col md={5}>
-                    <Input type="streetAddress"
+                    <Input type="text"
                       name="intstreetAddress"
                       // invalid={this.hasError('clientStep2', 'integer', 'integer')}
                       onChange={this.validateOnChange}
@@ -211,7 +211,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Country</label>
                   <Col md={5}>
-                    <Input type="country"
+                    <Input type="text"
                       name="country"
                       // invalid={this.hasError('clientStep2', 'integer', 'integer')}
                       onChange={this.validateOnChange}
@@ -227,7 +227,7 @@ class ClientStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">State</label>
                   <Col md={5}>
-                    <Input type="state"
+                    <Input type="text"
                       name="state"
                       // invalid={this.hasError('clientStep2', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
@@ -239,7 +239,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">City</label>
                   <Col md={5}>
-                    <Input type="city"
+                    <Input type="text"
                       name="city"
                       // invalid={this.hasError('clientStep2', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
@@ -255,7 +255,7 @@ class ClientStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Zipcode</label>
                   <Col md={5}>
-                    <Input type="zipCode"
+                    <Input type="number"
                       name="zipCode"
                       // invalid={this.hasError('clientStep2', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
@@ -267,7 +267,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">LinkedIn Profile URL</label>
                   <Col md={5}>
-                    <Input type="linkedInProfile"
+                    <Input type="text"
                       name="linkedInProfile"
                       // invalid={this.hasError('clientStep2', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
@@ -283,7 +283,7 @@ class ClientStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Facebook Profile URL</label>
                   <Col md={5}>
-                    <Input type="facebookProfile"
+                    <Input type="text"
                       name="facebookProfile"
                       // invalid={this.hasError('clientStep2', 'url', 'url')}
                       onChange={this.validateOnChange}
@@ -295,7 +295,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Twitter Profile URL</label>
                   <Col md={5}>
-                    <Input type="twitterProfile"
+                    <Input type="text"
                       name="twitterProfile"
                       // invalid={this.hasError('clientStep2', 'url', 'url')}
                       onChange={this.validateOnChange}

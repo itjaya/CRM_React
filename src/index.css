@@ -4,9 +4,9 @@ fieldset {
 .rbc-time-view {
     display: none !important;
 }
-.invalid-feedback {
+/* .invalid-feedback {
     font-size: 100% !important;
-}
+} */
 /* .rbc-active {
     background-color: #5d9cec !important;
 } */

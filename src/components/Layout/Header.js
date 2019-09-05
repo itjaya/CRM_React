@@ -26,7 +26,6 @@ class Header extends Component {
         HeaderRun();
         let user = this.props.user.userLogin.userData;
         let orgs = user.organization
-        this.setState({ organizations: orgs, orgName : orgs[0].value })
         
     }
 

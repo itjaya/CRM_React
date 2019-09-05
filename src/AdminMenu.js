@@ -8,7 +8,7 @@ const AdminMenu = [
         icon: 'icon-speedometer',
         translate: 'sidebar.nav.DASHBOARD',
         // label: { value: 3, color: 'success' },
-        path: '/dashboardv2'
+        path: '/admindashboard'
         // submenu: [{
         //         name: 'Dashboard v1',
         //         path: '/dashboardv1'

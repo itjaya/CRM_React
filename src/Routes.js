@@ -14,7 +14,7 @@ const waitFor = Tag => props => <Tag {...props} />;
 const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
 const DashboardV2 = lazy(() => import('./components/Dashboard/DashboardV2'));
 const DashboardV3 = lazy(() => import('./components/Dashboard/DashboardV3'));
-
+const userDashboard = lazy(() => import("./components/Dashboard/userDashbord"));
 const Widgets = lazy(() => import('./components/Widgets/Widgets'));
 
 const AddOrganization = lazy(() => import('./components/Organizations/AddOrganization'));
@@ -102,9 +102,10 @@ const Routes = ({ location }) => {
                                     <Switch location={location}>
 
                                         {/*Dashboard*/}
-                                        <Route path="/dashboardv1" component={waitFor(DashboardV1)} />
-                                        <Route path="/dashboardv2" component={waitFor(DashboardV2)} />
+                                        <Route path="/admindashboard" component={waitFor(DashboardV1)} />
+                                        <Route path="/dashboard" component={waitFor(DashboardV2)} />
                                         <Route path="/dashboardv3" component={waitFor(DashboardV3)} />
+                                        <Route path="/userdashboard" component={waitFor(userDashboard)} />
 
                                         {/*Widgets*/}
                                         <Route path="/widgets" component={waitFor(Widgets)} />
