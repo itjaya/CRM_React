@@ -70,7 +70,7 @@ class Sidebar extends Component {
         this.props.history.listen(this.closeSidebar);
 
         let user = JSON.parse(sessionStorage.getItem('userData'))
-        if(user.userData.role === "superAdmin") {
+        if(user.userData.role.value === "superAdmin") {
             this.setState({ menu : Menu })
         }
         else if(user.userData.role.value === "admin") {

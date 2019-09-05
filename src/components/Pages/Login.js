@@ -91,7 +91,7 @@ class Login extends Component {
         if(this.state.redirectCondition && this.state.userRole.value === "admin") {
             return <Redirect to = {{ pathname :"/admindashboard" }}/>
         }
-        else if(this.state.redirectCondition && this.state.userRole === "superAdmin") {
+        else if(this.state.redirectCondition && this.state.userRole.value === "superAdmin") {
             return <Redirect to = {{ pathname :"/dashboard" }}/>
         }
         else if(this.state.redirectCondition && this.state.userRole.value === "user") {

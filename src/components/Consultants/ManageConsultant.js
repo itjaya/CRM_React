@@ -78,20 +78,24 @@ class ManageConsultant extends Component {
 
     onSubmit = e => {
         e.preventDefault()
+
         const form = $(this.refs.userForm)
-    
-            if(form.valid()) {
-                if(this.state.selectedOptionMulti.length === 0){
-                    this.setState({selectError : true })
+
+        console.log("userrole", this.state.userRole)
+
+        if(this.state.userRole == "superAdmin") {
+            if (form.valid()) {
+                if (this.state.selectedOptionMulti.length === 0) {
+                    this.setState({ selectError: true })
                 }
-                if(Object.keys(this.state.selectedOption).length === 0){
-                    this.setState({ colorError : true })
+                if (Object.keys(this.state.selectedOption).length === 0) {
+                    this.setState({ colorError: true })
                 }
-                else{
+                if (this.state.selectedOptionMulti.length > 0 && Object.keys(this.state.selectedOption).length > 0) {
                     let obj = {
-                        data  : this.state.userForm,
-                        organization : this.state.selectedOptionMulti,
-                        role : this.state.selectedOption
+                        data: this.state.userForm,
+                        organization: this.state.selectedOptionMulti,
+                        role: this.state.selectedOption
                     }
                     this.props.userRegister(obj)
                     this.setState({ modal: !this.state.modal })
@@ -99,22 +103,53 @@ class ManageConsultant extends Component {
                         this.refreshData();
                     }, 1000);
                 }
-              }
-              else{
-                if(this.state.selectedOptionMulti.length === 0){    
-                    this.setState({selectError : true })
+            }
+            else {
+                if (this.state.selectedOptionMulti.length === 0) {
+                    this.setState({ selectError: true })
                 }
-                if(Object.keys(this.state.selectedOption).length === 0){
-                    this.setState({ colorError : true})
+                if (Object.keys(this.state.selectedOption).length === 0) {
+                    this.setState({ colorError: true })
                 }
-    
-              }
+            }
+        }
+        else if (this.state.userRole === "admin") {
+            console.log("org", this.props.orgData)
+            if (form.valid()) {
+                if (Object.keys(this.state.selectedOption).length === 0) {
+                    this.setState({ colorError: true })
+                }
+                if (Object.keys(this.state.selectedOption).length > 0) {
+                    let obj = {
+                        data: this.state.userForm,
+                        organization: [{ label : this.props.orgData.orgResult.organizationName, value : this.props.orgData.orgResult._id }],
+                        role: this.state.selectedOption
+                    }
+                    console.log("obj", obj)
+                    this.props.userRegister(obj)
+                    this.setState({ modal: !this.state.modal })
+                    setTimeout(() => {
+                        this.refreshData();
+                    }, 1000);
+                }
+            }
+            else {
+                if (Object.keys(this.state.selectedOption).length === 0) {
+                    this.setState({ colorError: true })
+                }
+            }
+        }
+
     }
 
     refreshData = () => {
-        this.props.getUsers();
+        let orgId = this.props.orgData.orgResult._id;
         if (this.state.userRole === "superAdmin") {
             this.props.onGetOrganizations();
+            this.props.getUsers();
+        }
+        else {
+            this.props.getUsers(orgId);
         }
         $().ready(() => {
             $("#usersTable").DataTable();
@@ -122,11 +157,13 @@ class ManageConsultant extends Component {
     }
 
     async componentDidMount() {
+        console.log("props", this.props.orgData)
         let userData = await JSON.parse(sessionStorage.getItem('userData'))
         let userRole = userData.userData.role
-        if (userRole === "superAdmin") {
-            this.setState({ style: { display: "flex" }, userRole: userRole })
+        if (userRole.value === "superAdmin") {
+            this.setState({ style: { display: "flex" } })
         }
+        this.setState({ userRole: userRole.value})
         this.refreshData();
     }
 
@@ -159,7 +196,7 @@ class ManageConsultant extends Component {
     render() {
         const roles = [
             { label : "Admin", value : "admin"},
-            { label : "Manager", value : "manager"},
+            // { label : "Manager", value : "manager"},
             { label : "User", value : "user"},
         ]
         let array = [];
@@ -263,7 +300,7 @@ class ManageConsultant extends Component {
                                             {this.state.colorError ? <label style={{color : "#f05050"}}>This field is required</label> : ""}                                      
                                         </Col>
                                     </div>
-                                    <div className="form-group row align-items-center" >
+                                    <div className="form-group row align-items-center" style = {this.state.style}>
                                         <label className="col-md-4 col-form-label">Organization</label>
                                         <Col md={8}>
                                             <Select
@@ -273,7 +310,6 @@ class ManageConsultant extends Component {
                                                 value={this.state.selectedOptionMulti}
                                                 onChange={this.handleChangeSelectMulti}
                                                 options={this.state.organizations}
-                                                className = "required"
                                             />
                                             {/* <label className=""> {this.state.selectError}</label>     */}
                                             {this.state.selectError ? <label style={{color : "#f05050"}}>This field is required</label> : ""}                                      

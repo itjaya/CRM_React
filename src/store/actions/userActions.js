@@ -77,11 +77,11 @@ export const getUsersSuccess = (allUsers) => {
     return { type: GET_USERS_SUCCESS, payload: allUsers };
 }
 
-export const getUsers = () => {
+export const getUsers = (id) => {
     return dispatch => {
         dispatch(getUsersStart())
         return (
-            $.get(url.url + "getUsers", (result) => {
+            $.get(url.url + `getUsers?id=${id}`, (result) => {
                 dispatch(getUsersSuccess(result))
             })
         )
