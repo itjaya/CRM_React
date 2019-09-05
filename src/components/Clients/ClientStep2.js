@@ -9,21 +9,20 @@ class ClientStep2 extends Component {
     super(props);
     this.state = {
       clientStep2 : {
-        contactName: '',
+        personName: '',
         designation: '',
-        mobileNumber: '',
+        mobileNo: '',
         owner: '',
         country: '',
         city: '',
-        linkedInProfile: '',
-        twitterProfile: '',
-        facebookProfile: '',
-        zipCode: '',
+        linkedInUrl: '',
+        twitterUrl: '',
+        facebookUrl: '',
+        zipcode: '',
         state: '',
-        intstreetAddress: '',
+        streetAddress: '',
         officeNumber: '',
-        email: ''
-      }
+        emailId: ''      }
     };
   }
   validateOnChange = event => {
@@ -100,7 +99,13 @@ class ClientStep2 extends Component {
       this.state[formName].errors[inputName] &&
       this.state[formName].errors[inputName][method]
   }
+  componentDidMount () {
+    if(this.props.wizardData.contacts !== undefined) {
+      console.log(this.props)
 
+      this.setState({clientStep2 : this.props.wizardData.contacts[0]})
+    }
+  }
   render() {
     return (
       <div>
@@ -113,12 +118,12 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">Name</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="contactName"
+                      name="personName"
                       // invalid={this.hasError('clientStep2', 'text', 'required')}
                       onChange={this.validateOnChange}
                       // data-validate='["required"]'
                       className = "required"
-                      value={this.state.clientStep2.contactName}
+                      value={this.state.clientStep2.personName}
                       // className = "required"
                     />
                     <span className="invalid-feedback">Field is required</span>
@@ -155,11 +160,11 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">Mobile Number</label>
                   <Col md={5}>
                     <Input type="number"
-                      name="mobileNumber"
+                      name="mobileNo"
                       // invalid={this.hasError('clientStep2', 'email', 'required') || this.hasError('clientStep2', 'email', 'email')}
                       onChange={this.validateOnChange}
                       // data-validate='["required", "email"]'
-                      value={this.state.clientStep2.mobileNumber} 
+                      value={this.state.clientStep2.mobileNo} 
                       className = "required"
                       />
                     {/* {this.hasError('clientStep2', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
@@ -172,11 +177,11 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">Email Id</label>
                   <Col md={5}>
                     <Input type="email"
-                      name="email"
+                      name="emailId"
                       // invalid={this.hasError('clientStep2', 'number', 'number')}
                       onChange={this.validateOnChange}
                       // data-validate='["number"]'
-                      value={this.state.clientStep2.email} 
+                      value={this.state.clientStep2.emailId} 
                       className = "required"
                       />
                     <span className="invalid-feedback">Field must be valid number</span>
@@ -200,11 +205,11 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">Street Address</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="intstreetAddress"
+                      name="streetAddress"
                       // invalid={this.hasError('clientStep2', 'integer', 'integer')}
                       onChange={this.validateOnChange}
                       // data-validate='["integer"]'
-                      value={this.state.clientStep2.intstreetAddress}
+                      value={this.state.clientStep2.streetAddress}
                       className = "required"
                        />
                     <span className="invalid-feedback">Field must be an integer</span>
@@ -244,7 +249,7 @@ class ClientStep2 extends Component {
                       // invalid={this.hasError('clientStep2', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
                       // data-validate='["alphanum"]'
-                      value={this.state.clientStep2.City} 
+                      value={this.state.clientStep2.city} 
                       className = "required"
                       />
                     <span className="invalid-feedback">Field must be alpha numeric</span>
@@ -256,11 +261,11 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">Zipcode</label>
                   <Col md={5}>
                     <Input type="number"
-                      name="zipCode"
+                      name="zipcode"
                       // invalid={this.hasError('clientStep2', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
                       // data-validate='["alphanum"]'
-                      value={this.state.clientStep2.zipCode} 
+                      value={this.state.clientStep2.zipcode} 
                       className = "required"
                       />
                     <span className="invalid-feedback">Field must be alpha numeric</span>
@@ -268,11 +273,11 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">LinkedIn Profile URL</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="linkedInProfile"
+                      name="linkedInUrl"
                       // invalid={this.hasError('clientStep2', 'alphanum', 'alphanum')}
                       onChange={this.validateOnChange}
                       // data-validate='["alphanum"]'
-                      value={this.state.clientStep2.linkedInProfile} 
+                      value={this.state.clientStep2.linkedInUrl} 
                       className = "required"
                       />
                     <span className="invalid-feedback">Field must be alpha numeric</span>
@@ -284,11 +289,11 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">Facebook Profile URL</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="facebookProfile"
+                      name="facebookUrl"
                       // invalid={this.hasError('clientStep2', 'url', 'url')}
                       onChange={this.validateOnChange}
                       // data-validate='["url"]'
-                      value={this.state.clientStep2.facebookProfile} 
+                      value={this.state.clientStep2.facebookUrl} 
                       className = "required"
                       />
                     <span className="invalid-feedback">Field must be valid url</span>
@@ -296,11 +301,11 @@ class ClientStep2 extends Component {
                   <label className="col-md-1 col-form-label">Twitter Profile URL</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="twitterProfile"
+                      name="twitterUrl"
                       // invalid={this.hasError('clientStep2', 'url', 'url')}
                       onChange={this.validateOnChange}
                       // data-validate='["url"]'
-                      value={this.state.clientStep2.twitterProfile} 
+                      value={this.state.clientStep2.twitterUrl} 
                       className = "required"
                       />
                     <span className="invalid-feedback">Field must be valid url</span>

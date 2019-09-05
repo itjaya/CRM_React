@@ -9,12 +9,12 @@ class VendorStep2 extends Component {
     this.state = {
       secondStep: "second step here",
       vendorStep2: {
-        contactName: '',
+        personName: '',
         designation: '',
         officeNo: '',
         mobileNo: '',
-        contactEmail: '',
-        ownerPerson: '',
+        emailId: '',
+        owner: '',
         streetAddress: '',
         country: '',
         state: '',
@@ -47,9 +47,7 @@ class VendorStep2 extends Component {
 
 }
 componentDidMount () {
-  console.log("props", this.props)
   if(this.props.wizardData.contacts !== undefined) {
-    console.log(this.props.wizardData.contacts)
     this.setState({vendorStep2 : this.props.wizardData.contacts[0]})
   }
 }
@@ -82,7 +80,7 @@ componentDidMount () {
                   <label className="col-md-1 col-form-label">Name</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="contactName"
+                      name="personName"
                       onChange={this.validateOnChange}
                       value={this.state.vendorStep2.personName}
                     />
@@ -120,14 +118,14 @@ componentDidMount () {
                   <label className="col-md-1 col-form-label">Email Id</label>
                   <Col md={5}>
                     <Input type="email"
-                      name="contactEmail"
+                      name="emailId"
                       onChange={this.validateOnChange}
                       value={this.state.vendorStep2.emailId} />
                   </Col>
                   <label className="col-md-1 col-form-label">Owner</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="ownerPerson"
+                      name="owner"
                       onChange={this.validateOnChange}
                       value={this.state.vendorStep2.owner} />
                   </Col>

@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
-import { Container, Card, CardBody } from 'reactstrap';
+import {Container,Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
 import ContentWrapper from '../Layout/ContentWrapper';
 import Datatable from '../Tables/Datatable';
+import { Link } from "react-router-dom"
 import * as clientActions from '../../store/actions/client';
 import { connect } from 'react-redux';
 import $ from "jquery";
 class ManageClients extends Component {
-    
+    constructor(props) {
+        super(props);
+        this.state = {
+            modal: false,
+            msg: "",
+            deleteId : "",
+            condition : false,
+            redirectCondition : false
+        }
+    }
     componentDidMount() {
         let orgId = this.props.orgData.orgResult._id
         this.props.getClient(orgId);
@@ -17,6 +27,25 @@ class ManageClients extends Component {
                 $("#usersTable").DataTable();
             })
         }
+    }
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+    handleOk = () => {
+
+        let orgId = this.props.orgData.orgResult._id
+        let id = this.state.deleteId
+        this.props.deleteClient(id)
+        this.setState({ modal: false })
+       setTimeout(()=>{
+        this.props.getClient(orgId);
+       }, 1000/2)
+    }
+    handleDelete = (vendor) =>{
+
+        this.setState({ modal: true,deleteId :vendor._id });
     }
     render() {
 
@@ -42,6 +71,7 @@ class ManageClients extends Component {
                                                         <th>email</th>
                                                         <th className="sort-numeric">state</th>
                                                         <th className="sort-alpha" data-priority="2">zipcode</th>
+                                                        <th className="sort-alpha" data-priority="2">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -53,7 +83,8 @@ class ManageClients extends Component {
                                                                 <td>{data.emailId}</td>
                                                                 <td>{data.state}</td>
                                                                 <td>{data.zipcode}</td>
-
+                                                                <td><Link to = {{ pathname : "/addClient" , state : data}}><i className="fa fa-edit"></i></Link>
+                                                                <i className="fa fa-trash" onClick={this.handleDelete.bind(this, data)}></i></td>
                                                             </tr>
                                                         )
                                                     })}
@@ -64,6 +95,16 @@ class ManageClients extends Component {
                             </Container>
                         </CardBody>
                     </Card>
+                    <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
+                        <ModalBody>
+                            Are you sure do you want delete ?                     
+                            </ModalBody>
+                        <ModalFooter>
+                            <Button color="danger" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
+                            <Button color="primary" onClick={this.toggleModal}>Cancel</Button>{' '}
+                        </ModalFooter>
+                    </Modal>
                 </ContentWrapper>
 
             </div>
@@ -81,6 +122,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getClient: (event) => dispatch(clientActions.getClient(event)),
+        deleteClient : (event) => dispatch(clientActions.deleteClient(event))
+
     }
 }
 

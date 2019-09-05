@@ -27,6 +27,7 @@ class AddVendor extends Component {
         this.props.addVendor(data);
     }
     componentWillReceiveProps = (nextProps) => {
+        console.log("haiii", nextProps)
           if(nextProps.addVendors.msg !== undefined){
         this.setState({ msg: nextProps.addVendors.msg, modal: true,condition: nextProps.addVendors.condition})
           }

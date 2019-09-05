@@ -13,8 +13,8 @@ class VendorStep1 extends Component {
       vendorStep1: {
         vendorName: '',
         website: '',
-        vendorEmail: '',
-        contactNo: '',
+        emailId: '',
+        contactNumber: '',
         addressStreet: '',
         country: '',
         state: '',
@@ -39,7 +39,6 @@ class VendorStep1 extends Component {
   }
 
   componentDidMount () {
-    console.log("props", this.props)
     if(this.props !== undefined) {
       // console.log(this.props.location.state)
       this.setState({vendorStep1 : this.props.wizardData})
@@ -100,7 +99,7 @@ class VendorStep1 extends Component {
                   <label className="col-md-1 col-form-label">Email Id</label>
                   <Col md={5}>
                     <Input type="email"
-                      name="vendorEmail"
+                      name="emailId"
                       onChange={this.validateOnChange}
                       value={this.state.vendorStep1.emailId}
                       className = "required"
@@ -109,7 +108,7 @@ class VendorStep1 extends Component {
                   <label className="col-md-1 col-form-label">Contact Number</label>
                   <Col md={5}>
                     <Input type="number"
-                      name="contactNo"
+                      name="contactNumber"
                       onChange={this.validateOnChange}
                       value={this.state.vendorStep1.contactNumber}
                       className = "required"

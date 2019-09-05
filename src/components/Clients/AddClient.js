@@ -19,9 +19,11 @@ class AddClient extends Component {
         }
     }
     finishButtonClick = (allStates) => {
+        console.log("haiiii", allStates)
         let data = {
             ordId: this.props.orgData.orgResult._id,
-            data: allStates
+            clientStep1: allStates.Business_Information.clientStep1,
+            clientStep2: allStates.Contact_Details.clientStep2
         }
         this.props.addClient(data)
     }
@@ -70,6 +72,7 @@ class AddClient extends Component {
                                 validate={true}
                                 color="primary"
                                 finishButtonClick={this.finishButtonClick}
+                                wizardData = {this.props.location.state}
                             />
                         </CardBody>
                     </Card>

@@ -13,15 +13,13 @@ class ClientStep1 extends Component {
         clientName: '',
         website: '',
         contactNumber: '',
-        email: '',
+        emailId: '',
         country: '',
-        streetAddres: '',
+        addressStreet: '',
         state: '',
         city: '',
         zipcode: '',
         fax: '',
-        url: '',
-        url1: ''
       }
     };
   }
@@ -95,6 +93,12 @@ class ClientStep1 extends Component {
       this.state[formName].errors[inputName] &&
       this.state[formName].errors[inputName][method]
   }
+
+  componentDidMount () {
+    if(this.props !== undefined) {
+      this.setState({clientStep1 : this.props.wizardData})
+    }
+  }
   render() {
     return (
       <div>
@@ -130,10 +134,10 @@ class ClientStep1 extends Component {
                   <label className="col-md-1 col-form-label">Email Id</label>
                   <Col md={5}>
                     <Input type="email"
-                      name="email"
+                      name="emailId"
                       onChange={this.validateOnChange}
                       className = "required"
-                       value={this.state.clientStep1.email} 
+                       value={this.state.clientStep1.emailId} 
                         />
                     {/* {this.hasError('clientStep1', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
                     {this.hasError('clientStep1', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>} */}
@@ -157,12 +161,12 @@ class ClientStep1 extends Component {
                   <label className="col-md-1 col-form-label">Street Address</label>
                   <Col md={5}>
                     <Input type="text"
-                      name="streetAddres"
+                      name="addressStreet"
                       // invalid={this.hasError('clientStep1', 'number', 'number')}
                       onChange={this.validateOnChange}
                       // data-validate='["number"]'
                       className = "required"
-                      value={this.state.clientStep1.streetAddres}
+                      value={this.state.clientStep1.addressStreet}
                        />
                     <span className="invalid-feedback">Field must be valid number</span>
                   </Col>
@@ -174,7 +178,7 @@ class ClientStep1 extends Component {
                       onChange={this.validateOnChange}
                       // data-validate='["number"]'
                       className = "required"
-                      // value={this.state.clientStep1.number} 
+                      value={this.state.clientStep1.country} 
                       />
                     <span className="invalid-feedback">Field must be valid number</span>
                   </Col>
