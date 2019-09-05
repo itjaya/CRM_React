@@ -76,7 +76,6 @@ class AddClient extends Component {
     }
 }
 const mapStateToProps = state => {
-    // console.log("haiiii", state)
     return {
         addClients: state.clientReducer.addResult,
         // loading : state.user.userLoading

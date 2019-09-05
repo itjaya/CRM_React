@@ -97,7 +97,7 @@ class ManageConsultant extends Component {
                     this.setState({ modal: !this.state.modal })
                     setTimeout(() => {
                         this.refreshData();
-                    }, 2000);
+                    }, 1000);
                 }
               }
               else{
@@ -116,6 +116,9 @@ class ManageConsultant extends Component {
         if (this.state.userRole === "superAdmin") {
             this.props.onGetOrganizations();
         }
+        $().ready(() => {
+            $("#usersTable").DataTable();
+        })
     }
 
     async componentDidMount() {

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../../store/actions/actions';
 import * as userActions from '../../store/actions/userActions';
+import * as orgActions from '../../store/actions/orgActions';
 
 import ToggleFullscreen from '../Common/ToggleFullscreen';
 import HeaderRun from './Header.run'
@@ -19,6 +20,7 @@ class Header extends Component {
     state = {
         redirect : false,
         organizations: [],
+        style : { display : "none"},
         orgName : ""
     }
 
@@ -26,8 +28,12 @@ class Header extends Component {
         HeaderRun();
         let user = this.props.user.userLogin.userData;
         let orgs = user.organization
-        this.setState({ organizations: orgs, orgName : orgs[0].value })
-        
+       
+        if(user.role.value === "admin") {
+            this.setState({ style : { visibility : "visible" } })
+            this.setState({ organizations: orgs, orgName : orgs[0].value })
+            this.props.onGetOrganizationByName(orgs[0].value)
+        }
     }
 
     toggleUserblock = e => {
@@ -65,6 +71,12 @@ class Header extends Component {
         handleAuth.logout();
         this.props.onUserLogOut();
         this.setState({ redirect : true })
+    }
+
+    handleClick = (org, e) => {
+        e.preventDefault();
+        this.props.onGetOrganizationByName(org)
+        this.setState({ orgName : org })
     }
 
 
@@ -125,7 +137,7 @@ class Header extends Component {
 
                     <ul className="navbar-nav flex-row">
                         { /* Toggle icon */ }
-                        <UncontrolledDropdown nav inNavbar className="dropdown-list">
+                        <UncontrolledDropdown nav inNavbar className="dropdown-list" style = {this.state.style}>
                             <DropdownToggle nav className="dropdown-toggle-nocaret">
                                 <em className="fa fa-toggle-on"></em>
                                 {/* <span className="badge badge-danger">11</span> */}
@@ -134,10 +146,10 @@ class Header extends Component {
                             <DropdownMenu right className="dropdown-menu-right animated">
                                 <DropdownItem>
                                     { /* START list group */ }
-                                    {this.state.organizations.map(org => {
+                                    <ListGroup>
+                                    {this.state.organizations.map((org, i) => {
                                           return (
-                                            <ListGroup>
-                                            <ListGroupItem action tag="a" href="" onClick={e => e.preventDefault()}>
+                                            <ListGroupItem key = {i} action tag="a" href="" onClick={this.handleClick.bind(this, org.value)}>
                                                <div className="media">
                                                   <div className="align-self-start mr-2">
                                                      <em className="far fa-building text-info"></em>
@@ -147,9 +159,10 @@ class Header extends Component {
                                                   </div>
                                                </div>
                                             </ListGroupItem>
-                                         </ListGroup>
                                           )  
                                     })}
+                                         </ListGroup>
+
                                     { /* END list group */ }
                                 </DropdownItem>
                             </DropdownMenu>
@@ -240,7 +253,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => (
     {   
         actions: bindActionCreators(actions, dispatch),
-        onUserLogOut: (event) => dispatch(userActions.userLogOut(event)) 
+        onUserLogOut: (event) => dispatch(userActions.userLogOut(event)),
+        onGetOrganizationByName : (event) => dispatch(orgActions.getOrganizationByName(event))
     }
 )
 

@@ -1,6 +1,9 @@
 import { ADD_ORGANIZATION_START, ADD_ORGANIZATION_SUCCESS, ADD_ORGANIZATION_FAIL,
-        GET_ORGANIZATION_START, GET_ORGANIZATION_SUCCESS, GET_ORGANIZATION_FAIL
+        GET_ORGANIZATION_START, GET_ORGANIZATION_SUCCESS, GET_ORGANIZATION_FAIL,
+        GET_ORGDETAIL_START, GET_ORGDETAIL_SUCCESS, GET_ORGDETAIL_FAIL
 } from '../actions/orgActions';
+
+let orgData = sessionStorage.getItem("orgId");
 
 const initialState = {
 
@@ -8,6 +11,7 @@ const initialState = {
     orgLoading : false,
     orgData : [],
     addResult : {},
+    orgResult : orgData ? orgData : ""
 }
 
 const orgReducer = (state = initialState, action) => {
@@ -62,7 +66,28 @@ const orgReducer = (state = initialState, action) => {
                 orgLoading: false,
             }
 
+            case GET_ORGDETAIL_START:
 
+                return {
+                    ...state,
+                    addLoading: true
+                }
+    
+    
+            case GET_ORGDETAIL_SUCCESS:
+    
+                return {
+                    ...state,
+                    addLoading: false,
+                    orgResult: action.payload
+                }
+    
+            case GET_ORGDETAIL_FAIL:
+    
+                return {
+                    ...state,
+                    addLoading: false,
+                }
         default: {
             return state
         }
