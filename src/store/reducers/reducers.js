@@ -6,6 +6,7 @@ import userReducer from './userReducer';
 import orgReducer from './orgReducer';
 import vendorReducer from "./vendor";
 import clientReducer from "./client";
+import projectReducer from './projectReducer';
 
 
 export default combineReducers({
@@ -14,5 +15,6 @@ export default combineReducers({
     user: userReducer,
     organization: orgReducer,
     vendorReducer : vendorReducer,
-    clientReducer : clientReducer
+    clientReducer : clientReducer,
+    projects : projectReducer
 });
