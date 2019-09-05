@@ -44,10 +44,10 @@ export const getClientFail = () => {
     return { type: GET_CLIENT_FAIL }
 }
 
-export const getClient = () => {
+export const getClient = (id) => {
     return dispatch => {
         dispatch(getClientStart());
-        $.get(url.url + "getClients", (result) => {
+        $.get(url.url + `getClients?id=${id}`, (result) => {
             if(result) {
                 dispatch(getClientSuccess(result));
             }

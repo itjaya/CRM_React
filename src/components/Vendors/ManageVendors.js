@@ -1,15 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import $ from "jquery"
-import { Container, Card, CardBody } from 'reactstrap';
+import { Link } from "react-router-dom"
+import {Container,Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
 import * as vendorActions from '../../store/actions/vendor';
 import ContentWrapper from '../Layout/ContentWrapper';
 import Datatable from '../Tables/Datatable';
 
 class ManageVendors extends Component {
-
+    constructor(props) {
+        super(props);
+        this.state = {
+            modal: false,
+            msg: "",
+            deleteId : "",
+            condition : false,
+            redirectCondition : false
+        }
+    }
     componentDidMount() {
-        this.props.getVendor();
+        let orgId = this.props.orgData.orgResult._id
+        this.props.getVendor(orgId);
     }
     componentDidUpdate() {
         if (this.props.vendorsList && this.props.vendorsList.length > 0) {
@@ -17,6 +28,25 @@ class ManageVendors extends Component {
                 $("#usersTable").DataTable();
             })
         }
+    }
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+    handleOk = () => {
+
+        let orgId = this.props.orgData.orgResult._id
+        let id = this.state.deleteId
+        this.props.deleteVendor(id)
+        this.setState({ modal: false })
+       setTimeout(()=>{
+        this.props.getVendor(orgId)
+       }, 1000/2)
+    }
+    handleDelete = (vendor) =>{
+
+        this.setState({ modal: true,deleteId :vendor._id });
     }
     render() {
 
@@ -42,6 +72,7 @@ class ManageVendors extends Component {
                                                         <th>email</th>
                                                         <th className="sort-numeric">city</th>
                                                         <th className="sort-alpha" data-priority="2">zipcode</th>
+                                                        <th className="sort-alpha" data-priority="2">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -53,6 +84,8 @@ class ManageVendors extends Component {
                                                                 <td>{vendor.emailId}</td>
                                                                 <td>{vendor.city}</td>
                                                                 <td>{vendor.zipcode}</td>
+                                                                <td><Link to = {{ pathname : "/addVendor" , state : vendor}}><i className="fa fa-edit"></i></Link>
+                                                                <i className="fa fa-trash" onClick={this.handleDelete.bind(this, vendor)}></i></td>
 
                                                             </tr>
                                                         )
@@ -66,6 +99,16 @@ class ManageVendors extends Component {
                             </Container>
                         </CardBody>
                     </Card>
+                    <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
+                        <ModalBody>
+                            Are you sure do you want delete ?                     
+                            </ModalBody>
+                        <ModalFooter>
+                            <Button color="danger" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
+                            <Button color="primary" onClick={this.toggleModal}>Cancel</Button>{' '}
+                        </ModalFooter>
+                    </Modal>
                 </ContentWrapper>
 
             </div>
@@ -74,6 +117,7 @@ class ManageVendors extends Component {
 }
 const mapStateToProps = state => {
     return {
+        orgData: state.organization,
         vendorsList: state.vendorReducer.vendorData,
     }
 }
@@ -81,6 +125,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getVendor: (event) => dispatch(vendorActions.getVendor(event)),
+        deleteVendor : (event) => dispatch(vendorActions.deleteVendor(event))
     }
 }
 

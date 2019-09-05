@@ -38,6 +38,14 @@ class VendorStep1 extends Component {
 
   }
 
+  componentDidMount () {
+    console.log("props", this.props)
+    if(this.props !== undefined) {
+      // console.log(this.props.location.state)
+      this.setState({vendorStep1 : this.props.wizardData})
+    }
+  }
+
   validateOnChange = event => {
 
     // console.log("event", event)
@@ -94,7 +102,7 @@ class VendorStep1 extends Component {
                     <Input type="email"
                       name="vendorEmail"
                       onChange={this.validateOnChange}
-                      value={this.state.vendorStep1.vendorEmail}
+                      value={this.state.vendorStep1.emailId}
                       className = "required"
                       />
                    </Col>
@@ -103,7 +111,7 @@ class VendorStep1 extends Component {
                     <Input type="number"
                       name="contactNo"
                       onChange={this.validateOnChange}
-                      value={this.state.vendorStep1.contactNo}
+                      value={this.state.vendorStep1.contactNumber}
                       className = "required"
                     />
                   </Col>

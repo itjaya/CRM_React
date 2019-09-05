@@ -141,7 +141,7 @@ class ClientStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Office Number</label>
                   <Col md={5}>
-                    <Input type="tel"
+                    <Input type="number"
                       name="officeNumber"
                       // invalid={this.hasError('clientStep2', 'email', 'required') || this.hasError('clientStep2', 'email', 'email')}
                       onChange={this.validateOnChange}
@@ -154,7 +154,7 @@ class ClientStep2 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Mobile Number</label>
                   <Col md={5}>
-                    <Input type="tel"
+                    <Input type="number"
                       name="mobileNumber"
                       // invalid={this.hasError('clientStep2', 'email', 'required') || this.hasError('clientStep2', 'email', 'email')}
                       onChange={this.validateOnChange}

@@ -6,8 +6,10 @@ import * as clientActions from '../../store/actions/client';
 import { connect } from 'react-redux';
 import $ from "jquery";
 class ManageClients extends Component {
+    
     componentDidMount() {
-        this.props.getClient();
+        let orgId = this.props.orgData.orgResult._id
+        this.props.getClient(orgId);
     }
     componentDidUpdate() {
         if (this.props.clientsList && this.props.clientsList.length > 0) {
@@ -71,6 +73,8 @@ class ManageClients extends Component {
 const mapStateToProps = state => {
     return {
        clientsList: state.clientReducer.clientData,
+       orgData: state.organization
+
     }
 }
 

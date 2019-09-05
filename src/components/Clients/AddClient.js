@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import {Card, CardBody, Modal,ModalHeader,ModalBody, Button} from 'reactstrap';
+import {Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
+import { Redirect } from "react-router-dom"
 import { connect } from 'react-redux';
 import ReactWizard from 'react-bootstrap-wizard';
 import ClientStep1 from './ClientStep1';
@@ -13,16 +14,20 @@ class AddClient extends Component {
         this.state = {
             modal: false,
             msg: "",
-            condition : false
+            condition : false,
+            redirectCondition : false
         }
     }
     finishButtonClick = (allStates) => {
-        console.log(allStates);
-        this.props.addClient(allStates)
+        let data = {
+            ordId: this.props.orgData.orgResult._id,
+            data: allStates
+        }
+        this.props.addClient(data)
     }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.addClients.msg !== undefined) {
-            this.setState({ msg: nextProps.addClients.msg, modal: true })
+            this.setState({ msg: nextProps.addClients.msg, modal: true,condition: nextProps.addClients.condition })
         }
     }
     toggleModal = () => {
@@ -30,8 +35,16 @@ class AddClient extends Component {
             modal: !this.state.modal
         });
     }
+    handleOk = () =>{   
+        if(this.state.condition){
+            this.setState({ redirectCondition : true})
+        }
+        this.setState({ modal : false})
+    }
     render() {
-
+        if (this.state.redirectCondition) {
+            return <Redirect to="/manageClients" />
+        }
         var steps = [
             // this step hasn't got a isValidated() function, so it will be considered to be true
             { stepName: "Business_Information", component: ClientStep1 },
@@ -60,15 +73,14 @@ class AddClient extends Component {
                             />
                         </CardBody>
                     </Card>
-
                     <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}><strong>ADD VENDOR</strong></ModalHeader>
+                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
                         <ModalBody>
-                            {this.state.msg}
-                            <div style={{ float: "right" }}>
-                                <Button color="danger" onClick={this.toggleModal}>Cancel</Button>
-                            </div>
-                        </ModalBody>
+                            {this.state.msg}                       
+                            </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
+                        </ModalFooter>
                     </Modal>
                 </ContentWrapper>
             </div>
@@ -76,9 +88,9 @@ class AddClient extends Component {
     }
 }
 const mapStateToProps = state => {
-    console.log("haiiii", state.user.userLogin.userData.organization[0].label)
     return {
         addClients: state.clientReducer.addResult,
+        orgData: state.organization
         // loading : state.user.userLoading
     }
 }

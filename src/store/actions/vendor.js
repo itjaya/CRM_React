@@ -9,6 +9,10 @@ export const GET_VENDOR_START = "GET_VENDOR_START";
 export const GET_VENDOR_SUCCESS = "GET_VENDOR_SUCCESS";
 export const GET_VENDOR_FAIL = "GET_VENDOR_FAIL";
 
+export const DELETE_VENDOR_START = "DELETE_VENDOR_START";
+export const DELETE_VENDOR_SUCCESS = "DELETE_VENDOR_SUCCESS";
+export const DELETE_VENDOR_FAIL = "DELETE_VENDOR_FAIL";
+
 // Add VENDOR
 export const addVendorStart = () => {
     return { type : ADD_VENDOR_START }
@@ -45,12 +49,37 @@ export const getVendorFail = () => {
     return { type: GET_VENDOR_FAIL }
 }
 
-export const getVendor = () => {
+export const getVendor = (id) => {
     return dispatch => {
         dispatch(getVendorStart());
-        $.get(url.url + "getVendors", (result) => {
+        $.get(url.url + `getVendors?id=${id}`, (result) => {
             if(result) {
                 dispatch(getVendorSuccess(result));
+            }
+        })
+    }
+}
+
+// Delete Vendor
+
+export const deleteVendorStart = () => {
+    return { type : DELETE_VENDOR_START }
+}
+
+export const deleteVendorSuccess = (result) => {
+    return { type: DELETE_VENDOR_SUCCESS, payload : result }
+}
+
+export const deleteVendorFail = () => {
+    return { type: DELETE_VENDOR_FAIL }
+}
+
+export const deleteVendor = (id) => {
+    return dispatch => {
+        dispatch(deleteVendorStart());
+        $.get(url.url + `deleteVendors?id=${id}`, (result) => {
+            if(result) {
+                dispatch(deleteVendorSuccess(result));
             }
         })
     }

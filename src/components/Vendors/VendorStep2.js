@@ -46,7 +46,13 @@ class VendorStep2 extends Component {
     });
 
 }
-
+componentDidMount () {
+  console.log("props", this.props)
+  if(this.props.wizardData.contacts !== undefined) {
+    console.log(this.props.wizardData.contacts)
+    this.setState({vendorStep2 : this.props.wizardData.contacts[0]})
+  }
+}
   isValidated() {
     const form = $(this.refs.vendorStep2);
 
@@ -78,7 +84,7 @@ class VendorStep2 extends Component {
                     <Input type="text"
                       name="contactName"
                       onChange={this.validateOnChange}
-                      value={this.state.vendorStep2.contactName}
+                      value={this.state.vendorStep2.personName}
                     />
                   </Col>
                   <label className="col-md-1 col-form-label">Designation</label>
@@ -116,14 +122,14 @@ class VendorStep2 extends Component {
                     <Input type="email"
                       name="contactEmail"
                       onChange={this.validateOnChange}
-                      value={this.state.vendorStep2.contactEmail} />
+                      value={this.state.vendorStep2.emailId} />
                   </Col>
                   <label className="col-md-1 col-form-label">Owner</label>
                   <Col md={5}>
                     <Input type="text"
                       name="ownerPerson"
                       onChange={this.validateOnChange}
-                      value={this.state.vendorStep2.ownerPerson} />
+                      value={this.state.vendorStep2.owner} />
                   </Col>
                 </div>
               </fieldset>
@@ -167,7 +173,7 @@ class VendorStep2 extends Component {
                 <div className="form-group row align-items-center">
                   <label className="col-md-1 col-form-label">Zipcode</label>
                   <Col md={5}>
-                    <Input type="text"
+                    <Input type="number"
                       name="zipcode"
                       onChange={this.validateOnChange}
                       value={this.state.vendorStep2.zipcode} />

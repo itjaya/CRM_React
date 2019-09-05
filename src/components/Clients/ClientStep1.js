@@ -140,7 +140,7 @@ class ClientStep1 extends Component {
                   </Col>
                   <label className="col-md-1 col-form-label">Contact Number</label>
                   <Col md={5}>
-                    <Input type="tel"
+                    <Input type="number"
                       name="contactNumber"
                       // invalid={this.hasError('clientStep1', 'email', 'required') || this.hasError('clientStep1', 'email', 'email')}
                       onChange={this.validateOnChange}
