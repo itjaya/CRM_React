@@ -1,59 +1,184 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import Select from 'react-select';
+import { Row, Col, Input, Card, CardBody, Button } from 'reactstrap';
+import { connect } from 'react-redux';
+import Datetime from 'react-datetime';
+import $ from 'jquery';
+import moment from 'moment';
+
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, Input, Card, CardBody } from 'reactstrap';
 import FormValidator from '../Forms/FormValidator';
+import * as userActions from '../../store/actions/userActions';
+import * as clientActions from '../../store/actions/client';
+import * as vendorActions from '../../store/actions/vendor';
+import * as projectActions from '../../store/actions/projectActions';
+
+import 'react-datetime/css/react-datetime.css';
+import 'jquery-validation/dist/jquery.validate.js';
 
 
 class AddProject extends Component {
 
     state = {
-        formDemo: {
-            text: '',
-            email: '',
-            number: '',
-            integer: '',
-            alphanum: '',
-            url: '',
-            password: '',
-            password2: '',
-            minlength: '',
-            maxlength: '',
-            length: '',
-            minval: '',
-            maxval: '',
-            list: ''
-          }
+        users: [],
+        clients: [],
+        vendors: [],
+        selectedOption: '',
+        selectedClientOption: '',
+        selectedVendorOption: '',
+        userError: false,
+        clientError: false,
+        vendorError: false,
+        projectForm: {
+            projectName: '',
+            projectStartDate: '',
+            projectEndDate: '',
+            street1: '',
+            street2: '',
+            country: '',
+            state: '',
+            city: '',
+            zipcode: '',
+        }
     }
 
-    validateOnChange = event => {
-        const input = event.target;
-        const form = input.form
-        const value = input.type === 'checkbox' ? input.checked : input.value;
-    
-        const result = FormValidator.validate(input);
-    
-        this.setState({
-            [form.name]: {
-                ...this.state[form.name],
-                [input.name]: value,
-                errors: {
-                    ...this.state[form.name].errors,
-                    [input.name]: result
-                }
+    validateOnChange = (event, data) => {
+
+        if (moment.isMoment(data)) {
+            let element = document.getElementsByName("projectForm")
+            let form = element[0]
+            if (event === "start") {
+                this.setState({
+                    [form.name]: {
+                        ...this.state[form.name],
+                        ["projectStartDate"]: moment(data).toDate(),
+                    }
+                });
             }
-        });
-    
+            else if (event === "end") {
+                this.setState({
+                    [form.name]: {
+                        ...this.state[form.name],
+                        ["projectEndDate"]: moment(data).toDate(),
+                    }
+                });            
+            }
+        }
+        else {
+            const input = event.target;
+            const form = input.form
+            const value = input.type === 'checkbox' ? input.checked : input.value;
+
+            const result = FormValidator.validate(input);
+
+            this.setState({
+                [form.name]: {
+                    ...this.state[form.name],
+                    [input.name]: value,
+                }
+            });
+        }
     }
-    
-      /* Simplify error check */
-      hasError = (formName, inputName, method) => {
-        return this.state[formName] &&
-          this.state[formName].errors &&
-          this.state[formName].errors[inputName] &&
-          this.state[formName].errors[inputName][method]
-      }
+
+    handleChangeSelect = (selectedOption) => {
+        this.setState({ selectedOption: selectedOption, userError: false });
+    }
+
+    handleClientSelect = (selectedClientOption) => {
+        this.setState({ selectedClientOption: selectedClientOption, clientError: false });
+    }
+
+    handleVendorSelect = (selectedVendorOption) => {
+        this.setState({ selectedVendorOption: selectedVendorOption, vendorError: false });
+    }
+
+    onSubmit = (e) => {
+        e.preventDefault();
+
+        const form = $(this.refs.projectForm)
+        if (form.valid()) {
+            if (Object.keys(this.state.selectedOption).length === 0) {
+                this.setState({ userError: true })
+            }
+            if (Object.keys(this.state.selectedClientOption).length === 0) {
+                this.setState({ clientError: true })
+            }
+            if (Object.keys(this.state.selectedVendorOption).length === 0) {
+                this.setState({ vendorError: true })
+            }
+            if (Object.keys(this.state.selectedOption).length > 0 && Object.keys(this.state.selectedClientOption).length > 0 && Object.keys(this.state.selectedVendorOption).length > 0) {
+                let obj = {
+                    data: this.state.projectForm,
+                    clientDetails: this.state.selectedClientOption,
+                    vendorDetails: this.state.selectedVendorOption,
+                    user : this.state.selectedOption,
+                    organization : this.props.orgData._id 
+                }
+                console.log("obj", obj)
+                this.props.onAddProject(obj)
+            }
+        }
+        else {
+            if (Object.keys(this.state.selectedOption).length === 0) {
+                this.setState({ userError: true })
+            }
+            if (Object.keys(this.state.selectedClientOption).length === 0) {
+                this.setState({ clientError: true })
+            }
+            if (Object.keys(this.state.selectedVendorOption).length === 0) {
+                this.setState({ vendorError: true })
+            }
+        }
+    }
+
+    componentDidMount() {
+        let orgId = this.props.orgData._id
+        this.props.getUsers(orgId);
+        this.props.getClient(orgId);
+        this.props.getVendor(orgId);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.users !== this.props.users) {
+            let array = [];
+            this.props.users.map((user) => {
+                array.push({
+                    label: user.firstName,
+                    value: user.firstName
+                })
+            })
+            this.setState({ users: array })
+        }
+        if (prevProps.clients !== this.props.clients) {
+            let array = [];
+            this.props.clients.map(client => {
+                array.push({
+                    label: client.clientName,
+                    value: client._id
+                })
+            })
+            this.setState({ clients: array })
+        }
+        if (prevProps.vendors !== this.props.vendors) {
+            let array = [];
+            this.props.vendors.map(vendor => {
+                array.push({
+                    label: vendor.vendorName,
+                    value: vendor._id
+                })
+            })
+            this.setState({ vendors: array })
+        }
+
+    }
 
     render() {
+
+        if(this.props.addProjectResult != undefined && Object.keys(this.props.addProjectResult).length > 0) {
+
+            return <Redirect to = {{ pathname : "/manageProjects"}}/>
+        }
         return (
             <div>
                 <ContentWrapper>
@@ -65,80 +190,57 @@ class AddProject extends Component {
                         <CardBody>
                             <Row>
                                 <div className="col-md-12">
-                                    <form onSubmit={this.onSubmit} action="" name="formDemo">
+                                    <form onSubmit={this.onSubmit} name="projectForm" ref="projectForm">
                                         {/* <legend className="mb-4">Type validation</legend> */}
                                         <fieldset>
                                             <div className="form-group row align-items-center">
                                                 <label className="col-md-1 col-form-label">Project Name</label>
                                                 <Col md={5}>
                                                     <Input type="text"
-                                                        name="text"
-                                                        invalid={this.hasError('formDemo', 'text', 'required')}
+                                                        name="projectName"
+                                                        placeholder="Enter project name"
                                                         onChange={this.validateOnChange}
-                                                        data-validate='["required"]'
-                                                        value={this.state.formDemo.text}
+                                                        value={this.state.projectForm.projectName}
+                                                        className="required"
                                                     />
-                                                    <span className="invalid-feedback">Field is required</span>
                                                 </Col>
                                                 <label className="col-md-1 col-form-label">Select a user</label>
                                                 <Col md={5}>
-                                                    <Input type="text"
-                                                        name="text"
-                                                        invalid={this.hasError('formDemo', 'text', 'required')}
-                                                        onChange={this.validateOnChange}
-                                                        data-validate='["required"]'
-                                                        value={this.state.formDemo.text}
+                                                    <Select
+                                                        name="projectUser"
+                                                        placeholder="Select user"
+                                                        value={this.state.selectedOption}
+                                                        onChange={this.handleChangeSelect}
+                                                        options={this.state.users}
                                                     />
-                                                    <span className="invalid-feedback">Field is required</span>
+                                                    {this.state.userError ? <label style={{ color: "#f05050" }}>This field is required</label> : ""}
                                                 </Col>
                                             </div>
                                         </fieldset>
                                         <fieldset>
                                             <div className="form-group row align-items-center">
-                                                <label className="col-md-1 col-form-label">Organization</label>
-                                                <Col md={5}>
-                                                    <Input type="email"
-                                                        name="email"
-                                                        invalid={this.hasError('formDemo', 'email', 'required') || this.hasError('formDemo', 'email', 'email')}
-                                                        onChange={this.validateOnChange}
-                                                        data-validate='["required", "email"]'
-                                                        value={this.state.formDemo.email} />
-                                                    {this.hasError('formDemo', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
-                                                    {this.hasError('formDemo', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>}
-                                                </Col>
-                                                <label className="col-md-1 col-form-label">Contact Number</label>
-                                                <Col md={5}>
-                                                    <Input type="email"
-                                                        name="email"
-                                                        invalid={this.hasError('formDemo', 'email', 'required') || this.hasError('formDemo', 'email', 'email')}
-                                                        onChange={this.validateOnChange}
-                                                        data-validate='["required", "email"]'
-                                                        value={this.state.formDemo.email} />
-                                                    {this.hasError('formDemo', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
-                                                    {this.hasError('formDemo', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>}
-                                                </Col>                </div>
-                                        </fieldset>
-                                        <fieldset>
-                                            <div className="form-group row align-items-center">
                                                 <label className="col-md-1 col-form-label">Client</label>
                                                 <Col md={5}>
-                                                    <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
-                                                        onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                    <Select
+                                                        name="clientName"
+                                                        placeholder="Select client"
+                                                        value={this.state.selectedClientOption}
+                                                        onChange={this.handleClientSelect}
+                                                        options={this.state.clients}
+                                                    />
+                                                    {this.state.clientError ? <label style={{ color: "#f05050" }}>This field is required</label> : ""}
                                                 </Col>
                                                 <label className="col-md-1 col-form-label">Vendor</label>
                                                 <Col md={5}>
-                                                    <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
-                                                        onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                    <Select
+                                                        name="vendorName"
+                                                        placeholder="Select vendor"
+                                                        value={this.state.selectedVendorOption}
+                                                        onChange={this.handleVendorSelect}
+                                                        options={this.state.vendors}
+                                                    />
+                                                    {this.state.vendorError ? <label style={{ color: "#f05050" }}>This field is required</label> : ""}
+
                                                 </Col>
                                             </div>
                                         </fieldset>
@@ -147,23 +249,25 @@ class AddProject extends Component {
                                             <div className="form-group row align-items-center">
                                                 <label className="col-md-1 col-form-label">Start Date</label>
                                                 <Col md={5}>
-                                                    <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
-                                                        onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                    <Datetime
+                                                        inputProps={{
+                                                            name: 'projectStartDtae',
+                                                            className: 'form-control required',
+                                                            placeholder: 'Enter project start date'
+                                                        }}
+                                                        onChange={this.validateOnChange.bind(this, "start")}
+                                                    />
                                                 </Col>
                                                 <label className="col-md-1 col-form-label">End Date</label>
                                                 <Col md={5}>
-                                                    <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
-                                                        onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                    <Datetime
+                                                        inputProps={{
+                                                            name: 'projectEndDate',
+                                                            className: 'form-control required',
+                                                            placeholder: 'Enter project end date'
+                                                        }}
+                                                        onChange={this.validateOnChange.bind(this, "end")}
+                                                    />
                                                 </Col>
                                             </div>
                                         </fieldset>
@@ -173,22 +277,21 @@ class AddProject extends Component {
                                                 <label className="col-md-1 col-form-label">Street1</label>
                                                 <Col md={5}>
                                                     <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
+                                                        name="street1"
+                                                        placeholder="Enter street address"
                                                         onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                        value={this.state.projectForm.street1}
+                                                        className="required"
+                                                    />
                                                 </Col>
                                                 <label className="col-md-1 col-form-label">Street2</label>
                                                 <Col md={5}>
                                                     <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
+                                                        name="street2"
+                                                        placeholder="Enter street address"
                                                         onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                        value={this.state.projectForm.street2}
+                                                        className="required" />
                                                 </Col>
                                             </div>
                                         </fieldset>
@@ -197,22 +300,20 @@ class AddProject extends Component {
                                                 <label className="col-md-1 col-form-label">Country</label>
                                                 <Col md={5}>
                                                     <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
+                                                        name="country"
+                                                        placeholder="Enter country"
                                                         onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                        value={this.state.projectForm.country}
+                                                        className="required" />
                                                 </Col>
                                                 <label className="col-md-1 col-form-label">State</label>
                                                 <Col md={5}>
                                                     <Input type="text"
-                                                        name="number"
-                                                        invalid={this.hasError('formDemo', 'number', 'number')}
+                                                        name="state"
+                                                        placeholder="Enter state"
                                                         onChange={this.validateOnChange}
-                                                        data-validate='["number"]'
-                                                        value={this.state.formDemo.number} />
-                                                    <span className="invalid-feedback">Field must be valid number</span>
+                                                        value={this.state.projectForm.state}
+                                                        className="required" />
                                                 </Col>
                                             </div>
                                         </fieldset>
@@ -221,23 +322,27 @@ class AddProject extends Component {
                                                 <label className="col-md-1 col-form-label">City</label>
                                                 <Col md={5}>
                                                     <Input type="text"
-                                                        name="integer"
-                                                        invalid={this.hasError('formDemo', 'integer', 'integer')}
+                                                        name="city"
+                                                        placeholder="Enter city"
                                                         onChange={this.validateOnChange}
-                                                        data-validate='["integer"]'
-                                                        value={this.state.formDemo.integer} />
-                                                    <span className="invalid-feedback">Field must be an integer</span>
+                                                        value={this.state.projectForm.city}
+                                                        className="required" />
                                                 </Col>
                                                 <label className="col-md-1 col-form-label">Zipcode</label>
                                                 <Col md={5}>
                                                     <Input type="text"
-                                                        name="integer"
-                                                        invalid={this.hasError('formDemo', 'integer', 'integer')}
+                                                        name="zipcode"
+                                                        placeholder="Enter zipcode"
                                                         onChange={this.validateOnChange}
-                                                        data-validate='["integer"]'
-                                                        value={this.state.formDemo.integer} />
-                                                    <span className="invalid-feedback">Field must be an integer</span>
+                                                        value={this.state.projectForm.zipcode}
+                                                        className="required" />
                                                 </Col>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div style={{ float: "right" }}>
+                                                <Button color="success" type="submit" >Save</Button>{' '}
+                                                <Button color="danger" >Cancel</Button>
                                             </div>
                                         </fieldset>
                                     </form>
@@ -251,4 +356,23 @@ class AddProject extends Component {
     }
 }
 
-export default AddProject;
+const mapStateToProps = state => {
+    return {
+        users: state.user.allUsers,
+        orgData: state.organization.orgResult,
+        clients: state.clientReducer.clientData,
+        vendors: state.vendorReducer.vendorData,
+        projects: state.projects.addProjectResult
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getUsers: (event) => dispatch(userActions.getUsers(event)),
+        getClient: (event) => dispatch(clientActions.getClient(event)),
+        getVendor: (event) => dispatch(vendorActions.getVendor(event)),
+        onAddProject: (event) => dispatch(projectActions.addProject(event))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddProject);

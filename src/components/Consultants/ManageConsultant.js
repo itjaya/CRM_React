@@ -80,9 +80,6 @@ class ManageConsultant extends Component {
         e.preventDefault()
 
         const form = $(this.refs.userForm)
-
-        console.log("userrole", this.state.userRole)
-
         if(this.state.userRole == "superAdmin") {
             if (form.valid()) {
                 if (this.state.selectedOptionMulti.length === 0) {
@@ -114,7 +111,6 @@ class ManageConsultant extends Component {
             }
         }
         else if (this.state.userRole === "admin") {
-            console.log("org", this.props.orgData)
             if (form.valid()) {
                 if (Object.keys(this.state.selectedOption).length === 0) {
                     this.setState({ colorError: true })
@@ -125,7 +121,6 @@ class ManageConsultant extends Component {
                         organization: [{ label : this.props.orgData.orgResult.organizationName, value : this.props.orgData.orgResult._id }],
                         role: this.state.selectedOption
                     }
-                    console.log("obj", obj)
                     this.props.userRegister(obj)
                     this.setState({ modal: !this.state.modal })
                     setTimeout(() => {
@@ -157,7 +152,6 @@ class ManageConsultant extends Component {
     }
 
     async componentDidMount() {
-        console.log("props", this.props.orgData)
         let userData = await JSON.parse(sessionStorage.getItem('userData'))
         let userRole = userData.userData.role
         if (userRole.value === "superAdmin") {

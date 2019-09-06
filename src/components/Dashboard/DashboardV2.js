@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withNamespaces, Trans } from 'react-i18next';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip, Progress } from 'reactstrap';
+import { Tooltip, Progress } from 'reactstrap';
 // EasyPieChart
 import EasyPieChart from 'easy-pie-chart';
 

@@ -47,7 +47,7 @@ export const addOrganization = (data) => {
 
 // Get Organizations
 export const getOrgStart = () => {
-    return { type : ADD_ORGANIZATION_START }
+    return { type : GET_ORGANIZATION_START }
 }
 
 export const getOrgSuccess = (result) => {
@@ -88,7 +88,7 @@ export const getOrganizationByName = (name) => {
         dispatch(getOrgByNameStart());
         $.get(url.url + `getOrganizationByName?name=${name}`, (result) => {
             if(result) {
-                sessionStorage.setItem("orgId", result._id)
+                sessionStorage.setItem("orgId", result)
                 dispatch(getOrgByNameSuccess(result));
             }
         })

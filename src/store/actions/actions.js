@@ -4,4 +4,5 @@ export * from './userActions';
 export * from './orgActions';
 export * from "./vendor";
 export * from "./client";
+export * from "./projectActions";
 
