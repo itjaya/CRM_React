@@ -28,6 +28,7 @@ class ManageConsultant extends Component {
         this.state = {
             modal: false,
             organizations: [],
+            users : [],
             style: { display: "none" },
             userRole: "",
             selectedOptionMulti: [],
@@ -146,9 +147,9 @@ class ManageConsultant extends Component {
         else {
             this.props.getUsers(orgId);
         }
-        $().ready(() => {
-            $("#usersTable").DataTable();
-        })
+        // $().ready(() => {
+        //     $("#usersTable").DataTable();
+        // })
     }
 
     async componentDidMount() {
@@ -171,7 +172,8 @@ class ManageConsultant extends Component {
 
     componentDidUpdate(prevProps) {
 
-        if (this.props.allUsers && this.props.allUsers.length > 0) {
+        if (prevProps.allUsers !== this.props.allUsers) {
+            this.setState({ users : this.props.allUsers})
             $().ready(() => {
                 $("#usersTable").DataTable();
             })
@@ -221,7 +223,7 @@ class ManageConsultant extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {this.props.allUsers.map((user, i) => {
+                                        {this.state.users.map((user, i) => {
                                             array = [];
                                             if(user.organization.length > 0) {
                                                 {user.organization.map((org) => {

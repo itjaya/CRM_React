@@ -1,27 +1,28 @@
 import {
     ADD_PROJECT_START, ADD_PROJECT_SUCCESS, ADD_PROJECT_FAIL,
-    GET_PROJECT_START, GET_PROJECT_SUCCESS, GET_PROJECT_FAIL
+    GET_PROJECT_START, GET_PROJECT_SUCCESS, GET_PROJECT_FAIL,
+    DELETE_PROJECT_START, DELETE_PROJECT_SUCCESS, DELETE_PROJECT_FAIL
 } from '../actions/projectActions';
 
 const initialState = {
 
     addLoading: false,
     addProjectResult: {},
-    prjLoading : false,
-    projects : []
+    prjLoading: false,
+    projects: [],
+    deleteResult : {}
 }
 
 const projectReducer = (state = initialState, action) => {
     switch (action.type) {
 
-        // CLIENT Add
+        // Add and Edit Projects
         case ADD_PROJECT_START:
 
             return {
                 ...state,
                 addLoading: true
             }
-
 
         case ADD_PROJECT_SUCCESS:
 
@@ -46,7 +47,6 @@ const projectReducer = (state = initialState, action) => {
                 prjLoading: true
             }
 
-
         case GET_PROJECT_SUCCESS:
 
             return {
@@ -60,6 +60,26 @@ const projectReducer = (state = initialState, action) => {
             return {
                 ...state,
                 prjLoading: false,
+            }
+
+        // Delete Projects
+        case DELETE_PROJECT_START:
+
+            return {
+                ...state,
+            }
+
+        case DELETE_PROJECT_SUCCESS:
+
+            return {
+                ...state,
+                deleteResult: action.payload
+            }
+
+        case DELETE_PROJECT_FAIL:
+
+            return {
+                ...state,
             }
 
 

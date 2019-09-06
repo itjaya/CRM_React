@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import Datetime from 'react-datetime';
 import $ from 'jquery';
 import moment from 'moment';
+import { ToastContainer, toast } from 'react-toastify';
+import swal from 'sweetalert';
 
 import ContentWrapper from '../Layout/ContentWrapper';
 import FormValidator from '../Forms/FormValidator';
@@ -16,6 +18,7 @@ import * as projectActions from '../../store/actions/projectActions';
 
 import 'react-datetime/css/react-datetime.css';
 import 'jquery-validation/dist/jquery.validate.js';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 class AddProject extends Component {
@@ -30,10 +33,11 @@ class AddProject extends Component {
         userError: false,
         clientError: false,
         vendorError: false,
+        redirect : false,
         projectForm: {
             projectName: '',
-            projectStartDate: '',
-            projectEndDate: '',
+            projectStartDate: new Date(),
+            projectEndDate: new Date(),
             street1: '',
             street2: '',
             country: '',
@@ -96,6 +100,8 @@ class AddProject extends Component {
     onSubmit = (e) => {
         e.preventDefault();
 
+        let obj = {};
+
         const form = $(this.refs.projectForm)
         if (form.valid()) {
             if (Object.keys(this.state.selectedOption).length === 0) {
@@ -108,12 +114,25 @@ class AddProject extends Component {
                 this.setState({ vendorError: true })
             }
             if (Object.keys(this.state.selectedOption).length > 0 && Object.keys(this.state.selectedClientOption).length > 0 && Object.keys(this.state.selectedVendorOption).length > 0) {
-                let obj = {
-                    data: this.state.projectForm,
-                    clientDetails: this.state.selectedClientOption,
-                    vendorDetails: this.state.selectedVendorOption,
-                    user : this.state.selectedOption,
-                    organization : this.props.orgData._id 
+
+                if(this.props.location.state) {
+                    obj = {
+                        projectId : this.props.location.state._id,
+                        data: this.state.projectForm,
+                        clientDetails: this.state.selectedClientOption,
+                        vendorDetails: this.state.selectedVendorOption,
+                        user : this.state.selectedOption,
+                        organization : this.props.orgData._id 
+                    }
+                }
+                else {
+                    obj = {
+                        data: this.state.projectForm,
+                        clientDetails: this.state.selectedClientOption,
+                        vendorDetails: this.state.selectedVendorOption,
+                        user : this.state.selectedOption,
+                        organization : this.props.orgData._id 
+                    }
                 }
                 console.log("obj", obj)
                 this.props.onAddProject(obj)
@@ -137,9 +156,31 @@ class AddProject extends Component {
         this.props.getUsers(orgId);
         this.props.getClient(orgId);
         this.props.getVendor(orgId);
+        // console.log("props", this.props)
+        if(this.props.location.state !== undefined) {
+            let projectData = this.props.location.state
+            this.setState({
+                projectForm: {
+                    projectName: projectData.projectName,
+                    projectStartDate: projectData.startDate,
+                    projectEndDate: projectData.endDate,
+                    street1: projectData.street1,
+                    street2: projectData.street2,
+                    country: projectData.country,
+                    state: projectData.state,
+                    city: projectData.city,
+                    zipcode: projectData.zipcode,
+                },
+                selectedOption: projectData.userId,
+                selectedClientOption: projectData.clientId,
+                selectedVendorOption: projectData.vendorId
+            })
+        }
+        
     }
 
     componentDidUpdate(prevProps) {
+       
         if (prevProps.users !== this.props.users) {
             let array = [];
             this.props.users.map((user) => {
@@ -170,12 +211,22 @@ class AddProject extends Component {
             })
             this.setState({ vendors: array })
         }
+        if (prevProps.projects !== this.props.projects) {
+            swal({
+                text: this.props.projects.msg,
+                icon: "success",
+                button: "Ok",
+            })
+                .then((value) => {
+                    this.setState({ redirect: true })
+                });
+        }
 
     }
 
     render() {
 
-        if(this.props.addProjectResult != undefined && Object.keys(this.props.addProjectResult).length > 0) {
+        if(this.state.redirect) {
 
             return <Redirect to = {{ pathname : "/manageProjects"}}/>
         }
@@ -256,6 +307,7 @@ class AddProject extends Component {
                                                             placeholder: 'Enter project start date'
                                                         }}
                                                         onChange={this.validateOnChange.bind(this, "start")}
+                                                        value = {moment(this.state.projectForm.projectStartDate).toDate()}
                                                     />
                                                 </Col>
                                                 <label className="col-md-1 col-form-label">End Date</label>
@@ -267,6 +319,8 @@ class AddProject extends Component {
                                                             placeholder: 'Enter project end date'
                                                         }}
                                                         onChange={this.validateOnChange.bind(this, "end")}
+                                                        value = {moment(this.state.projectForm.projectEndDate).toDate()}
+
                                                     />
                                                 </Col>
                                             </div>
@@ -350,6 +404,7 @@ class AddProject extends Component {
                             </Row>
                         </CardBody>
                     </Card>
+                    <ToastContainer />
                 </ContentWrapper>
             </div>
         )
@@ -357,6 +412,7 @@ class AddProject extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log("state", state)
     return {
         users: state.user.allUsers,
         orgData: state.organization.orgResult,

@@ -84,7 +84,7 @@ class ManageVendors extends Component {
                                                                 <td>{vendor.emailId}</td>
                                                                 <td>{vendor.city}</td>
                                                                 <td>{vendor.zipcode}</td>
-                                                                <td><Link to = {{ pathname : "/addVendor" , state : vendor}}><i className="fa fa-edit"></i></Link>&nbsp;
+                                                                <td><Link to = {{ pathname : "/addVendor" , state : vendor}}><i className="fa fa-edit text-warning"></i></Link>&nbsp;
                                                                 <i className="fa fa-trash text-danger cursor" onClick={this.handleDelete.bind(this, vendor)}></i></td>
 
                                                             </tr>

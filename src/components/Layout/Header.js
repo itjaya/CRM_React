@@ -85,7 +85,6 @@ class Header extends Component {
         if (this.state.redirect) {
             return <Redirect to={{ pathname: "/login" }} />
         }
-        let orgArray = [];
         return (
             <header className="topnavbar-wrapper">
                 { /* START Top Navbar */ }

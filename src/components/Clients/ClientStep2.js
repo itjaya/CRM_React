@@ -44,13 +44,7 @@ class ClientStep2 extends Component {
     });
 
 }
-  isValidated() {
-    // do some validations
-    // decide if you will
-    return true;
-    // or you will
-    // return false;
-  }
+
   /* Simplify error check */
   hasError = (formName, inputName, method) => {
     return this.state[formName] &&
