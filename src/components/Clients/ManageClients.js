@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
-import {Container,Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
+import { Row, Col, Container, Card, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import ContentWrapper from '../Layout/ContentWrapper';
 import Datatable from '../Tables/Datatable';
 import { Link } from "react-router-dom"
 import * as clientActions from '../../store/actions/client';
 import { connect } from 'react-redux';
 import $ from "jquery";
+// import 'sweetalert/dist/sweetalert.css';
+import Swal from 'sweetalert';
 class ManageClients extends Component {
     constructor(props) {
         super(props);
         this.state = {
             modal: false,
             msg: "",
-            deleteId : "",
-            condition : false,
-            redirectCondition : false
+            deleteId: "",
+            condition: false,
+            redirectCondition: false,
+            swalOption3: {
+                title: "Good job!",
+                text: "You clicked the button!",
+                type: "success"
+            },
         }
     }
     componentDidMount() {
@@ -39,13 +46,13 @@ class ManageClients extends Component {
         let id = this.state.deleteId
         this.props.deleteClient(id)
         this.setState({ modal: false })
-       setTimeout(()=>{
-        this.props.getClient(orgId);
-       }, 1000/2)
+        setTimeout(() => {
+            this.props.getClient(orgId);
+        }, 1000 / 2)
     }
-    handleDelete = (vendor) =>{
+    handleDelete = (vendor) => {
 
-        this.setState({ modal: true,deleteId :vendor._id });
+        this.setState({ modal: true, deleteId: vendor._id });
     }
     render() {
 
@@ -61,35 +68,34 @@ class ManageClients extends Component {
                             <Container fluid>
                                 {/* DATATABLE DEMO 1 */}
                                 <Card>
-
                                     <CardBody>
-                                            <table className="table table-striped my-4 w-100" id="usersTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th data-priority="1">clientName</th>
-                                                        <th>contactNumber</th>
-                                                        <th>email</th>
-                                                        <th className="sort-numeric">state</th>
-                                                        <th className="sort-alpha" data-priority="2">zipcode</th>
-                                                        <th className="sort-alpha" data-priority="2">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {this.props.clientsList.map((data, i)=>{
-                                                        return(
-                                                            <tr key={i}>
-                                                                <td>{data.clientName}</td>
-                                                                <td>{data.contactNumber}</td>
-                                                                <td>{data.emailId}</td>
-                                                                <td>{data.state}</td>
-                                                                <td>{data.zipcode}</td>
-                                                                <td><Link to = {{ pathname : "/addClient" , state : data}}><i className="fa fa-edit"></i></Link>&nbsp;
+                                        <table className="table table-striped my-4 w-100" id="usersTable">
+                                            <thead>
+                                                <tr>
+                                                    <th data-priority="1">clientName</th>
+                                                    <th>contactNumber</th>
+                                                    <th>email</th>
+                                                    <th className="sort-numeric">state</th>
+                                                    <th className="sort-alpha" data-priority="2">zipcode</th>
+                                                    <th className="sort-alpha" data-priority="2">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {this.props.clientsList.map((data, i) => {
+                                                    return (
+                                                        <tr key={i}>
+                                                            <td>{data.clientName}</td>
+                                                            <td>{data.contactNumber}</td>
+                                                            <td>{data.emailId}</td>
+                                                            <td>{data.state}</td>
+                                                            <td>{data.zipcode}</td>
+                                                            <td><Link to={{ pathname: "/addClient", state: data }}><i className="fa fa-edit"></i></Link>&nbsp;
                                                                 <i className="fa fa-trash text-danger cursor" onClick={this.handleDelete.bind(this, data)}></i></td>
-                                                            </tr>
-                                                        )
-                                                    })}
-                                                </tbody>
-                                                </table>
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
                                     </CardBody>
                                 </Card>
                             </Container>
@@ -98,7 +104,7 @@ class ManageClients extends Component {
                     <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                         <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
                         <ModalBody>
-                            Are you sure do you want delete ?                     
+                            Are you sure do you want delete ?
                             </ModalBody>
                         <ModalFooter>
                             <Button color="danger" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
@@ -113,8 +119,8 @@ class ManageClients extends Component {
 }
 const mapStateToProps = state => {
     return {
-       clientsList: state.clientReducer.clientData,
-       orgData: state.organization
+        clientsList: state.clientReducer.clientData,
+        orgData: state.organization
 
     }
 }
@@ -122,7 +128,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getClient: (event) => dispatch(clientActions.getClient(event)),
-        deleteClient : (event) => dispatch(clientActions.deleteClient(event))
+        deleteClient: (event) => dispatch(clientActions.deleteClient(event))
 
     }
 }
