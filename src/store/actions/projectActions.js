@@ -9,6 +9,10 @@ export const GET_PROJECT_START = "GET_PROJECT_START";
 export const GET_PROJECT_SUCCESS = "GET_PROJECT_SUCCESS";
 export const GET_PROJECT_FAIL = "GET_PROJECT_FAIL";
 
+export const GET_USER_PROJECT_START = "GET_USER_PROJECT_START";
+export const GET_USER_PROJECT_SUCCESS = "GET_USER_PROJECT_SUCCESS";
+export const GET_USER_PROJECT_FAIL = "GET_USER_PROJECT_FAIL";
+
 export const DELETE_PROJECT_START = "DELETE_PROJECT_START";
 export const DELETE_PROJECT_SUCCESS = "DELETE_PROJECT_SUCCESS";
 export const DELETE_PROJECT_FAIL = "DELETE_PROJECT_FAIL";
@@ -57,6 +61,30 @@ export const getProjects = (id) => {
         $.get(url.url + `getProjects?id=${id}`, (result) => {
             if(result) {
                 dispatch(getProjectSuccess(result));
+            }
+        })
+    }
+}
+
+ // Get User Projects
+ export const getUserProjectStart = () => {
+    return { type : GET_USER_PROJECT_START }
+}
+
+export const getUserProjectSuccess = (result) => {
+    return { type: GET_USER_PROJECT_SUCCESS, payload : result }
+}
+
+export const getUserProjectFail = () => {
+    return { type: GET_USER_PROJECT_FAIL }
+}
+
+export const getUserProjects = (id) => {
+    return dispatch => {
+        dispatch(getUserProjectStart());
+        $.get(url.url + `getUserProjects?id=${id}`, (result) => {
+            if(result) {
+                dispatch(getUserProjectSuccess(result));
             }
         })
     }
