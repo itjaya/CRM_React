@@ -83,8 +83,8 @@ class ManageClients extends Component {
                                                                 <td>{data.emailId}</td>
                                                                 <td>{data.state}</td>
                                                                 <td>{data.zipcode}</td>
-                                                                <td><Link to = {{ pathname : "/addClient" , state : data}}><i className="fa fa-edit"></i></Link>
-                                                                <i className="fa fa-trash" onClick={this.handleDelete.bind(this, data)}></i></td>
+                                                                <td><Link to = {{ pathname : "/addClient" , state : data}}><i className="fa fa-edit"></i></Link>&nbsp;
+                                                                <i className="fa fa-trash text-danger cursor" onClick={this.handleDelete.bind(this, data)}></i></td>
                                                             </tr>
                                                         )
                                                     })}

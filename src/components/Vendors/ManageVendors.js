@@ -84,8 +84,8 @@ class ManageVendors extends Component {
                                                                 <td>{vendor.emailId}</td>
                                                                 <td>{vendor.city}</td>
                                                                 <td>{vendor.zipcode}</td>
-                                                                <td><Link to = {{ pathname : "/addVendor" , state : vendor}}><i className="fa fa-edit"></i></Link>
-                                                                <i className="fa fa-trash" onClick={this.handleDelete.bind(this, vendor)}></i></td>
+                                                                <td><Link to = {{ pathname : "/addVendor" , state : vendor}}><i className="fa fa-edit"></i></Link>&nbsp;
+                                                                <i className="fa fa-trash text-danger cursor" onClick={this.handleDelete.bind(this, vendor)}></i></td>
 
                                                             </tr>
                                                         )
@@ -100,7 +100,7 @@ class ManageVendors extends Component {
                         </CardBody>
                     </Card>
                     <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
+                        <ModalHeader toggle={this.toggleModal}>ADD CLIENT</ModalHeader>
                         <ModalBody>
                             Are you sure do you want delete ?                     
                             </ModalBody>

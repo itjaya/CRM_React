@@ -25,11 +25,11 @@ class AddVendor extends Component {
             data : allStates
         }
         this.props.addVendor(data);
+        this.setState({ modal : true})
     }
     componentWillReceiveProps = (nextProps) => {
-        console.log("haiii", nextProps)
           if(nextProps.addVendors.msg !== undefined){
-        this.setState({ msg: nextProps.addVendors.msg, modal: true,condition: nextProps.addVendors.condition})
+        this.setState({ msg: nextProps.addVendors.msg,condition: nextProps.addVendors.condition})
           }
     }
     toggleModal = () => {

@@ -19,17 +19,18 @@ class AddClient extends Component {
         }
     }
     finishButtonClick = (allStates) => {
-        console.log("haiiii", allStates)
         let data = {
             ordId: this.props.orgData.orgResult._id,
             clientStep1: allStates.Business_Information.clientStep1,
             clientStep2: allStates.Contact_Details.clientStep2
         }
         this.props.addClient(data)
+        this.setState({ modal : true})
+
     }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.addClients.msg !== undefined) {
-            this.setState({ msg: nextProps.addClients.msg, modal: true,condition: nextProps.addClients.condition })
+            this.setState({ msg: nextProps.addClients.msg,condition: nextProps.addClients.condition })
         }
     }
     toggleModal = () => {
@@ -77,7 +78,7 @@ class AddClient extends Component {
                         </CardBody>
                     </Card>
                     <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
+                        <ModalHeader toggle={this.toggleModal}>ADD CLIENT</ModalHeader>
                         <ModalBody>
                             {this.state.msg}                       
                             </ModalBody>

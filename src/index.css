@@ -25,3 +25,6 @@ th{
     text-transform: uppercase;
     font-weight: 600
 }
+.cursor {
+    cursor: pointer;
+}
