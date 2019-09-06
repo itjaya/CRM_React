@@ -6,6 +6,7 @@ import {Container,Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Butto
 import * as vendorActions from '../../store/actions/vendor';
 import ContentWrapper from '../Layout/ContentWrapper';
 import Datatable from '../Tables/Datatable';
+import swal from 'sweetalert';
 
 class ManageVendors extends Component {
     constructor(props) {
@@ -34,19 +35,28 @@ class ManageVendors extends Component {
             modal: !this.state.modal
         });
     }
-    handleOk = () => {
-
+    refreshData = () => {
         let orgId = this.props.orgData.orgResult._id
-        let id = this.state.deleteId
-        this.props.deleteVendor(id)
-        this.setState({ modal: false })
-       setTimeout(()=>{
-        this.props.getVendor(orgId)
-       }, 1000/2)
+        this.props.getVendor(orgId);
     }
-    handleDelete = (vendor) =>{
-
-        this.setState({ modal: true,deleteId :vendor._id });
+    handleDelete = (vendor) => {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this vendor!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                this.props.deleteVendor(vendor._id);
+                setTimeout(() => {
+                    this.refreshData();
+                }, 1000);
+            } else {
+                swal("Your imaginary file is safe!");
+            }
+        })
     }
     render() {
 
@@ -84,8 +94,8 @@ class ManageVendors extends Component {
                                                                 <td>{vendor.emailId}</td>
                                                                 <td>{vendor.city}</td>
                                                                 <td>{vendor.zipcode}</td>
-                                                                <td><Link to = {{ pathname : "/addVendor" , state : vendor}}><i className="fa fa-edit text-warning"></i></Link>&nbsp;
-                                                                <i className="fa fa-trash text-danger cursor" onClick={this.handleDelete.bind(this, vendor)}></i></td>
+                                                                <td><Link to = {{ pathname : "/addVendor" , state : vendor}}><i className="far fa-edit text-warning"></i></Link>&nbsp;
+                                                                <i className="far fa-trash-alt text-danger cursor" onClick={this.handleDelete.bind(this, vendor)}></i></td>
 
                                                             </tr>
                                                         )
@@ -99,16 +109,6 @@ class ManageVendors extends Component {
                             </Container>
                         </CardBody>
                     </Card>
-                    <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}>ADD CLIENT</ModalHeader>
-                        <ModalBody>
-                            Are you sure do you want delete ?                     
-                            </ModalBody>
-                        <ModalFooter>
-                            <Button color="danger" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
-                            <Button color="primary" onClick={this.toggleModal}>Cancel</Button>{' '}
-                        </ModalFooter>
-                    </Modal>
                 </ContentWrapper>
 
             </div>

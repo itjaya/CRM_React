@@ -7,16 +7,13 @@ import { Redirect } from "react-router-dom"
 import VendorStep1 from './VendorStep1';
 import VendorStep2 from './VendorStep2';
 import * as vendorActions from '../../store/actions/vendor';
+import swal from 'sweetalert';
 
 class AddVendor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
-            msg: "",
-            condition : false,
             redirectCondition : false,
-            totalData : {},
         }
     }
     finishButtonClick = (allStates) => {
@@ -26,29 +23,19 @@ class AddVendor extends Component {
         }
         this.props.addVendor(data);
     }
-    componentWillReceiveProps = (nextProps) => {
-        console.log("haiii", nextProps)
-          if(nextProps.addVendors.msg !== undefined){
-        this.setState({ msg: nextProps.addVendors.msg, modal: true,condition: nextProps.addVendors.condition})
-          }
-    }
-    toggleModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
-    }
-    handleOk = () =>{   
-        if(this.state.condition){
-            this.setState({ redirectCondition : true})
+    componentDidUpdate(prevProps) {
+        // console.log(prevProps)
+        if (prevProps.addVendors !== this.props.addVendors) {
+            swal({
+                text: this.props.addVendors.msg,
+                icon: "success",
+                button: "Ok",
+            })
+                .then((value) => {
+                    this.setState({ redirectCondition: true })
+                });
         }
-        this.setState({ modal : false})
     }
-    // async componentDidMount () {
-    //    let stateData = await this.props.location.state
-    //    this.setState({ totalData : stateData })
-    // }
-
-
     render() {
         if (this.state.redirectCondition) {
             return <Redirect to="/manageVendor" />
@@ -81,16 +68,6 @@ class AddVendor extends Component {
                             />
                         </CardBody>
                     </Card>
-
-                    <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
-                        <ModalBody>
-                            {this.state.msg}                       
-                            </ModalBody>
-                        <ModalFooter>
-                            <Button color="primary" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
-                        </ModalFooter>
-                    </Modal>
                 </ContentWrapper>
             </div>
         )

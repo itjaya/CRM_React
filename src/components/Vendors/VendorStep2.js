@@ -48,6 +48,7 @@ class VendorStep2 extends Component {
 }
 componentDidMount () {
   if(this.props.wizardData.contacts !== undefined) {
+    // console.log("haiii", this.props.wizardData.contacts)
     this.setState({vendorStep2 : this.props.wizardData.contacts[0]})
   }
 }

@@ -5,7 +5,7 @@ import { Row, Col, FormGroup, Input, Card, CardBody } from 'reactstrap';
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
 import BigCalendar from 'react-big-calendar'
-// import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import moment from 'moment';
 import Dropzone from 'react-dropzone';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -13,32 +13,34 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 
 BigCalendar.momentLocalizer(moment);
 
-// const DragAndDropCalendar = withDragAndDrop(BigCalendar)
+const DragAndDropCalendar = withDragAndDrop(BigCalendar)
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
-class Timesheets extends Component {
+class Calendar extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            events: [],
-            divStyle: { minHeight: 500 },
+            divStyle: { minHeight: 100 },
             files: []
+
+
         }
     }
 
     componentDidMount() {
-        document.getElementById("hide/show").style.display = "none"
+        var dates = moment(new Date)
+        this.setState({ sun: dates.day(0).toDate().getDate(), mon: dates.day(1).toDate().getDate(), tue: dates.day(2).toDate().getDate(), wed: dates.day(3).toDate().getDate(), thur: dates.day(4).toDate().getDate(), fri: dates.day(5).toDate().getDate(), sat: dates.day(6).toDate().getDate() })
+        
+        // document.getElementById("hide/show").style.display = "inline"
 
     }
 
     handleView = (view) => {
-        if (view === "week" && view !== "month") {
-
-            var dates = moment(this.state.navigatedDate)
-            this.setState({ sun: dates.day(0).toDate().getDate(), mon: dates.day(1).toDate().getDate(), tue: dates.day(2).toDate().getDate(), wed: dates.day(3).toDate().getDate(), thur: dates.day(4).toDate().getDate(), fri: dates.day(5).toDate().getDate(), sat: dates.day(6).toDate().getDate() })
-            this.setState({ divStyle: { minHeight: 100 } })
+        
+        if (view = "week" && view != "month") {
+           this.setState({ divStyle: { minHeight: 100 } })
             document.getElementById("hide/show").style.display = "block"
 
         }
@@ -50,7 +52,9 @@ class Timesheets extends Component {
         }
     }
     onNavigate = (navigate, flipUnit, prevOrNext) => {
+
         var dates = moment(navigate)
+        console.log(dates);
         this.setState({ sun: dates.day(0).toDate().getDate(), mon: dates.day(1).toDate().getDate(), tue: dates.day(2).toDate().getDate(), wed: dates.day(3).toDate().getDate(), thur: dates.day(4).toDate().getDate(), fri: dates.day(5).toDate().getDate(), sat: dates.day(6).toDate().getDate() })
 
     }
@@ -72,6 +76,10 @@ class Timesheets extends Component {
                       <small>React gcal/outlook like calendar component</small>
                         </div>
                     </div>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="http://localhost:3000/dashboardv2">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Big Calendar</li>
+                    </ol>
                     { /* START row */}
                     <div className="calendar-app">
                         { /* START panel */}
@@ -80,7 +88,7 @@ class Timesheets extends Component {
                                 <div className="row">
                                     <FormGroup className="col-lg-6">
                                         <label className="form-control-label" htmlFor="input-Sun">Project</label>
-                                        <select className="custom-select">
+                                        <select class="custom-select">
                                             <option>Open this select menu</option>
                                             <option>One</option>
                                             <option>Two</option>
@@ -89,7 +97,7 @@ class Timesheets extends Component {
                                         </FormGroup>
                                     <FormGroup className="col-lg-6">
                                         <label className="form-control-label" htmlFor="input-Sun">Job Title</label>
-                                        <select className="custom-select">
+                                        <select class="custom-select">
                                             <option>Open this select menu</option>
                                             <option>One</option>
                                             <option>Two</option>
@@ -98,6 +106,7 @@ class Timesheets extends Component {
                                     </FormGroup>
                                 </div>
                                 <BigCalendar style={this.state.divStyle}
+                                    defaultView='week'
                                     localizer={localizer}
                                     views={["month", "week"]}
                                     events={
@@ -169,8 +178,8 @@ class Timesheets extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="form-group col-lg-12">
-                                            <label className="">Description:</label>
-                                            <textarea className="form-control" cols="5" placeholder="Short description.." ></textarea></div>
+                                            <label class="">Description:</label>
+                                            <textarea class="form-control" cols="5" placeholder="Short description.." spellcheck="false"></textarea></div>
 
                                     </div>
                                 </div>
@@ -185,6 +194,6 @@ class Timesheets extends Component {
 
 }
 
-export default DragDropContext(HTML5Backend)(Timesheets);
+export default DragDropContext(HTML5Backend)(Calendar);
 
 

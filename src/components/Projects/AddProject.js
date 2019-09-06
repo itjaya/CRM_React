@@ -134,7 +134,6 @@ class AddProject extends Component {
                         organization : this.props.orgData._id 
                     }
                 }
-                console.log("obj", obj)
                 this.props.onAddProject(obj)
             }
         }
@@ -412,7 +411,6 @@ class AddProject extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log("state", state)
     return {
         users: state.user.allUsers,
         orgData: state.organization.orgResult,

@@ -4,12 +4,39 @@ fieldset {
 .rbc-time-view {
     display: none !important;
 }
-/* .invalid-feedback {
-    font-size: 100% !important;
-} */
-/* .rbc-active {
-    background-color: #5d9cec !important;
-} */
+.col-xs-1-4 {
+    width: 11.99995%;
+    padding-left: 18px;
+
+    
+  }
+  @media only screen and (max-width: 1024px){
+    .col-xs-1-4 {
+        width: 11.50000%;
+      }
+      .total-hours{
+        width: 150%;
+  
+        }
+  }
+  @media only screen and (max-width: 768px){
+    .col-xs-1-4 {
+        width: 20.50000%;        
+      }
+      .total-hours{
+        width: 150%;
+  
+        }
+  }
+  @media only screen and (max-width: 320px){
+    .col-xs-1-4 {
+        width: 25.50000%; 
+      }
+      .total-hours{
+      width: 150%;
+
+      }
+  }
 .rbc-toolbar button.rbc-active {
     background-image: none;
     box-shadow: none !important;

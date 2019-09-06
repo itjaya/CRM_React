@@ -95,8 +95,6 @@ class ClientStep2 extends Component {
   }
   componentDidMount () {
     if(this.props.wizardData.contacts !== undefined) {
-      console.log(this.props)
-
       this.setState({clientStep2 : this.props.wizardData.contacts[0]})
     }
   }

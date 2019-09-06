@@ -6,22 +6,13 @@ import { Link } from "react-router-dom"
 import * as clientActions from '../../store/actions/client';
 import { connect } from 'react-redux';
 import $ from "jquery";
-// import 'sweetalert/dist/sweetalert.css';
-import Swal from 'sweetalert';
+import swal from 'sweetalert';
+
 class ManageClients extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
-            msg: "",
-            deleteId: "",
-            condition: false,
             redirectCondition: false,
-            swalOption3: {
-                title: "Good job!",
-                text: "You clicked the button!",
-                type: "success"
-            },
         }
     }
     componentDidMount() {
@@ -35,24 +26,28 @@ class ManageClients extends Component {
             })
         }
     }
-    toggleModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
-    }
-    handleOk = () => {
-
+    refreshData = () =>{
         let orgId = this.props.orgData.orgResult._id
-        let id = this.state.deleteId
-        this.props.deleteClient(id)
-        this.setState({ modal: false })
-        setTimeout(() => {
-            this.props.getClient(orgId);
-        }, 1000 / 2)
+        this.props.getClient(orgId);
     }
-    handleDelete = (vendor) => {
-
-        this.setState({ modal: true, deleteId: vendor._id });
+    handleDelete = (client) => {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this client!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                this.props.deleteClient(client._id);
+                setTimeout(() => {
+                    this.refreshData();
+                }, 1000);
+            } else {
+                swal("Your imaginary file is safe!");
+            }
+        })
     }
     render() {
 
@@ -89,8 +84,8 @@ class ManageClients extends Component {
                                                             <td>{data.emailId}</td>
                                                             <td>{data.state}</td>
                                                             <td>{data.zipcode}</td>
-                                                            <td><Link to={{ pathname: "/addClient", state: data }}><i className="fa fa-edit"></i></Link>&nbsp;
-                                                                <i className="fa fa-trash text-danger cursor" onClick={this.handleDelete.bind(this, data)}></i></td>
+                                                            <td><Link to={{ pathname: "/addClient", state: data }}><i className="far fa-edit text-warning"></i></Link>&nbsp;
+                                                                <i className="far fa-trash-alt text-danger cursor" onClick={this.handleDelete.bind(this, data)}></i></td>
                                                         </tr>
                                                     )
                                                 })}
@@ -101,16 +96,6 @@ class ManageClients extends Component {
                             </Container>
                         </CardBody>
                     </Card>
-                    <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
-                        <ModalBody>
-                            Are you sure do you want delete ?
-                            </ModalBody>
-                        <ModalFooter>
-                            <Button color="danger" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
-                            <Button color="primary" onClick={this.toggleModal}>Cancel</Button>{' '}
-                        </ModalFooter>
-                    </Modal>
                 </ContentWrapper>
 
             </div>

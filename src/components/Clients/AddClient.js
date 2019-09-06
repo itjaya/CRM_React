@@ -7,14 +7,12 @@ import ReactWizard from 'react-bootstrap-wizard';
 import ClientStep1 from './ClientStep1';
 import ClientStep2 from './ClientStep2';
 import * as clientActions from '../../store/actions/client';
+import swal from 'sweetalert';
 
 class AddClient extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
-            msg: "",
-            condition : false,
             redirectCondition : false
         }
     }
@@ -28,22 +26,20 @@ class AddClient extends Component {
         this.setState({ modal : true})
 
     }
-    componentWillReceiveProps = (nextProps) => {
-        if (nextProps.addClients.msg !== undefined) {
-            this.setState({ msg: nextProps.addClients.msg,condition: nextProps.addClients.condition })
+    componentDidUpdate(prevProps) {
+        // console.log(prevProps)
+        if (prevProps.addClients !== this.props.addClients) {
+            swal({
+                text: this.props.addClients.msg,
+                icon: "success",
+                button: "Ok",
+            })
+                .then((value) => {
+                    this.setState({ redirectCondition: true })
+                });
         }
     }
-    toggleModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
-    }
-    handleOk = () =>{   
-        if(this.state.condition){
-            this.setState({ redirectCondition : true})
-        }
-        this.setState({ modal : false})
-    }
+
     render() {
         if (this.state.redirectCondition) {
             return <Redirect to="/manageClients" />
@@ -77,15 +73,6 @@ class AddClient extends Component {
                             />
                         </CardBody>
                     </Card>
-                    <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}>ADD CLIENT</ModalHeader>
-                        <ModalBody>
-                            {this.state.msg}                       
-                            </ModalBody>
-                        <ModalFooter>
-                            <Button color="primary" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
-                        </ModalFooter>
-                    </Modal>
                 </ContentWrapper>
             </div>
         )

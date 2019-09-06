@@ -119,7 +119,7 @@ class ManageProjects extends Component {
                                                             <td>{project.clientId.label}</td>
                                                             <td>{moment(project.startDate).format('MM-DD-YYYY')}</td>
                                                             <td>{moment(project.endDate).format('MM-DD-YYYY')}</td>
-                                                            <td ><Link to={{ pathname: "/addProject", state: project }}><i style = {{ color : "#ff902b"}} className="far fa-edit"></i></Link>&nbsp;
+                                                            <td ><Link to={{ pathname: "/addProject", state: project }}><i className="far fa-edit text-warning"></i></Link>&nbsp;
                                                                 <i className="far fa-trash-alt text-danger cursor" onClick={this.handleDelete.bind(this, project)}></i></td>
                                                         </tr>
                                                     )
