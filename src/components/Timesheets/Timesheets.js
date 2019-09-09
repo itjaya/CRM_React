@@ -4,8 +4,6 @@ import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, FormGroup, Input, Card, CardBody, Button } from 'reactstrap';
 import Select from 'react-select';
 import { connect } from 'react-redux';
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
 import BigCalendar from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import moment from 'moment';
@@ -33,13 +31,16 @@ class Calendar extends Component {
             files: [],
             selectedOption: '',
             projects: [],
+            events : [],
             buttonName :'',
-            navigatedDate : moment()
+            navigatedDate : moment(),
+            projectStartDate : ""
         }
     }
 
+ 
     componentDidMount() {
-        var dates = moment(new Date)
+        var dates = moment(new Date);
         this.setState({ 
             sun: dates.day(0).toDate().getDate(), date1 : dates.day(0).toDate(),
             mon: dates.day(1).toDate().getDate(), date2 : dates.day(1).toDate(),
@@ -52,8 +53,8 @@ class Calendar extends Component {
 
         let userId = this.props.userData._id;
         this.props.getUserProjects(userId);
-
     }
+
     componentDidUpdate = (prevProps) => {
         if (prevProps.userProjects !== this.props.userProjects) {
             let array = [];
@@ -63,9 +64,41 @@ class Calendar extends Component {
                     value: projects._id
                 })
             })
-            this.setState({ projects: array, selectedOption: array[0] })
+            this.setState({ projects: array });
+            this.handleChangeSelect(array[0]);
+        }
+        if(prevProps.events !== this.props.events) {
+            if(this.props.events.events !== undefined) {
+                let array = [];
+                let events = this.props.events.events;
+                for( let obj of events) {
+                    array.push({
+                        start : moment(obj.start).toDate(),
+                        end : moment(obj.end).toDate(),
+                        title: "9",
+                        isAllDay : obj.isAllDay
+                    })
+                }
+                this.setState({ events : array })
+            }
         }
     }
+
+    handleChangeSelect = async(selectedOption) => {
+        await this.setState({ selectedOption: selectedOption });
+        this.refreshData();
+    }
+
+    refreshData = () => {
+    
+        let obj = {
+            userId : this.props.userData._id, 
+            project : this.state.selectedOption
+        }
+        this.props.getTimesheets(obj)
+    }
+
+
     handleView = (view) => {
 
         if (view = "week" && view != "month") {
@@ -105,16 +138,6 @@ class Calendar extends Component {
         </Col>
     )
 
-    handleChangeSelect = (selectedOption) => {
-        this.setState({ selectedOption: selectedOption });
-    }
-
-    handleClick = (e) => {
-        e.preventDefault();
-        // console.log("value", e.target.value)
-        this.setState({ buttonName: e.target.value })
-    }
-
     handleSubmit = (e, values) => {
         e.preventDefault();
         
@@ -129,16 +152,19 @@ class Calendar extends Component {
         ]
 
         let submitData = {
-            type : this.state.buttonName,
+            type : "save",
             userId : this.props.userData,
             weekData : weekData,
             projectId : this.state.selectedOption,
         }
+        console.log("subm", submitData)
         this.props.addTimesheets(submitData);
     }
+
     render() {
         let allFiles = this.state.files;
 
+        console.log("ebee", this.state.events)
         return (
             <div>
                 <ContentWrapper>
@@ -147,9 +173,9 @@ class Calendar extends Component {
                       {/* <small>React gcal/outlook like calendar component</small> */}
                         </div>
                     </div>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><Link to="/userdashboard">Dashboard</Link></li>
-                        <li class="breadcrumb-item active">Timesheet</li>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to="/userdashboard">Dashboard</Link></li>
+                        <li className="breadcrumb-item active">Timesheet</li>
                     </ol>
                     { /* START row */}
                     <div className="calendar-app">
@@ -173,14 +199,7 @@ class Calendar extends Component {
                                         defaultView='week'
                                         localizer={localizer}
                                         views={["month", "week"]}
-                                        events={
-                                            [{
-                                                "title": "ashok",
-                                                "allDay": false,
-                                                "start": moment(),
-                                                "end": new Date(2019, 0, 1, 10, 0)
-                                            }]
-                                        }
+                                        events={this.state.events}
                                         startAccessor="start"
                                         endAccessor="end"
                                         defaultDate={new Date()}
@@ -241,11 +260,11 @@ class Calendar extends Component {
                                         </div>
                                         <div className="row">
                                             <div className="form-group col-lg-12">
-                                                <label class="">Description:</label>
-                                                <textarea class="form-control" cols="5" placeholder="Short description.." spellcheck="false"></textarea></div>
+                                                <label className="">Description:</label>
+                                                <textarea className="form-control" cols="5" placeholder="Short description.." spellCheck="false"></textarea></div>
                                         </div>
                                         <div style={{ float: "right" }}>
-                                            <Button type="submit" color="primary" id="savedata" value="save" onClick = {this.handleClick}>Save</Button>&nbsp;
+                                            <Button type="submit" color="primary" id="savedata" value="save" >Save</Button>&nbsp;
                                             <Button type="submit" color="success" id="submitdata" value="submit" onClick = {this.handleClick}>Submit</Button>
                                         </div>
                                     </div>
@@ -265,14 +284,16 @@ class Calendar extends Component {
 const mapStateToProps = state => {
     return {
         userData: state.user.userLogin.userData,
-        userProjects: state.projects.userProjects
+        userProjects: state.projects.userProjects,
+        events : state.timesheets.allEvents
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         getUserProjects: (event) => dispatch(projectActions.getUserProjects(event)),
-        addTimesheets : (event) => dispatch(timesheetActions.updateTimesheets(event))
+        addTimesheets : (event) => dispatch(timesheetActions.updateTimesheets(event)),
+        getTimesheets : (event) => dispatch(timesheetActions.getTimesheets(event))
     }
 }
 

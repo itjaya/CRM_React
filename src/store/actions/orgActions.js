@@ -1,6 +1,5 @@
 import * as url from '../../urlConstants';
 import $ from 'jquery';
-import Auth from '../../helpers/Auth';
 
 export const ADD_ORGANIZATION_START = "ADD_ORGANIZATION_START";
 export const ADD_ORGANIZATION_SUCCESS = "ADD_ORGANIZATION_SUCCESS";
@@ -13,8 +12,6 @@ export const GET_ORGANIZATION_FAIL = "GET_ORGANIZATION_FAIL";
 export const GET_ORGDETAIL_START = "GET_ORGDETAIL_START";
 export const GET_ORGDETAIL_SUCCESS = "GET_ORGDETAIL_SUCCESS";
 export const GET_ORGDETAIL_FAIL = "GET_ORGDETAIL_FAIL";
-
-let handleAuth = new Auth();
 
 
 // Add Organization
