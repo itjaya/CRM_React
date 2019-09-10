@@ -185,7 +185,7 @@ class AddProject extends Component {
             this.props.users.map((user) => {
                 array.push({
                     label: user.firstName,
-                    value: user.firstName
+                    value: user._id
                 })
             })
             this.setState({ users: array })

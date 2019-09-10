@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Container, Card, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import {  Container, Card, CardBody } from 'reactstrap';
 import ContentWrapper from '../Layout/ContentWrapper';
 import Datatable from '../Tables/Datatable';
 import { Link } from "react-router-dom"
@@ -19,8 +19,8 @@ class ManageClients extends Component {
         let orgId = this.props.orgData.orgResult._id
         this.props.getClient(orgId);
     }
-    componentDidUpdate() {
-        if (this.props.clientsList && this.props.clientsList.length > 0) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.clientsList !== this.props.clientsList) {
             $().ready(() => {
                 $("#usersTable").DataTable();
             })
@@ -30,6 +30,7 @@ class ManageClients extends Component {
         let orgId = this.props.orgData.orgResult._id
         this.props.getClient(orgId);
     }
+    
     handleDelete = (client) => {
         swal({
             title: "Are you sure?",

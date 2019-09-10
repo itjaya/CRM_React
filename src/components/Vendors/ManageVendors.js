@@ -23,8 +23,8 @@ class ManageVendors extends Component {
         let orgId = this.props.orgData.orgResult._id
         this.props.getVendor(orgId);
     }
-    componentDidUpdate() {
-        if (this.props.vendorsList && this.props.vendorsList.length > 0) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.vendorsList && this.props.vendorsList) {
             $().ready(() => {
                 $("#usersTable").DataTable();
             })

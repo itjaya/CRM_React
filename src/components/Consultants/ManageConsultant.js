@@ -81,7 +81,7 @@ class ManageConsultant extends Component {
         e.preventDefault()
 
         const form = $(this.refs.userForm)
-        if(this.state.userRole == "superAdmin") {
+        if(this.state.userRole === "superAdmin") {
             if (form.valid()) {
                 if (this.state.selectedOptionMulti.length === 0) {
                     this.setState({ selectError: true })
@@ -242,7 +242,7 @@ class ManageConsultant extends Component {
                                                     <td style={this.state.style}>{array.join(", ")}</td>                                                    
                                                     <td>{user.email}</td>
                                                     <td>{user.role.value}</td>
-                                                    <td><Link to={{ pathname: "/viewConsultant" }}>View</Link></td>
+                                                    <td><Link to={{ pathname: "/viewUser" }}>View</Link></td>
                                                 </tr>
                                             )
                                         })}

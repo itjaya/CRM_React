@@ -1,6 +1,7 @@
 import {
     ADD_PROJECT_START, ADD_PROJECT_SUCCESS, ADD_PROJECT_FAIL,
     GET_PROJECT_START, GET_PROJECT_SUCCESS, GET_PROJECT_FAIL,
+    GET_USER_PROJECT_START,GET_USER_PROJECT_SUCCESS,GET_USER_PROJECT_FAIL,
     DELETE_PROJECT_START, DELETE_PROJECT_SUCCESS, DELETE_PROJECT_FAIL
 } from '../actions/projectActions';
 
@@ -10,7 +11,8 @@ const initialState = {
     addProjectResult: {},
     prjLoading: false,
     projects: [],
-    deleteResult : {}
+    deleteResult : {},
+    userProjects:[]
 }
 
 const projectReducer = (state = initialState, action) => {
@@ -56,6 +58,28 @@ const projectReducer = (state = initialState, action) => {
             }
 
         case GET_PROJECT_FAIL:
+
+            return {
+                ...state,
+                prjLoading: false,
+            }
+              // Get User Projects
+        case GET_USER_PROJECT_START:
+
+            return {
+                ...state,
+                prjLoading: true
+            }
+
+        case GET_USER_PROJECT_SUCCESS:
+
+            return {
+                ...state,
+                prjLoading: false,
+                userProjects: action.payload
+            }
+
+        case GET_USER_PROJECT_FAIL:
 
             return {
                 ...state,

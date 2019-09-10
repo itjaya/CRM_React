@@ -7,7 +7,7 @@ import orgReducer from './orgReducer';
 import vendorReducer from "./vendor";
 import clientReducer from "./client";
 import projectReducer from './projectReducer';
-
+import timesheetReducer from './timesheet';
 
 export default combineReducers({
     settings: settingsReducer,
@@ -16,5 +16,6 @@ export default combineReducers({
     organization: orgReducer,
     vendorReducer : vendorReducer,
     clientReducer : clientReducer,
-    projects : projectReducer
+    projects : projectReducer,
+    timesheets : timesheetReducer
 });

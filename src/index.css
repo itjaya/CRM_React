@@ -40,12 +40,13 @@ fieldset {
 .rbc-toolbar button.rbc-active {
     background-image: none;
     box-shadow: none !important;
-    background-color: #5d9cec !important;
+    background-color: #23b7e5 !important;
     border-color: none !important;
+    color : #fff !important
 }
 .rbc-toolbar button:active{
 
-    background-color: #5d9cec !important;
+    background-color: #23b7e5 !important;
 
 }
 th{
@@ -54,4 +55,10 @@ th{
 }
 .cursor {
     cursor: pointer;
+}
+.rbc-event-content {
+  text-align: center !important;
+}
+.rbc-event {
+  background-color: #23b7e5 !important;
 }
