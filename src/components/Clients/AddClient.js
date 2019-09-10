@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
+import {Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
+import { Redirect, Link } from "react-router-dom"
 import {Card, CardBody} from 'reactstrap';
-import { Redirect } from "react-router-dom"
+import { Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 import ReactWizard from 'react-bootstrap-wizard';
 import ClientStep1 from './ClientStep1';
@@ -59,6 +61,10 @@ class AddClient extends Component {
                         {/* <small>Form validation based on Controlled Components.</small> */}
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Add Client</li>
+                  </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <ReactWizard

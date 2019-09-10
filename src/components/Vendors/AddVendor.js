@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { connect } from 'react-redux';
 import ReactWizard from 'react-bootstrap-wizard';
-import {Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
+import { Link } from "react-router-dom"
+import {Card, CardBody} from 'reactstrap';
 import { Redirect } from "react-router-dom"
 import VendorStep1 from './VendorStep1';
 import VendorStep2 from './VendorStep2';
@@ -52,9 +53,13 @@ class AddVendor extends Component {
                 <ContentWrapper>
                     <div className="content-heading">
                         <div>Add Vendor
-                        <small>Form validation based on Controlled Components.</small>
+                        {/* <small>Form validation based on Controlled Components.</small> */}
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Add Vendor</li>
+                  </ol>
                     <Card className="card-default">
                         <CardBody>
                             <ReactWizard
