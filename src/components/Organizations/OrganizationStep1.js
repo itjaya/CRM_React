@@ -38,7 +38,6 @@ class organizationStep1 extends Component {
       return false;
       // return true;
     }
-
   }
 
   validateOnChange = event => {
@@ -54,6 +53,13 @@ class organizationStep1 extends Component {
         [input.name]: value,
       }
     });
+  }
+
+  componentDidMount () {
+    if(this.props !== undefined) {
+      console.log("wizard", this.props.wizardData)
+      this.setState({organizationStep1 : this.props.wizardData})
+    }
   }
 
 

@@ -5,6 +5,7 @@ import { Card, CardBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom"
 import ReactWizard from 'react-bootstrap-wizard';
+import swal from 'sweetalert';
 
 import OrganizationStep1 from './OrganizationStep1';
 import * as orgActions from '../../store/actions/orgActions';
@@ -16,16 +17,25 @@ class AddOrganization extends Component {
     }
 
     finishButtonClick = (allStates) => {
+        // console.log("allstates", allStates)
         let postData = allStates.General_Information.organizationStep1
         this.props.onAddOrganization(postData)
     }
 
     componentDidUpdate (prevProps) {
         if(prevProps.orgData !== this.props.orgData) {
-            if(this.props.orgData.addLoading) {
-                this.setState({ redirect : true })
+            console.log("orgdata", this.props.orgData)
+            // if(this.props.orgData.addLoading) {
+                swal({
+                    text: this.props.orgData.msg,
+                    icon: "success",
+                    button: "Ok",
+                })
+                .then((value) => {
+                    this.setState({ redirect: true })
+                });            
             }
-        }
+        // }
     }
 
     render () {
@@ -53,6 +63,7 @@ class AddOrganization extends Component {
                         <CardBody>
                             <ReactWizard
                                 steps={steps}
+                                wizardData = {this.props.location.state}
                                 description=""
                                 headerTextCenter
                                 validate={true}
@@ -70,7 +81,7 @@ class AddOrganization extends Component {
 
 const mapStateToProps = state => {
     return {
-        orgData : state.organization
+        orgData : state.organization.addResult
     }
 }
 

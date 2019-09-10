@@ -16,19 +16,26 @@ class ManageOrganization extends Component {
 
     componentDidMount() {
         this.refreshData();
+        $().ready(() => {
+            $("#usersTable").DataTable();
+        })
     }
 
     refreshData = () => {
         this.props.onGetOrganizations();
     }
 
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         if (prevProps.orgData !== this.props.orgData) {
-            this.setState({ organizations: this.props.orgData.orgData })
+            await this.setState({ organizations: this.props.orgData.orgData })
             $().ready(() => {
                 $("#usersTable").DataTable();
             })
         }
+    }
+
+    handleDelete = (orgData) => {
+        console.log("orgdata", orgData)
     }
 
     render() {
@@ -62,11 +69,13 @@ class ManageOrganization extends Component {
                                             return (
                                                 <tr className="gradeX" key={i}>
                                                     <td>{i + 1}</td>
-                                                    <td>{org.organizationName}</td>
+                                                    <td> <Link to = {{ pathname : "/viewOrganization"}}>{org.organizationName}</Link></td>
                                                     <td>{org.orgEmail}</td>
                                                     <td>{org.personName}</td>
                                                     <td>{org.orgPhNo}</td>
-                                                    <td><Link to={{ pathname: "/viewOrganization" }}>View</Link></td>
+                                                    <td>
+                                                    <Link to = {{ pathname : "/addOrganization" , state : org}}><i className="far fa-edit text-warning"></i></Link>&nbsp;
+                                                    <i className="far fa-trash-alt text-danger cursor" onClick={this.handleDelete.bind(this, org)}></i></td>
                                                 </tr>
                                             )
                                         })}
