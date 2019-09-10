@@ -204,6 +204,10 @@ class ManageConsultant extends Component {
                         <div>Users
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Users</li>
+                  </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>

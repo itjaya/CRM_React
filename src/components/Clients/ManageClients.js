@@ -58,6 +58,10 @@ class ManageClients extends Component {
                         <div>Clients
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Clients</li>
+                  </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>

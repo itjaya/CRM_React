@@ -67,6 +67,10 @@ class ManageVendors extends Component {
                         <div>Vendors
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Vendors</li>
+                  </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>
@@ -87,6 +91,7 @@ class ManageVendors extends Component {
                                                 </thead>
                                                 <tbody>
                                                     {this.props.vendorsList.map((vendor, i) => {
+                                                        console.log("haiii", vendor)
                                                         return (
                                                             <tr key={i}>
                                                                 <td>{vendor.vendorName}</td>

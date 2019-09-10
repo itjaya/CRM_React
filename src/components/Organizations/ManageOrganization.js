@@ -35,6 +35,10 @@ class ManageOrganization extends Component {
                         <div>Organizations
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Organizations</li>
+                  </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>
