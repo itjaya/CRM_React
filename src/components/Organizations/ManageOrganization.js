@@ -15,6 +15,10 @@ class ManageOrganization extends Component {
     }
 
     componentDidMount() {
+        this.refreshData();
+    }
+
+    refreshData = () => {
         this.props.onGetOrganizations();
     }
 
