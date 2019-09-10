@@ -5,6 +5,8 @@ import { ADD_ORGANIZATION_START, ADD_ORGANIZATION_SUCCESS, ADD_ORGANIZATION_FAIL
 
 let orgData = sessionStorage.getItem("orgId");
 
+console.log("ashok", orgData)
+
 const initialState = {
 
     addLoading : false,

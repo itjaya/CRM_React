@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Card, CardBody } from 'reactstrap';
 import { connect } from 'react-redux';
-
+import { Link } from "react-router-dom"
 import ReactWizard from 'react-bootstrap-wizard';
 
 import OrganizationStep1 from './OrganizationStep1';
@@ -45,6 +45,10 @@ class AddOrganization extends Component {
                         {/* <small>Form validation based on Controlled Components.</small> */}
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Add Organization</li>
+                  </ol>
                     <Card className="card-default">
                         <CardBody>
                             <ReactWizard

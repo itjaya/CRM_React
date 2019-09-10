@@ -31,8 +31,8 @@ class Header extends Component {
        
         if(user.role.value === "admin") {
             this.setState({ style : { visibility : "visible" } })
-            this.setState({ organizations: orgs, orgName : orgs[0].value })
-            this.props.onGetOrganizationByName(orgs[0].value)
+            this.setState({ organizations: orgs, orgName : orgs[0].label })
+            this.props.onGetOrganizationByName(orgs[0].label)
         }
         
     }

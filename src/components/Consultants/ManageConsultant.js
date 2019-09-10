@@ -183,7 +183,7 @@ class ManageConsultant extends Component {
             this.props.orgData.orgData.map((org) => {
                return orgArray.push({
                     label: org.organizationName,
-                    value: org.organizationName
+                    value: org._id
                 })
             })
             this.setState({ organizations: orgArray })
@@ -204,6 +204,10 @@ class ManageConsultant extends Component {
                         <div>Users
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                      <li className="breadcrumb-item active">Users</li>
+                  </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>
@@ -227,7 +231,7 @@ class ManageConsultant extends Component {
                                             array = [];
                                             if(user.organization.length > 0) {
                                                 {user.organization.map((org) => {
-                                                    return array.push(org.value)
+                                                    return array.push(org.label)
                                                 })}
                                             }
                                             return (

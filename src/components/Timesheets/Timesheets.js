@@ -75,7 +75,7 @@ class Calendar extends Component {
                     array.push({
                         start : moment(obj.start).toDate(),
                         end : moment(obj.end).toDate(),
-                        title: "9",
+                        title: obj.title,
                         isAllDay : obj.isAllDay
                     })
                 }
@@ -156,15 +156,14 @@ class Calendar extends Component {
             userId : this.props.userData,
             weekData : weekData,
             projectId : this.state.selectedOption,
+            weekNo : moment(this.state.date1).week()
         }
-        console.log("subm", submitData)
+        // console.log("subm", submitData)
         this.props.addTimesheets(submitData);
     }
 
     render() {
         let allFiles = this.state.files;
-
-        console.log("ebee", this.state.events)
         return (
             <div>
                 <ContentWrapper>
