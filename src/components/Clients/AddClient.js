@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import {Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
-import { Redirect, Link } from "react-router-dom"
 import {Card, CardBody} from 'reactstrap';
-import { Redirect } from "react-router-dom";
+import {Card, CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
 import ReactWizard from 'react-bootstrap-wizard';
 import ClientStep1 from './ClientStep1';
