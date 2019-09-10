@@ -17,6 +17,8 @@ class ManageClients extends Component {
     }
     componentDidMount() {
         let orgId = this.props.orgData.orgResult._id
+        console.log("haiii", orgId)
+
         this.props.getClient(orgId);
     }
     componentDidUpdate(prevProps) {
@@ -27,7 +29,7 @@ class ManageClients extends Component {
         }
     }
     refreshData = () =>{
-        let orgId = this.props.orgData.orgResult._id
+        let orgId = this.props.orgData.orgResult._id;
         this.props.getClient(orgId);
     }
     
@@ -104,6 +106,7 @@ class ManageClients extends Component {
     }
 }
 const mapStateToProps = state => {
+    // console.log("helooo", state.organization)
     return {
         clientsList: state.clientReducer.clientData,
         orgData: state.organization
