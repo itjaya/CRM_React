@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
 import {Card, CardBody} from 'reactstrap';
-import {Card, CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
 import ReactWizard from 'react-bootstrap-wizard';
 import ClientStep1 from './ClientStep1';
