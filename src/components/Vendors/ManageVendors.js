@@ -91,7 +91,6 @@ class ManageVendors extends Component {
                                                 </thead>
                                                 <tbody>
                                                     {this.props.vendorsList.map((vendor, i) => {
-                                                        console.log("haiii", vendor)
                                                         return (
                                                             <tr key={i}>
                                                                 <td>{vendor.vendorName}</td>

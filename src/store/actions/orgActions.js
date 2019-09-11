@@ -13,6 +13,10 @@ export const GET_ORGDETAIL_START = "GET_ORGDETAIL_START";
 export const GET_ORGDETAIL_SUCCESS = "GET_ORGDETAIL_SUCCESS";
 export const GET_ORGDETAIL_FAIL = "GET_ORGDETAIL_FAIL";
 
+export const DELETE_ORGANIZATION_START = "DELETE_ORGANIZATION_START";
+export const DELETE_ORGANIZATION_SUCCESS = "DELETE_ORGANIZATION_SUCCESS";
+export const DELETE_ORGANIZATION_FAIL = "DELETE_ORGANIZATION_FAIL";
+
 
 // Add Organization
 export const addOrgStart = () => {
@@ -31,7 +35,6 @@ export const addOrganization = (data) => {
     return dispatch => {
         dispatch(addOrgStart());
         $.post(url.url + "addOrganization", data, (result) => {
-            console.log("result", result)
             if(result.condition) {
                 dispatch(addOrgSuccess(result));
             }
@@ -91,3 +94,31 @@ export const getOrganizationByName = (name) => {
         })
     }
 }
+
+// Remove organization data
+export const deleteOrgStart = () => {
+    return { type : DELETE_ORGANIZATION_START }
+}
+
+export const deleteOrgSuccess = (result) => {
+    return { type: DELETE_ORGANIZATION_SUCCESS, payload : result }
+}
+
+export const deleteOrgFail = () => {
+    return { type: DELETE_ORGANIZATION_FAIL }
+}
+
+export const deleteOrganization = (id) => {
+    return dispatch => {
+        dispatch(deleteOrgStart());
+        $.post(url.url + `deleteOrganization?id=${id}`, (result) => {
+            if(result.condition) {
+                dispatch(deleteOrgSuccess(result));
+            }
+            else {
+                dispatch(deleteOrgFail());
+            }
+        })
+    }
+}
+

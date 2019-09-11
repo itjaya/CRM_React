@@ -3,6 +3,7 @@ import { Container, Card, CardBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
+import swal from 'sweetalert';
 
 import ContentWrapper from '../Layout/ContentWrapper';
 import * as orgActions from '../../store/actions/orgActions';
@@ -16,9 +17,6 @@ class ManageOrganization extends Component {
 
     componentDidMount() {
         this.refreshData();
-        $().ready(() => {
-            $("#usersTable").DataTable();
-        })
     }
 
     refreshData = () => {
@@ -27,15 +25,39 @@ class ManageOrganization extends Component {
 
     async componentDidUpdate(prevProps) {
         if (prevProps.orgData !== this.props.orgData) {
-            await this.setState({ organizations: this.props.orgData.orgData })
+            await this.setState({ organizations: this.props.orgData })
             $().ready(() => {
                 $("#usersTable").DataTable();
             })
         }
+        if (prevProps.deleteData !== this.props.deleteData) {
+            swal(this.props.deleteData.msg, {
+                icon: "success",
+            })
+                .then(value => {
+                    setTimeout(() => {
+                        this.refreshData();
+                    }, 500); 
+                })
+        }
+
     }
 
     handleDelete = (orgData) => {
-        console.log("orgdata", orgData)
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this organization data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    this.props.deleteOrg(orgData._id);
+                } else {
+                    swal("Your organization data is safe!");
+                }
+            })
     }
 
     render() {
@@ -69,7 +91,7 @@ class ManageOrganization extends Component {
                                             return (
                                                 <tr className="gradeX" key={i}>
                                                     <td>{i + 1}</td>
-                                                    <td> <Link to = {{ pathname : "/viewOrganization"}}>{org.organizationName}</Link></td>
+                                                    <td> <Link to = {{ pathname : "/viewOrganization", state : org}}>{org.organizationName}</Link></td>
                                                     <td>{org.orgEmail}</td>
                                                     <td>{org.personName}</td>
                                                     <td>{org.orgPhNo}</td>
@@ -94,13 +116,15 @@ class ManageOrganization extends Component {
 
 const mapStateToProps = state => {
     return {
-        orgData: state.organization
+        orgData: state.organization.orgData,
+        deleteData : state.organization.deleteResult
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onGetOrganizations: (event) => dispatch(orgActions.getOrganization(event))
+        onGetOrganizations: (event) => dispatch(orgActions.getOrganization(event)),
+        deleteOrg : (event) => dispatch(orgActions.deleteOrganization(event))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ManageOrganization);

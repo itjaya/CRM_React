@@ -9,6 +9,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import moment from 'moment';
 import Dropzone from 'react-dropzone';
 import { AvForm, AvInput } from 'availity-reactstrap-validation';
+import swal from 'sweetalert';
 
 import * as projectActions from '../../store/actions/projectActions';
 import * as timesheetActions from '../../store/actions/timesheet';
@@ -34,7 +35,13 @@ class Calendar extends Component {
             events : [],
             buttonName :'',
             navigatedDate : moment(),
-            projectStartDate : ""
+            projectStartDate : "",
+            value1 : "",
+            value2 : "",
+            value3 : "",
+            value4 : "",
+            value5 : "",
+
         }
     }
 
@@ -70,8 +77,8 @@ class Calendar extends Component {
         if(prevProps.events !== this.props.events) {
             if(this.props.events.events !== undefined) {
                 let array = [];
-                let events = this.props.events.events;
-                for( let obj of events) {
+                let eventsArray = this.props.events.events;
+                for( let obj of eventsArray) {
                     array.push({
                         start : moment(obj.start).toDate(),
                         end : moment(obj.end).toDate(),
@@ -80,7 +87,40 @@ class Calendar extends Component {
                     })
                 }
                 this.setState({ events : array })
+                var dates = moment(new Date());
+                let events = array
+                for(var k=0; k<events.length; k++){
+                        let eventsDates = moment(new Date(events[k].start)).format("MM-DD-YY");
+        
+                        if(eventsDates === moment(new Date(dates.day(1).toDate())).format("MM-DD-YY")){
+                            this.setState({ value1 : events[k].title})
+                        }
+                        if(eventsDates === moment(new Date(dates.day(2).toDate())).format("MM-DD-YY")){
+                            this.setState({ value2 : events[k].title})
+                        }
+                        if(eventsDates === moment(new Date(dates.day(3).toDate())).format("MM-DD-YY")){
+                            this.setState({ value3 : events[k].title})
+                        }
+                        if(eventsDates === moment(new Date(dates.day(4).toDate())).format("MM-DD-YY")){
+                            this.setState({ value4 : events[k].title})
+                        }
+                        if(eventsDates === moment(new Date(dates.day(5).toDate())).format("MM-DD-YY")){
+                            this.setState({ value5 : events[k].title})
+                        }
+                }
             }
+        }
+        if(prevProps.timesheets !== this.props.timesheets) {
+            swal({
+                text: this.props.timesheets.msg,
+                icon: "success",
+                button: "Ok",
+            })     
+            .then(value => {
+                setTimeout(() => {
+                    this.refreshData();
+                }, 1000);
+            })    
         }
     }
 
@@ -101,9 +141,30 @@ class Calendar extends Component {
 
     handleView = (view) => {
 
-        if (view = "week" && view != "month") {
+        if (view === "week") {
             this.setState({ divStyle: { minHeight: 100 } })
             document.getElementById("hide/show").style.display = "block"
+            var dates = moment(new Date());
+            let events = this.state.events
+            for(var k=0; k<events.length; k++){
+                    let eventsDates = moment(new Date(events[k].start)).format("MM-DD-YY");
+    
+                    if(eventsDates === moment(new Date(dates.day(1).toDate())).format("MM-DD-YY")){
+                        this.setState({ value1 : events[k].title})
+                    }
+                    if(eventsDates === moment(new Date(dates.day(2).toDate())).format("MM-DD-YY")){
+                        this.setState({ value2 : events[k].title})
+                    }
+                    if(eventsDates === moment(new Date(dates.day(3).toDate())).format("MM-DD-YY")){
+                        this.setState({ value3 : events[k].title})
+                    }
+                    if(eventsDates === moment(new Date(dates.day(4).toDate())).format("MM-DD-YY")){
+                        this.setState({ value4 : events[k].title})
+                    }
+                    if(eventsDates === moment(new Date(dates.day(5).toDate())).format("MM-DD-YY")){
+                        this.setState({ value5 : events[k].title})
+                    }
+            }
 
         }
         else {
@@ -115,8 +176,12 @@ class Calendar extends Component {
     }
     onNavigate = (navigate, flipUnit, prevOrNext) => {
 
-        var dates = moment(navigate)
-        this.setState({ 
+        var dates = moment(navigate);
+        this.setState({ value1: "", value2: "", value3: "", value4: "", value5: "" })
+        let events = this.state.events
+        let weekStartDate = moment().day(0);
+        let weekEndDate = moment().day(6);
+         this.setState({ 
             sun: dates.day(0).toDate().getDate(), date1 : dates.day(0).toDate(),
             mon: dates.day(1).toDate().getDate(), date2 : dates.day(1).toDate(),
             tue: dates.day(2).toDate().getDate(), date3 : dates.day(2).toDate(),
@@ -125,7 +190,46 @@ class Calendar extends Component {
             fri: dates.day(5).toDate().getDate(), date6 : dates.day(5).toDate(),
             sat: dates.day(6).toDate().getDate(), date7 : dates.day(6).toDate(),
             navigatedDate : dates
-        })
+        });
+        document.getElementById("input1").disabled = false;
+        document.getElementById("input2").disabled = false;
+        document.getElementById("input3").disabled = false;
+        document.getElementById("input4").disabled = false;
+        document.getElementById("input5").disabled = false;
+        document.getElementById("input6").disabled = false;
+        document.getElementById("input7").disabled = false;
+
+        for(var k=0; k<events.length; k++){
+                let eventsDates = moment(new Date(events[k].start)).format("MM-DD-YY");
+
+                if(eventsDates === moment(new Date(dates.day(1).toDate())).format("MM-DD-YY")){
+                    this.setState({ value1 : events[k].title})
+                }
+                if(eventsDates === moment(new Date(dates.day(2).toDate())).format("MM-DD-YY")){
+                    this.setState({ value2 : events[k].title})
+                }
+                if(eventsDates === moment(new Date(dates.day(3).toDate())).format("MM-DD-YY")){
+                    this.setState({ value3 : events[k].title})
+                }
+                if(eventsDates === moment(new Date(dates.day(4).toDate())).format("MM-DD-YY")){
+                    this.setState({ value4 : events[k].title})
+                }
+                if(eventsDates === moment(new Date(dates.day(5).toDate())).format("MM-DD-YY")){
+                    this.setState({ value5 : events[k].title})
+                }
+        }
+
+        if(dates.isAfter(weekEndDate)) {
+            document.getElementById("input1").disabled = true;
+            document.getElementById("input2").disabled = true;
+            document.getElementById("input3").disabled = true;
+            document.getElementById("input4").disabled = true;
+            document.getElementById("input5").disabled = true;
+            document.getElementById("input6").disabled = true;
+            document.getElementById("input7").disabled = true;
+        }
+        
+       
 
     }
 
@@ -142,13 +246,13 @@ class Calendar extends Component {
         e.preventDefault();
         
         let weekData = [ 
-            { date : this.state.date1, hours : values.input1 },
-            { date : this.state.date2, hours : values.input2 },
-            { date : this.state.date3, hours : values.input3 },
-            { date : this.state.date4, hours : values.input4 },
-            { date : this.state.date5, hours : values.input5 },
-            { date : this.state.date6, hours : values.input6 },
-            { date : this.state.date7, hours : values.input7 },
+            { date : this.state.date1, title : values.input1 },
+            { date : this.state.date2, title : values.input2 },
+            { date : this.state.date3, title : values.input3 },
+            { date : this.state.date4, title : values.input4 },
+            { date : this.state.date5, title : values.input5 },
+            { date : this.state.date6, title : values.input6 },
+            { date : this.state.date7, title : values.input7 },
         ]
 
         let submitData = {
@@ -160,6 +264,7 @@ class Calendar extends Component {
         }
         // console.log("subm", submitData)
         this.props.addTimesheets(submitData);
+        
     }
 
     render() {
@@ -211,35 +316,35 @@ class Calendar extends Component {
                                             {/* <FormGroup className="col-lg-2"></FormGroup> */}
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label" htmlFor="input-Sun">{this.state.sun} - Sun</label>
-                                                <AvInput className="form-control" defaultValue="0" name="input1" placeholder="Enter Time" type="number" min={0} disabled/>
+                                                <AvInput className="form-control" name="input1" id="input1" placeholder="Enter Time" type="number" min={0} disabled />
                                             </FormGroup>&nbsp;
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label" htmlFor="input-Mon">{this.state.mon} - Mon</label>
-                                                <AvInput className="form-control" defaultValue="0" name="input2" placeholder="Enter Time" type="number" min={0} />
+                                                <AvInput className="form-control"  name="input2" id="input2" placeholder="Enter Time" type="number" min={0} value={this.state.value1}/>
                                             </FormGroup >&nbsp;
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label" htmlFor="input-Tue">{this.state.tue} - Tue</label>
-                                                <AvInput className="form-control" defaultValue="0" name="input3" placeholder="Enter Time" type="number" min={0} />
+                                                <AvInput className="form-control" name="input3" id="input3" placeholder="Enter Time" type="number" min={0} value={this.state.value2}/>
                                             </FormGroup>&nbsp;
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label" htmlFor="input-Wes">{this.state.wed} - Wed </label>
-                                                <AvInput className="form-control" defaultValue="0" name="input4" placeholder="Enter Time" type="number" min={0} />
+                                                <AvInput className="form-control" name="input4" id="input4" placeholder="Enter Time" type="number" min={0} value={this.state.value3}/>
                                             </FormGroup>&nbsp;
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label" htmlFor="input-Thur">{this.state.thur} - Thu</label>
-                                                <AvInput className="form-control" defaultValue="0" name="input5" placeholder="Enter Time" type="number" min={0} />
+                                                <AvInput className="form-control"  name="input5" id="input5" placeholder="Enter Time" type="number" min={0} value={this.state.value4}/>
                                             </FormGroup>&nbsp;
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label" htmlFor="input-Fri"> {this.state.fri} - Fri </label>
-                                                <AvInput className="form-control" defaultValue="0" name="input6" placeholder="Enter Time" type="number" min={0} />
+                                                <AvInput className="form-control"  name="input6" id="input6" placeholder="Enter Time" type="number" min={0} value={this.state.value5}/>
                                             </FormGroup>&nbsp;
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label" htmlFor="input-Sat"> {this.state.sat} - Sat </label>
-                                                <AvInput className="form-control" defaultValue="0" name="input7" placeholder="Enter Time" type="number" min={0} disabled/>
+                                                <AvInput className="form-control" name="input7" id="input7" placeholder="Enter Time" type="number" min={0} disabled/>
                                             </FormGroup>&nbsp;
                                             <FormGroup className="col-xs-1 col-xs-1-4">
                                                 <label className="form-control-label total-hours" htmlFor="input-Total">Total Hours</label>
-                                                <AvInput className="form-control" defaultValue="0" name="input8" placeholder="Enter Time" type="number" min={0} disabled />
+                                                <AvInput className="form-control"  name="input8" placeholder="Enter Time" type="number" min={0} disabled />
                                             </FormGroup>
                                             {/* <FormGroup className="col-lg-2"></FormGroup> */}
                                         </Row>
@@ -284,7 +389,8 @@ const mapStateToProps = state => {
     return {
         userData: state.user.userLogin.userData,
         userProjects: state.projects.userProjects,
-        events : state.timesheets.allEvents
+        events : state.timesheets.allEvents,
+        timesheets : state.timesheets.timesheetResult
     }
 }
 

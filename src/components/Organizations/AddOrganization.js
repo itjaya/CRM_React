@@ -24,7 +24,6 @@ class AddOrganization extends Component {
 
     componentDidUpdate (prevProps) {
         if(prevProps.orgData !== this.props.orgData) {
-            console.log("orgdata", this.props.orgData)
             // if(this.props.orgData.addLoading) {
                 swal({
                     text: this.props.orgData.msg,

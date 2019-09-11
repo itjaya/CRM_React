@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
-import { Container, Card, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Container, Card, CardBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import $ from 'jquery';
@@ -14,8 +14,6 @@ class ManageProjects extends Component {
 
     state = {
         projects: [],
-        modal: false,
-
     }
 
     refreshData = () => {
@@ -44,23 +42,6 @@ class ManageProjects extends Component {
         }
     }
 
-    toggleModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
-    }
-
-    handleOk = () => {
-
-        // let orgId = this.props.orgData.orgResult._id
-        // let id = this.state.deleteId
-        // this.props.deleteClient(id)
-        // this.setState({ modal: false })
-        // setTimeout(() => {
-        //     this.props.getClient(orgId);
-        // }, 1000 / 2)
-    }
-
     handleDelete = (project) => {
         swal({
             title: "Are you sure?",
@@ -76,7 +57,7 @@ class ManageProjects extends Component {
                         this.refreshData();
                     }, 1000);
                 } else {
-                    swal("Your imaginary file is safe!");
+                    swal("Your project data is safe!");
                 }
             })
     }
@@ -131,16 +112,6 @@ class ManageProjects extends Component {
                             </Container>
                         </CardBody>
                     </Card>
-                    <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                        <ModalHeader toggle={this.toggleModal}><h4 style={{ "color": "orange" }}>ADD CLIENT</h4></ModalHeader>
-                        <ModalBody>
-                            Are you sure do you want delete ?
-                            </ModalBody>
-                        <ModalFooter>
-                            <Button color="danger" onClick={this.handleOk.bind(this)}>Ok</Button>{' '}
-                            <Button color="primary" onClick={this.toggleModal}>Cancel</Button>{' '}
-                        </ModalFooter>
-                    </Modal>
                 </ContentWrapper>
 
             </div>
