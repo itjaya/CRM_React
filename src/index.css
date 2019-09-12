@@ -4,7 +4,7 @@ fieldset {
 .rbc-time-view {
     display: none !important;
 }
-.col-xs-1-4 {
+/* .col-xs-1-4 {
     width: 11.99995%;
     padding-left: 18px;
 
@@ -36,7 +36,7 @@ fieldset {
       width: 150%;
 
       }
-  }
+  } */
 .rbc-toolbar button.rbc-active {
     background-image: none;
     box-shadow: none !important;
@@ -61,4 +61,13 @@ th{
 }
 .rbc-event {
   background-color: #23b7e5 !important;
+}
+.text-center{
+  text-align: center !important;
+}
+.badge {
+  padding: 0.4875rem 0.9rem !important;
+  font-size: 0.75rem;
+  border-radius: 20px !important;
+  background: #23b7e5;
 }
