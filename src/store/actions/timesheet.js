@@ -7,6 +7,9 @@ export const TIMESHEET_ADD_SUCCESS = 'TIMESHEET_ADD_SUCCESS';
 export const TIMESHEETS_GET_START = 'TIMESHEETS_GET_START';
 export const TIMESHEETS_GET_SUCCESS = 'TIMESHEETS_GET_SUCCESS'; 
 
+export const TIMESHEETS_UPLOAD_START = 'TIMESHEETS_UPLOAD_START';
+export const TIMESHEETS_UPLOAD_SUCCESS = 'TIMESHEETS_UPLOAD_SUCCESS'; 
+
 // Add Timesheet
 
 export const timesheetAddStart = () => {
@@ -46,6 +49,42 @@ export const getTimesheets = (data) => {
             $.get(url.url + "allEvents", data, (result) => {
                 dispatch(timesheetGetSuccess(result))
             })
+        )
+    }
+}
+
+// Upload Timesheet Files
+
+export const timesheetUploadStart = () => {
+    return { type: TIMESHEETS_UPLOAD_START };
+}
+
+export const timesheetUploadSuccess = (result) => {
+    return { type: TIMESHEETS_UPLOAD_SUCCESS, payload: result };
+}
+
+export const uploadTimesheets = (data, type, navigatedDate) => {
+    console.log("Data", type)
+    let userData = JSON.parse(sessionStorage.getItem("userData"));
+    let userId = userData.userData._id;
+    return dispatch => {
+        dispatch(timesheetUploadStart())
+        return (
+            $.ajax({
+                url: url.url + `upload?id=${userId}&type=${type.value}&navigatedDate=${navigatedDate}`,
+                type: "POST",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: (result) => {
+                    dispatch(timesheetUploadSuccess(result))
+                }
+
+            })
+            // $.post(url.url + "upload", data, (result) => {
+            //     console.log("Result", result)
+            //     // dispatch(timesheetUploadSuccess(result))
+            // })
         )
     }
 }
