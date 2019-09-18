@@ -1,6 +1,8 @@
 import { USER_ADD_START, USER_ADD_SUCCESS, 
         USER_LOGIN_SUCCESS, USER_LOGIN_START,
-        GET_USERS_START, GET_USERS_SUCCESS, USER_LOGOUT 
+        GET_USERS_START, GET_USERS_SUCCESS, USER_LOGOUT,
+        GET_ACTIVATE_USERS_START, GET_USERS_ACTIVATE_SUCCESS, GET_USERS_ACTIVATE_FAIL
+ 
 } from '../actions/userActions';
 
 let user = JSON.parse(sessionStorage.getItem('userData'));
@@ -64,6 +66,29 @@ const userReducer = (state = intialState, action) => {
         case USER_LOGOUT:
             return {
                 ...intialState,
+            }
+                    // Activate VENDORS
+        case GET_ACTIVATE_USERS_START:
+
+            return {
+                ...state,
+                orgLoading: true
+            }
+
+
+        case GET_USERS_ACTIVATE_SUCCESS:
+
+            return {
+                ...state,
+                orgLoading: false,
+                clientDelData: action.payload
+            }
+
+        case GET_USERS_ACTIVATE_FAIL:
+
+            return {
+                ...state,
+                orgLoading: false,
             }
         default: {
             return state

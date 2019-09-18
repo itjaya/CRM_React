@@ -12,6 +12,11 @@ export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 export const GET_USERS_START = 'GET_USERS_START';
 export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS'; 
 
+export const GET_ACTIVATE_USERS_START = "GET_ACTIVATE_USERS_START";
+export const GET_USERS_ACTIVATE_SUCCESS = "GET_USERS_ACTIVATE_SUCCESS";
+export const GET_USERS_ACTIVATE_FAIL = "GET_USERS_ACTIVATE_FAIL";
+
+
 export const USER_LOGOUT = 'USER_LOGOUT';
 
 let handleAuth = new Auth();
@@ -87,4 +92,27 @@ export const getUsers = (id) => {
         )
     }
  }
+// Activate/Deactivate User
 
+export const userActivatStart = () => {
+    return { type: GET_ACTIVATE_USERS_START };
+}
+
+export const userActivateSuccess = (userActivate) => {
+    return { type: GET_USERS_ACTIVATE_SUCCESS, payload: userActivate };
+}
+
+export const userActivateFail = () => {
+    return { type: GET_USERS_ACTIVATE_FAIL }
+}
+
+export const userActivate = (id) => {
+    return dispatch => {
+        dispatch(userActivatStart())
+        return (
+            $.get(url.url + `userAcitivate?id=${id}`, (result) => {
+                dispatch(userActivateSuccess(result))
+            })
+        )
+    }
+ }

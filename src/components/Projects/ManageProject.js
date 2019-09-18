@@ -83,6 +83,7 @@ class ManageProjects extends Component {
                                                 <tr>
                                                     <th data-priority="1">S. No</th>
                                                     <th>Project Name</th>
+                                                    <th>User (Consultant)</th>
                                                     <th>Vendor Name</th>
                                                     <th className="sort-numeric">Client Name</th>
                                                     <th className="sort-alpha" data-priority="2">Start Date</th>
@@ -96,6 +97,7 @@ class ManageProjects extends Component {
                                                         <tr key={i}>
                                                             <td>{i + 1}</td>
                                                             <td>{project.projectName}</td>
+                                                            <td>{project.userId.label}</td>
                                                             <td>{project.vendorId.label}</td>
                                                             <td>{project.clientId.label}</td>
                                                             <td>{moment(project.startDate).format('MM-DD-YYYY')}</td>

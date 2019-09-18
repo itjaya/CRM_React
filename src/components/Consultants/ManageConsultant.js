@@ -9,7 +9,7 @@ import {
 import $ from 'jquery';
 import { connect } from 'react-redux';
 import Select from 'react-select'
-
+import swal from 'sweetalert';
 
 import ContentWrapper from '../Layout/ContentWrapper';
 import DataTable from '../Tables/Datatable';
@@ -27,6 +27,7 @@ class ManageConsultant extends Component {
         super(props);
         this.state = {
             modal: false,
+            msg : "",
             organizations: [],
             users : [],
             style: { display: "none" },
@@ -96,7 +97,6 @@ class ManageConsultant extends Component {
                         role: this.state.selectedOption
                     }
                     this.props.userRegister(obj)
-                    this.setState({ modal: !this.state.modal })
                     setTimeout(() => {
                         this.refreshData();
                     }, 1000);
@@ -123,7 +123,6 @@ class ManageConsultant extends Component {
                         role: this.state.selectedOption
                     }
                     this.props.userRegister(obj)
-                    this.setState({ modal: !this.state.modal })
                     setTimeout(() => {
                         this.refreshData();
                     }, 1000);
@@ -142,14 +141,16 @@ class ManageConsultant extends Component {
         let orgId = this.props.orgData.orgResult._id;
         if (this.state.userRole === "superAdmin") {
             this.props.onGetOrganizations();
-            this.props.getUsers();
+            setTimeout(()=>{
+                this.props.getUsers();
+            },1000/2)
+            
         }
         else {
-            this.props.getUsers(orgId);
+            setTimeout(()=>{
+                this.props.getUsers(orgId);
+            },1000/2)
         }
-        // $().ready(() => {
-        //     $("#usersTable").DataTable();
-        // })
     }
 
     async componentDidMount() {
@@ -171,8 +172,18 @@ class ManageConsultant extends Component {
     }
 
     componentDidUpdate(prevProps) {
+        
+        if(prevProps.userResult !== this.props.userResult){
+            if(this.props.userResult.condition) {
+                this.setState({ modal: !this.state.modal })
+            }
+            else {
+                this.setState({ msg : this.props.userResult.msg})
+            }
+        }
 
         if (prevProps.allUsers !== this.props.allUsers) {
+
             this.setState({ users : this.props.allUsers})
             $().ready(() => {
                 $("#usersTable").DataTable();
@@ -188,6 +199,31 @@ class ManageConsultant extends Component {
             })
             this.setState({ organizations: orgArray })
         }
+    }
+
+    handleActivate = (user) => {    
+        let text = "";
+        if(user.account) {
+            text = "Are you sure do you want deactivate user ?"
+        }
+        else{
+            text = "Are you sure do you want activate user ?"
+        }
+        swal({
+            text: text,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                this.props.userActivate(user._id)
+                this.refreshData();
+            } else {
+                swal("Your user data is safe!");
+            }
+        })   
+      
     }
     render() {
         const roles = [
@@ -229,22 +265,29 @@ class ManageConsultant extends Component {
                                     <tbody>
                                         {this.state.users.map((user, i) => {
                                             array = [];
-                                            if(user.organization.length > 0) {
-                                                {user.organization.map((org) => {
-                                                    return array.push(org.label)
-                                                })}
+                                            if (user.organization.length > 0) {
+                                                {
+                                                    user.organization.map((org) => {
+                                                        return array.push(org.label)
+                                                    })
+                                                }
                                             }
-                                            return (
-                                                <tr className="gradeX" key={i}>
-                                                    <td>{i + 1}</td>
-                                                    <td>{user.firstName}</td>
-                                                    <td>{user.lastName}</td>
-                                                    <td style={this.state.style}>{array.join(", ")}</td>                                                    
-                                                    <td>{user.email}</td>
-                                                    <td>{user.role.value}</td>
-                                                    <td><Link to={{ pathname: "/viewUser" }}>View</Link></td>
-                                                </tr>
-                                            )
+                                            if (user.role.value !== "superAdmin") {
+                                                return (
+                                                    <tr className="gradeX" key={i}>
+                                                        <td>{i + 1}</td>
+                                                        <td><Link to={{ pathname: "/viewUser" }}>{user.firstName}</Link></td>
+                                                        <td>{user.lastName}</td>
+                                                        <td style={this.state.style}>{array.join(", ")}</td>
+                                                        <td>{user.email}</td>
+                                                        <td>{user.role.value}</td>
+                                                        <td>{user.account ?
+                                                            <i class="far fa-check-circle text-success cursor" style={{ size: "9px" }} onClick={this.handleActivate.bind(this, user)}></i> :
+                                                            <i class="far fa-times-circle text-danger cursor" style={{ size: "9px" }} onClick={this.handleActivate.bind(this, user)}></i>}&nbsp;
+                                                    </td>
+                                                    </tr>
+                                                )
+                                            }
                                         })}
                                     </tbody>
                                 </table>
@@ -253,8 +296,9 @@ class ManageConsultant extends Component {
                         <Modal isOpen={this.state.modal} toggle={this.toggleModal} size="lg">
                             <ModalHeader toggle={this.toggleModal}><strong>ADD USER</strong></ModalHeader>
                             <ModalBody>
+
                                 <form onSubmit={this.onSubmit} name="userForm" ref ="userForm" >
-                                    {/* <legend className="mb-4">Personal Details</legend> */}
+                                    <p className="text-center text-danger">{this.state.msg}</p>
                                     <div className="form-group row align-items-center">
                                         <label className="col-md-4 col-form-label">First Name</label>
                                         <Col md={8}>
@@ -382,8 +426,8 @@ const mapStateToProps = state => {
     return {
         allUsers: state.user.allUsers,
         loading: state.user.userLoading,
-        orgData: state.organization
-
+        orgData: state.organization,
+        userResult: state.user.userRegister
     }
 }
 
@@ -391,7 +435,9 @@ const mapDispatchToProps = dispatch => {
     return {
         userRegister: (event) => dispatch(userActions.userRegister(event)),
         getUsers: (event) => dispatch(userActions.getUsers(event)),
-        onGetOrganizations: (event) => dispatch(orgActions.getOrganization(event))
+        onGetOrganizations: (event) => dispatch(orgActions.getOrganization(event)),
+        userActivate: (event) => dispatch(userActions.userActivate(event)),
+
 
     }
 }

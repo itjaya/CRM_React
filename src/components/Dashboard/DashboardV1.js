@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap'
-import { compose, withProps } from "recompose"
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { Row } from 'reactstrap'
+// import { compose, withProps } from "recompose"
+// import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 
 
-// required props for HOCs (withScriptjs and withGoogleMap)
-const requiredProps = {
-    googleMapURL: '//maps.google.com/maps/api/js?key=AIzaSyBNs42Rt_CyxAqdbIBK0a5Ut83QiauESPA', // &libraries=geometry,drawing,places
-    loadingElement: <div className='gmap gmap-sm'>Loading...</div>,
-    containerElement: <div className='gmap gmap-sm'/>,
-    mapElement: <div style={{ height: `100%` }}/>
-}
+// // required props for HOCs (withScriptjs and withGoogleMap)
+// const requiredProps = {
+//     googleMapURL: '//maps.google.com/maps/api/js?key=AIzaSyBNs42Rt_CyxAqdbIBK0a5Ut83QiauESPA', // &libraries=geometry,drawing,places
+//     loadingElement: <div className='gmap gmap-sm'>Loading...</div>,
+//     containerElement: <div className='gmap gmap-sm'/>,
+//     mapElement: <div style={{ height: `100%` }}/>
+// }
 
-// Demo classic
-const DemoMapClassic = compose(
-  withProps(requiredProps),
-  withScriptjs,
-  withGoogleMap
-)(props => (
-    <GoogleMap defaultZoom={14} defaultCenter={props.location}>
-        <Marker position={props.location} />
-    </GoogleMap>
-))
+// // Demo classic
+// const DemoMapClassic = compose(
+//   withProps(requiredProps),
+//   withScriptjs,
+//   withGoogleMap
+// )(props => (
+//     <GoogleMap defaultZoom={14} defaultCenter={props.location}>
+//         <Marker position={props.location} />
+//     </GoogleMap>
+// ))
 
 class Widgets extends Component {
 

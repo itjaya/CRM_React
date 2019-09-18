@@ -93,8 +93,8 @@ class Header extends Component {
                     <div className="navbar-header">
                         <a className="navbar-brand" href="#/">
                             <div className="brand-logo" style = {{ color: "#fff"}}>
-                                My Reporting
-                                {/* <img className="img-fluid" src="img/logo.png" alt="App Logo" /> */}
+                                {/* My Reporting */}
+                                <img className="img-fluid" src="img/project.png" alt="App Logo" />
                             </div>
                             <div className="brand-logo-collapsed">
                                 <img className="img-fluid" src="img/logo-single.png" alt="App Logo" />
@@ -184,14 +184,14 @@ class Header extends Component {
                                     { /* START list group */ }
                                     <ListGroup>
                                        <ListGroupItem action tag="a" href="" onClick={e => e.preventDefault()}>
-                                          <div className="media">
+                                          {/* <div className="media">
                                              <div className="align-self-start mr-2">
                                                 <em className="fas fa-user text-info"></em>
                                              </div>
                                              <div className="media-body">
                                                 <p className="m-0">My Profile</p>
                                              </div>
-                                          </div>
+                                          </div> */}
                                        </ListGroupItem>
                                        <ListGroupItem action tag="a" href="" onClick={this.handleLogout}>
                                           <div className="media">

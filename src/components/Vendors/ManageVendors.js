@@ -54,7 +54,7 @@ class ManageVendors extends Component {
                     this.refreshData();
                 }, 1000);
             } else {
-                swal("Your imaginary file is safe!");
+                swal("Your vendor data is safe!");
             }
         })
     }

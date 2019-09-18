@@ -48,7 +48,7 @@ class ManageClients extends Component {
                     this.refreshData();
                 }, 1000);
             } else {
-                swal("Your imaginary file is safe!");
+                swal("Your client data is safe!");
             }
         })
     }
@@ -74,8 +74,8 @@ class ManageClients extends Component {
                                         <table className="table table-striped my-4 w-100" id="usersTable">
                                             <thead>
                                                 <tr>
-                                                    <th data-priority="1">clientName</th>
-                                                    <th>contactNumber</th>
+                                                    <th data-priority="1">client Name</th>
+                                                    <th>contact Number</th>
                                                     <th>email</th>
                                                     <th className="sort-numeric">state</th>
                                                     <th className="sort-alpha" data-priority="2">zipcode</th>
