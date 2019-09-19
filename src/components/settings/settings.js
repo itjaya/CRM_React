@@ -130,10 +130,12 @@ class Settings extends Component {
     }
     componentDidMount() {
         if (this.props.user.role.label === "superAdmin") {
-            this.setState({ divStyle: { display: "none" }, orgName: "" })
+            this.setState({ divStyle: { display: "none" },profileForm: this.props.user, orgName: "" })
 
         }
-        this.setState({ profileForm: this.props.user, orgName: this.props.user.organization[0].label })
+        else{
+            this.setState({ profileForm: this.props.user, orgName: this.props.user.organization[0].label })
+        }
     }
     render() {
         // let profileForm = this.props.user;
