@@ -32,6 +32,7 @@ class Calendar extends Component {
             selectedOption: '',
             projects: [],
             events: [],
+            uploads : [],
             projectDetails: {},
             buttonName: '',
             navigatedDate: moment(),
@@ -51,50 +52,44 @@ class Calendar extends Component {
 
     setEvents = (events, dates) => {
         let counter = 0;
-        let mon, tue, wed, thur, fri;
 
-            for (var k = 0; k < events.length; k++) {
-                let eventsDates = moment(new Date(events[k].start)).format("MM-DD-YY");
+        for (var k = 0; k < events.length; k++) {
+            let eventsDates = moment(new Date(events[k].start)).format("MM-DD-YY");
 
-                if (eventsDates === moment(dates.day(0).toDate()).format("MM-DD-YY")) {
-                    document.getElementById("input1").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(1).toDate()).format("MM-DD-YY")) {
-                    mon = counter + events[k].title;
-                    this.setState({ value1: events[k].title })
-                    document.getElementById("input2").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(2).toDate()).format("MM-DD-YY")) {
-                    tue = counter + events[k].title;
-                    this.setState({ value2: events[k].title })
-                    document.getElementById("input3").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(3).toDate()).format("MM-DD-YY")) {
-                    wed = counter + events[k].title;
-                    this.setState({ value3: events[k].title })
-                    document.getElementById("input4").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(4).toDate()).format("MM-DD-YY")) {
-                    thur = counter + events[k].title;
-                    this.setState({ value4: events[k].title })
-                    document.getElementById("input5").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(5).toDate()).format("MM-DD-YY")) {
-                    fri = counter + events[k].title;
-                    this.setState({ value5: events[k].title })
-                    document.getElementById("input6").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(6).toDate()).format("MM-DD-YY")) {
-                    document.getElementById("input7").disabled = events[k].lock;
-                }
+            if (eventsDates === moment(dates.day(0).toDate()).format("MM-DD-YY")) {
+                document.getElementById("input1").disabled = events[k].lock;
             }
-        if (mon && tue && wed && thur && fri !== undefined) {
-            let totalHours = mon + tue + wed + thur + fri
-            this.setState({ counter: totalHours })
+            if (eventsDates === moment(dates.day(1).toDate()).format("MM-DD-YY")) {
+                counter = counter + events[k].title || 0;
+                this.setState({ value1: events[k].title })
+                document.getElementById("input2").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(2).toDate()).format("MM-DD-YY")) {
+                counter = counter + events[k].title || 0;
+                this.setState({ value2: events[k].title })
+                document.getElementById("input3").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(3).toDate()).format("MM-DD-YY")) {
+                counter = counter + events[k].title || 0;
+                this.setState({ value3: events[k].title })
+                document.getElementById("input4").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(4).toDate()).format("MM-DD-YY")) {
+                counter = counter + events[k].title || 0;
+                this.setState({ value4: events[k].title })
+                document.getElementById("input5").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(5).toDate()).format("MM-DD-YY")) {
+                counter = counter + events[k].title || 0;
+                this.setState({ value5: events[k].title })
+                document.getElementById("input6").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(6).toDate()).format("MM-DD-YY")) {
+                document.getElementById("input7").disabled = events[k].lock;
+            }
         }
-        else {
-            this.setState({ counter: 0 })
-        }
+        // let totalHours = mon + tue + wed + thur + fri
+        this.setState({ counter: counter })
     }
 
     toggle = () => {
@@ -134,7 +129,8 @@ class Calendar extends Component {
         }
         if (prevProps.events !== this.props.events) {
 
-            if (this.props.events.events !== undefined) {
+            if (this.props.events !== undefined) {
+
                 let array = [];
                 let eventsArray = this.props.events.events;
                 for (let obj of eventsArray) {
@@ -146,7 +142,7 @@ class Calendar extends Component {
                         lock: obj.lock
                     })
                 }
-                this.setState({ events: array, projectDetails: this.props.events, projectDate: moment(this.props.events.prjStartDate).toDate() })
+                this.setState({ events: array, uploads : this.props.events.uploads, projectDetails: this.props.events, projectDate: moment(this.props.events.prjStartDate).toDate() })
                 var dates = moment(new Date());
                 await this.setEvents(array, dates);
             }
@@ -296,8 +292,14 @@ class Calendar extends Component {
         }
         formdata.append("type", JSON.stringify(this.state.selectedType))
         formdata.append("userData", JSON.stringify(this.props.userData))
+        formdata.append("weekNo", moment(this.state.navigatedDate).week())
+        formdata.append("month", moment(this.state.navigatedDate).month()+1)
+        formdata.append("year", moment(this.state.navigatedDate).year())
+        formdata.append("projectId", this.state.selectedOption.value)
+
 
         this.props.uploadDocs(formdata, this.state.selectedType, this.state.navigatedDate)
+        this.setState({ modal : !this.state.modal })
     }
 
     handleClick = () => {
@@ -344,6 +346,7 @@ class Calendar extends Component {
     }
 
     render() {
+
         const options = [
             { label: "Client", value: "Client" },
             { label: "Vendor", value: "Vendor" }
@@ -402,7 +405,25 @@ class Calendar extends Component {
                                                         <label className="form-control-label" htmlFor="input-Sun">Upload Documents</label><br />
                                                         <Button type="button" color="info" value="Upload Documents" onClick={this.toggle}>Upload</Button>&nbsp;
                                                     </div>
+                                                    <ol>
+                                                        {this.state.uploads.map((upload, i) => {
+                                                            let weekNo = moment(this.state.navigatedDate).week();
+                                                            let yearNo = moment(this.state.navigatedDate).year()
+                                                            if (weekNo === parseInt(upload.weekNo) && yearNo === parseInt(upload.year)) {
+                                                                return (
+                                                                    <>
+                                                                        {upload.files.map((file, k) => {
+                                                                            return (
+                                                                                <li key={k}>{file.filename}</li>
+                                                                            )
+                                                                        })}
+                                                                    </>
+                                                                )
+                                                            }
+                                                        })}
+                                                    </ol>
                                                 </div>
+
                                             </Col>
 
                                             <Col lg="8">

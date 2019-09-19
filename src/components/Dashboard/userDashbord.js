@@ -10,7 +10,6 @@ import swal from 'sweetalert';
 
 import AddressDetails from './AddressDetails';
 import EducationDetails from './EducationDetails';
-import AdminTimesheet from '../Timesheets/AdminTimesheet';
 // Filestyle
 import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';

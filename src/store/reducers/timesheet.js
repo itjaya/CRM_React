@@ -1,4 +1,6 @@
-import { TIMESHEET_ADD_START, TIMESHEET_ADD_SUCCESS, TIMESHEETS_GET_START, TIMESHEETS_GET_SUCCESS } from '../actions/timesheet';
+import { TIMESHEET_ADD_START, TIMESHEET_ADD_SUCCESS, TIMESHEETS_GET_START, TIMESHEETS_GET_SUCCESS,
+    TIMESHEETS_DOWNLOAD_START,TIMESHEETS_DOWNLOAD_SUCCESS
+} from '../actions/timesheet';
 
 const intialState = {
 
@@ -31,6 +33,18 @@ const timesheetReducer = (state = intialState, action) => {
                 eventsLoading: true
             }
         case TIMESHEETS_GET_SUCCESS:
+            return {
+                ...state,
+                allEvents: action.payload,
+                eventsLoading: false
+            }
+              // Download Timesheets
+         case TIMESHEETS_DOWNLOAD_START:
+            return {
+                ...state,
+                eventsLoading: true
+            }
+        case TIMESHEETS_DOWNLOAD_SUCCESS:
             return {
                 ...state,
                 allEvents: action.payload,
