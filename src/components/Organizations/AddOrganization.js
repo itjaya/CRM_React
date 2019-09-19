@@ -24,7 +24,7 @@ class AddOrganization extends Component {
 
     componentDidUpdate (prevProps) {
         if(prevProps.orgData !== this.props.orgData) {
-            // if(this.props.orgData.addLoading) {
+            if(this.props.orgData.condition) {
                 swal({
                     text: this.props.orgData.msg,
                     icon: "success",
@@ -34,7 +34,14 @@ class AddOrganization extends Component {
                     this.setState({ redirect: true })
                 });            
             }
-        // }
+            else {
+                swal({
+                    text: this.props.orgData.msg,
+                    icon: "warning",
+                    button: "Ok",
+                })
+            }
+        }
     }
 
     render () {

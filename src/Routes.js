@@ -35,6 +35,7 @@ const ViewConsultant = lazy(() => import('./components/Consultants/ViewConsultan
 
 const Timesheets = lazy(() => import('./components/Timesheets/Timesheets'));
 const Settings = lazy(() => import('./components/settings/settings'));
+const AdminTimesheet = lazy(() => import('./components/Timesheets/AdminTimesheet'));
 
 
 const Login = lazy(() => import('./components/Pages/Login'));
@@ -142,6 +143,8 @@ const Routes = ({ location }) => {
                                         {/* Timesheets */}
                                         <Route path="/timesheets" component={waitFor(Timesheets)} />
                                         <Route path="/settings" component={waitFor(Settings)} />
+                                        <Route path="/userTimesheets" component={waitFor(AdminTimesheet)} />
+
                                         <Redirect to="/login" />
                                     </Switch>
                                 </Suspense>

@@ -35,12 +35,8 @@ export const addOrganization = (data) => {
     return dispatch => {
         dispatch(addOrgStart());
         $.post(url.url + "addOrganization", data, (result) => {
-            if(result.condition) {
-                dispatch(addOrgSuccess(result));
-            }
-            else {
-                dispatch(addOrgFail());
-            }
+            dispatch(addOrgSuccess(result));
+       
         })
     }
 }

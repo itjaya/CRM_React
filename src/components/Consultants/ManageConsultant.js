@@ -276,7 +276,7 @@ class ManageConsultant extends Component {
                                                 return (
                                                     <tr className="gradeX" key={i}>
                                                         <td>{i + 1}</td>
-                                                        <td><Link to={{ pathname: "/viewUser" }}>{user.firstName}</Link></td>
+                                                        <td><Link to={{ pathname: "/viewUser", state : user }}>{user.firstName}</Link></td>
                                                         <td>{user.lastName}</td>
                                                         <td style={this.state.style}>{array.join(", ")}</td>
                                                         <td>{user.email}</td>

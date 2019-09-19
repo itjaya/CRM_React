@@ -183,16 +183,16 @@ class Header extends Component {
                                 <DropdownItem>
                                     { /* START list group */ }
                                     <ListGroup>
-                                       <ListGroupItem action tag="a" href="" onClick={e => e.preventDefault()}>
-                                          {/* <div className="media">
+                                       {/* <ListGroupItem action tag="a" href="" onClick={e => e.preventDefault()}>
+                                          <div className="media">
                                              <div className="align-self-start mr-2">
                                                 <em className="fas fa-user text-info"></em>
                                              </div>
                                              <div className="media-body">
                                                 <p className="m-0">My Profile</p>
                                              </div>
-                                          </div> */}
-                                       </ListGroupItem>
+                                          </div>
+                                       </ListGroupItem> */}
                                        <ListGroupItem action tag="a" href="" onClick={this.handleLogout}>
                                           <div className="media">
                                              <div className="align-self-start mr-2">
