@@ -13,6 +13,7 @@ import swal from 'sweetalert';
 
 import * as projectActions from '../../store/actions/projectActions';
 import * as timesheetActions from '../../store/actions/timesheet';
+import { url } from "../../urlConstants"
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -35,6 +36,7 @@ class AdminTimesheet extends Component {
             projects: [],
             days : [],
             events: [],
+            uploads : [],
             monthEvents : [],
             projectDetails: {},
             buttonName: '',
@@ -48,13 +50,15 @@ class AdminTimesheet extends Component {
             value3: "",
             value4: "",
             value5: "",
-            counter: 0
+            counter: 0,
+            monthCounter : 0
 
         }
     }
 
     setEvents = (events, dates) => {
         let counter = 0;
+        let monthCounter = 0;
         let mon, tue, wed, thur, fri;
         var days1 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         var today = moment(dates).toDate()
@@ -64,64 +68,53 @@ class AdminTimesheet extends Component {
 
         var days = [];
         let monthEve = [];
-        let sample = []
+        for (let i = 1; i <= daysInaMonth; i++) {
+            // days.push(days1[date.getDay(i)] + " " + date.getDate());
+            days.push(date.getDate());
+            date.setDate(date.getDate() + 1);
+        }
 
         for (var k = 0; k < events.length; k++) {
 
             let eventsDates = moment(new Date(events[k].start)).format("M-DD-YYYY");
             let monthNo = moment(new Date(events[k].start)).toDate().getMonth()+1;
+            let yearNo = moment(new Date(events[k].start)).toDate().getFullYear();
 
-            if(monthNo === dates.toDate().getMonth()+1) {
-                monthEve.push(events[k])
-            }
-         
-            if (eventsDates === moment(dates.day(0).toDate()).format("M-DD-YYYY")) {
-                document.getElementById("input1").disabled = events[k].lock;
+            if(monthNo === dates.toDate().getMonth()+1 && yearNo === dates.toDate().getFullYear()) {
+                monthEve.push(moment(new Date(events[k].start)).toDate().getDate());
+                monthCounter += events[k].title
             }
             if (eventsDates === moment(dates.day(1).toDate()).format("M-DD-YYYY")) {
-                mon = counter + events[k].title;
+                counter = counter + events[k].title || 0;
                 this.setState({ value1: events[k].title })
-                document.getElementById("input2").disabled = events[k].lock;
             }
             if (eventsDates === moment(dates.day(2).toDate()).format("M-DD-YYYY")) {
-                tue = counter + events[k].title;
+                counter = counter + events[k].title || 0;
                 this.setState({ value2: events[k].title })
-                document.getElementById("input3").disabled = events[k].lock;
             }
             if (eventsDates === moment(dates.day(3).toDate()).format("M-DD-YYYY")) {
-                wed = counter + events[k].title;
+                counter = counter + events[k].title || 0;
                 this.setState({ value3: events[k].title })
-                document.getElementById("input4").disabled = events[k].lock;
             }
             if (eventsDates === moment(dates.day(4).toDate()).format("M-DD-YYYY")) {
-                thur = counter + events[k].title;
+                counter = counter + events[k].title || 0;
                 this.setState({ value4: events[k].title })
-                document.getElementById("input5").disabled = events[k].lock;
             }
             if (eventsDates === moment(dates.day(5).toDate()).format("M-DD-YYYY")) {
-                fri = counter + events[k].title;
+                counter = counter + events[k].title || 0;
                 this.setState({ value5: events[k].title })
-                document.getElementById("input6").disabled = events[k].lock;
-            }
-            if (eventsDates === moment(dates.day(6).toDate()).format("M-DD-YYYY")) {
-                document.getElementById("input7").disabled = events[k].lock;
             }
         }
-         console.log("month", monthEve)
-        for (let i = 1; i <= daysInaMonth; i++) {
-         
-            days.push(days1[date.getDay(i)] + " " + date.getDate());
-            date.setDate(date.getDate() + 1);
-        }
-
-        if (mon && tue && wed && thur && fri !== undefined) {
-            let totalHours = mon + tue + wed + thur + fri
-            this.setState({ counter: totalHours })
-        }
-        else {
-            this.setState({ counter: 0 })
-        }
-        this.setState({ days: days, monthEvents : monthEve })
+       
+        this.setState({ counter: counter })
+        // if (mon && tue && wed && thur && fri !== undefined) {
+            // let totalHours = mon + tue + wed + thur + fri
+            // this.setState({ counter: counter })
+        // }
+        // else {
+        //     this.setState({ counter: 0 })
+        // }
+        this.setState({ days: days, monthEvents : monthEve, monthCounter: monthCounter })
     }
 
     toggle = () => {
@@ -174,7 +167,7 @@ class AdminTimesheet extends Component {
                         lock: obj.lock
                     })
                 }
-                this.setState({ events: array, projectDetails: this.props.events, projectDate: moment(this.props.events.prjStartDate).toDate() })
+                this.setState({ events: array, uploads : this.props.events.uploads, projectDetails: this.props.events, projectDate: moment(this.props.events.prjStartDate).toDate() })
                 var dates = moment(new Date());
                 await this.setEvents(array, dates);
             }
@@ -247,25 +240,7 @@ class AdminTimesheet extends Component {
                 sat: dates.day(6).toDate().getDate(), date7: dates.day(6).toDate(),
                 navigatedDate: dates
             });
-            document.getElementById("input1").disabled = false;
-            document.getElementById("input2").disabled = false;
-            document.getElementById("input3").disabled = false;
-            document.getElementById("input4").disabled = false;
-            document.getElementById("input5").disabled = false;
-            document.getElementById("input6").disabled = false;
-            document.getElementById("input7").disabled = false;
-
             this.setEvents(this.state.events, dates);
-
-            if (dates.isAfter(weekEndDate)) {
-                document.getElementById("input1").disabled = true;
-                document.getElementById("input2").disabled = true;
-                document.getElementById("input3").disabled = true;
-                document.getElementById("input4").disabled = true;
-                document.getElementById("input5").disabled = true;
-                document.getElementById("input6").disabled = true;
-                document.getElementById("input7").disabled = true;
-            }
         }
 
     }
@@ -327,55 +302,21 @@ class AdminTimesheet extends Component {
         }
         formdata.append("type", JSON.stringify(this.state.selectedType))
         formdata.append("userData", JSON.stringify(this.props.user))
+        formdata.append("weekNo", moment(this.state.navigatedDate).week())
+        formdata.append("month", moment(this.state.navigatedDate).month()+1)
+        formdata.append("year", moment(this.state.navigatedDate).year())
 
-        this.props.uploadDocs(formdata, this.state.selectedType, this.state.navigatedDate)
+        this.props.uploadDocs(formdata, this.state.selectedType, this.state.navigatedDate);
+        this.setState({ modal : !this.state.modal })
     }
 
-    handleClick = () => {
+    handleDownload = (upload) =>{
+        // console.log("data", url)
+        // this.props.downloadDocs(upload)
+        window.location = url + "downloadtimesheet?data=" + upload.path + "&filename=" + upload.filename + ""
 
-        let counter = 0;
-        let weekData = [
-            { date: this.state.date1, title: document.getElementById("input1").value },
-            { date: this.state.date2, title: document.getElementById("input2").value },
-            { date: this.state.date3, title: document.getElementById("input3").value },
-            { date: this.state.date4, title: document.getElementById("input4").value },
-            { date: this.state.date5, title: document.getElementById("input5").value },
-            { date: this.state.date6, title: document.getElementById("input6").value },
-            { date: this.state.date7, title: document.getElementById("input7").value },
-        ]
-        for (let data of weekData) {
-            if (data.title) {
-                counter += 1;
-            }
-        }
-        if (counter === 7) {
-            swal({
-                text: "Are you sure to submit timesheet data ?",
-                icon: "success",
-                button: "Ok",
-            })
-                .then(value => {
-                    let submitData = {
-                        type: "submit",
-                        userId: this.props.user,
-                        weekData: weekData,
-                        projectId: this.state.selectedOption,
-                        weekNo: moment(this.state.date1).week()
-                    }
-                    this.props.addTimesheets(submitData);
-                })
-        }
-        else {
-            swal({
-                text: "Timesheet data missing for submission",
-                icon: "warning",
-                button: "Ok",
-            })
-        }
     }
-
     render() {
-        // console.log("mon", this.state.monthEvents)
         const options = [
             { label: "Client", value: "Client" },
             { label: "Vendor", value: "Vendor" }
@@ -430,7 +371,7 @@ class AdminTimesheet extends Component {
                                                 <th className="text-center text-info"> Date</th>
                                                 {this.state.days.map((data, i) => {
                                                     return (
-                                                        <th className="text-center text-info">{data.split(" ")[1]}</th>
+                                                        <th key = {i} className="text-center text-info">{data}</th>
                                                     )
                                                 })}
                                                 <th className="text-center text-info">Total</th>
@@ -439,24 +380,47 @@ class AdminTimesheet extends Component {
                                         <tbody>
                                             <tr>
                                                 <td className="text-center">Time (Hrs)</td>
-                                                {this.state.days.map(day => {
-                                                    let dayDate = parseInt(day.split(" ")[1]);
-                                                    let dates = []
-                                                    for(let date1 of this.state.monthEvents) {
-                                                        let monDate = moment(new Date(date1.start)).toDate().getDate();
-                                                        dates.push(monDate)
-                                                    }
-                                                    if(dates.includes(dayDate)) {
-                                                        return <td>{2}</td>
-                                                    }
-                                                    else {
-                                                        return <td>{5}</td>
-                                                    }
-                                                })}
-                                                <td>45</td>
+                                                {
+                                                    this.state.days.map((day, k) => {
+                                                        if (this.state.monthEvents.includes(day)) {
+                                                            for (let i = 0; i < this.state.events.length; i++) {
+                                                                if (moment(this.state.events[i].start).toDate().getMonth() + 1 === moment(this.state.navigatedDate).toDate().getMonth() + 1
+                                                                    && moment(this.state.events[i].start).toDate().getDate() === day && moment(this.state.events[i].start).toDate().getFullYear() === moment(this.state.navigatedDate).year()) {
+                                                                    return <td key={k} className="text-center">{this.state.events[i].title}</td>
+                                                                }
+                                                            }
+                                                        }
+                                                        else {
+                                                            return <td key={k} className="text-center">-</td>
+                                                        }
+                                                    })
+                                                }
+                                                <td className="text-center">{this.state.monthCounter}</td>
                                             </tr>
                                         </tbody>
                                     </Table>
+                                                
+                                    <br />
+                                    <div>
+                                        <label className="form-control-label" htmlFor="input-Sun">Uploaded Documents</label>
+                                        <ol>
+                                            {this.state.uploads.map((upload, i) => {
+                                                let monthNo = moment(this.state.navigatedDate).month()+1;
+                                                let yearNo = moment(this.state.navigatedDate).year()
+                                                if(parseInt(upload.month) === monthNo && yearNo === parseInt(upload.year)) {
+                                                    return (
+                                                        upload.files.map(file => {
+                                                            return (
+                                                                <li key={i}>{file.filename} &nbsp;<i className="fas fa-download text-success cursor" onClick={this.handleDownload.bind(this, file)}></i></li>
+                                                            )
+
+                                                        })
+                                                    )
+                                                }
+                                               
+                                            })}
+                                        </ol>
+                                    </div>
                                 </div>
 
                                 <AvForm onValidSubmit={this.handleSubmit}>
@@ -468,7 +432,7 @@ class AdminTimesheet extends Component {
                                                 <FormGroup className="text-center">
                                                     <div className="px-2 badge badge-success text-center">{this.state.sun}</div><br />
                                                     <label className="form-control-label" htmlFor="input-Sun">Sun</label>
-                                                    <AvInput className="form-control text-center" name="input1" id="input1" placeholder="Time" type="number" min={0} value="0" disabled />
+                                                    <AvInput className="form-control text-center" name="input1" id="input1" placeholder="Time" type="number" min={0} value="0" />
                                                 </FormGroup>
                                             </Col>
                                             <Col>
@@ -510,7 +474,7 @@ class AdminTimesheet extends Component {
                                                 <FormGroup className="text-center">
                                                     <div className="px-2 badge badge-success text-center">{this.state.sat}</div><br />
                                                     <label className="form-control-label" htmlFor="input-Sat">Sat </label>
-                                                    <AvInput className="form-control text-center" name="input7" id="input7" placeholder="Time" type="number" min={0} value="0" disabled />
+                                                    <AvInput className="form-control text-center" name="input7" id="input7" placeholder="Time" type="number" min={0} value="0"  />
                                                 </FormGroup>
                                             </Col>
                                             <Col>
@@ -518,7 +482,7 @@ class AdminTimesheet extends Component {
                                                     <div className="px-2 badge badge-success text-center"></div>
                                                     <label className="form-control-label total-hours" htmlFor="input-Total">Total</label>
                                                     {/* <p>{this.state.counter}</p> */}
-                                                    <Input className="form-control text-center" name="input8" placeholder="Time" type="text" value={this.state.counter} disabled />
+                                                    <Input className="form-control text-center" name="input8" placeholder="Time" type="text" value={this.state.counter} readOnly/>
                                                 </FormGroup>
                                             </Col>
                                         </Row>
@@ -535,10 +499,9 @@ class AdminTimesheet extends Component {
                                                     </div>
                                         </div>
 
-
                                         <div style={{ float: "right" }}>
-                                            <Button type="submit" color="primary" id="savedata" value="save" >Save</Button>&nbsp;
-                                                    <Button color="success" id="submitdata" value="submit" onClick={this.handleClick}>Submit</Button>
+                                            <Button type="submit" color="primary" id="savedata" value="save">Save</Button>&nbsp;
+                                                    {/* <Button color="success" id="submitdata" value="submit" onClick={this.handleClick}>Submit</Button> */}
                                         </div>
 
                                     </div>
@@ -609,7 +572,8 @@ const mapDispatchToProps = dispatch => {
         getUserProjects: (event) => dispatch(projectActions.getUserProjects(event)),
         addTimesheets: (event) => dispatch(timesheetActions.updateTimesheets(event)),
         getTimesheets: (event) => dispatch(timesheetActions.getTimesheets(event)),
-        uploadDocs: (event, type, navigatedDate) => dispatch(timesheetActions.uploadTimesheets(event, type, navigatedDate))
+        uploadDocs: (event, type, navigatedDate) => dispatch(timesheetActions.uploadTimesheets(event, type, navigatedDate)),
+        downloadDocs : (event) => dispatch(timesheetActions.downloadTimesheets(event))
     }
 }
 

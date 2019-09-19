@@ -8,7 +8,6 @@ import moment from 'moment';
 
 import AddressDetails from './AddressDetails';
 import EducationDetails from './EducationDetails';
-import AdminTimesheet from '../Timesheets/AdminTimesheet';
 // Filestyle
 import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';
@@ -92,12 +91,6 @@ class Settings extends Component {
                                                 onClick={() => { this.toggleTab('account'); }}>
                                                 Account
                                             </ListGroupItem>
-                                            {userRole === "superAdmin" ?
-                                                <ListGroupItem action
-                                                    className={this.state.activeTab === 'timesheets' ? 'active' : ''}
-                                                    onClick={() => { this.toggleTab('timesheets'); }}>
-                                                    Timesheets
-                                                </ListGroupItem> : ""}
                                         </ListGroup>
                                     </div>
                                 </div>
@@ -328,17 +321,6 @@ class Settings extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </TabPane>
-                                <TabPane tabId="timesheets">
-                                    <div className="card card-default">
-                                        <div className="card-header d-flex align-items-center">
-                                            <div className="d-flex justify-content-center col">
-                                                <div className="h4 m-0 text-center">User Timesheets</div>
-                                            </div>
-                                        </div>
-                                        {/* <div className="card-header bg-gray-lighter text-bold">Profile</div> */}
-                                            <AdminTimesheet />
                                     </div>
                                 </TabPane>
                             </TabContent>

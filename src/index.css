@@ -75,7 +75,7 @@ th{
   background : none !important;
   border : none !important;
 }
-.nav-tabs > .nav-item > .nav-link:active {
+.nav-tabs > .nav-item > .nav-link.active {
   background: #23b7e5 !important;
 }
 .table-responsive > .table-bordered {

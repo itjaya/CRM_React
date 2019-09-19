@@ -8,7 +8,10 @@ export const TIMESHEETS_GET_START = 'TIMESHEETS_GET_START';
 export const TIMESHEETS_GET_SUCCESS = 'TIMESHEETS_GET_SUCCESS'; 
 
 export const TIMESHEETS_UPLOAD_START = 'TIMESHEETS_UPLOAD_START';
-export const TIMESHEETS_UPLOAD_SUCCESS = 'TIMESHEETS_UPLOAD_SUCCESS'; 
+export const TIMESHEETS_UPLOAD_SUCCESS = 'TIMESHEETS_UPLOAD_SUCCESS';
+
+export const TIMESHEETS_DOWNLOAD_START  = 'TIMESHEETS_DOWNLOAD_START';
+export const TIMESHEETS_DOWNLOAD_SUCCESS = 'TIMESHEETS_DOWNLOAD_SUCCESS';
 
 // Add Timesheet
 
@@ -87,4 +90,26 @@ export const uploadTimesheets = (data, type, navigatedDate) => {
             // })
         )
     }
+}
+
+// Download Timesheet Files
+
+export const timesheetDownloadStart = () => {
+    return { type: TIMESHEETS_DOWNLOAD_START };
+}
+
+export const timesheetDownloadSuccess = (result) => {
+    return { type: TIMESHEETS_DOWNLOAD_SUCCESS, payload: result };
+}
+
+export const downloadTimesheets = (data) => {
+    return dispatch => {
+        dispatch(timesheetDownloadStart())
+        return (
+            $.post(url.url + "downloadtimesheet", data, (result) => {
+                dispatch(timesheetDownloadSuccess(result))
+            })
+        )
+    }
+  
 }
