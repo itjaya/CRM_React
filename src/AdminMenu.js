@@ -101,6 +101,12 @@ const AdminMenu = [
     //     ]
     // },
     {
+        name: 'Settings',
+        icon: 'fas fa-users',
+        path: '/settings',
+        translate: 'sidebar.nav.element.SETTINGS'
+    },
+    {
         name: 'Timesheets',
         icon: 'far fa-clock',
         path: '/timesheets',

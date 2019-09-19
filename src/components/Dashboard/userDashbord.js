@@ -157,12 +157,6 @@ class Settings extends Component {
                                                 onClick={() => { this.toggleTab('account'); }}>
                                                 Account
                                             </ListGroupItem>
-                                            {userRole === "superAdmin" ?
-                                                <ListGroupItem action
-                                                    className={this.state.activeTab === 'timesheets' ? 'active' : ''}
-                                                    onClick={() => { this.toggleTab('timesheets'); }}>
-                                                    Timesheets
-                                                </ListGroupItem> : ""}
                                         </ListGroup>
                                     </div>
                                 </div>
@@ -426,17 +420,6 @@ class Settings extends Component {
                                         </div>
                                     </div>
                                 </TabPane>
-                                <TabPane tabId="timesheets">
-                                    <div className="card card-default">
-                                        <div className="card-header d-flex align-items-center">
-                                            <div className="d-flex justify-content-center col">
-                                                <div className="h4 m-0 text-center">User Timesheets</div>
-                                            </div>
-                                        </div>
-                                        {/* <div className="card-header bg-gray-lighter text-bold">Profile</div> */}
-                                            <AdminTimesheet />
-                                    </div>
-                                </TabPane>
                             </TabContent>
 
                         </Col>
@@ -457,10 +440,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-       
         userPasswordUpdate: (event) => dispatch(userActions.userUpdatePassword(event)),
-
-
     }
 }
 

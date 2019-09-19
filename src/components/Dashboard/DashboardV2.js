@@ -2,38 +2,17 @@ import React, { Component } from 'react';
 import { withNamespaces, Trans } from 'react-i18next';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Tooltip, Progress } from 'reactstrap';
+import { connect } from 'react-redux';
+
+import * as orgActions from '../../store/actions/orgActions';
+import * as projectActions from '../../store/actions/projectActions';
+import * as clientActions from '../../store/actions/client';
+import * as vendorActions from '../../store/actions/vendor';
+
 // EasyPieChart
 import EasyPieChart from 'easy-pie-chart';
 
 
-
-/**
- * Wrap an element and assign automatically an ID,
- * creates a handler to show/hide tooltips without
- * the hassle of creating new states and class methods.
- * Support only one child and simple text content.
- */
-class BSTooltip extends Component {
-    // static propTypes { content: PropTypes.string }
-    state = {
-        _id: 'id4tooltip_'+new Date().getUTCMilliseconds(),
-        tooltipOpen: false
-    }
-    toggle = e => {
-        this.setState({tooltipOpen: !this.state.tooltipOpen});
-    }
-    render() {
-        return [
-            <Tooltip {...this.props} isOpen={this.state.tooltipOpen} toggle={this.toggle} target={this.state._id} key='1'>
-                {this.props.content}
-            </Tooltip>,
-            React.cloneElement(React.Children.only(this.props.children), {
-                id: this.state._id,
-                key: '2'
-            })
-        ]
-    }
-}
 
 
 class DashboardV2 extends Component {
@@ -271,9 +250,17 @@ class DashboardV2 extends Component {
     changeLanguage = lng => {
         this.props.i18n.changeLanguage(lng);
     }
+    componentDidMount() {
+        this.refreshData();
+    }
 
+    refreshData = () => {
+        this.props.onGetOrganizations();
+        this.props.getProjects();
+        this.props.getClient();
+        this.props.getVendor()
+    }
     render() {
-
         return (
             <ContentWrapper>
                 <div className="content-heading">
@@ -282,10 +269,7 @@ class DashboardV2 extends Component {
                         {/* <small><Trans i18nKey='dashboard.WELCOME'></Trans></small> */}
                     </div>
                 </div>
-                <div className="unwrap">
-                        <small>Workreport !</small>
-                    </div>
-                   
+            
                <div className="unwrap">
                     {/* START chart */}
                     <div className="card">
@@ -298,19 +282,19 @@ class DashboardV2 extends Component {
                             <div className="row">
                                 <div className="col-md-3 col-6 text-center">
                                     <p>Organizations</p>
-                                    <div className="h1">25</div>
+                                    <div className="h1">{this.props.orgData.length}</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
                                     <p>Projects</p>
-                                    <div className="h1">85</div>
+                                    <div className="h1">{this.props.projects.length}</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
                                     <p>Vendors</p>
-                                    <div className="h1">380</div>
+                                    <div className="h1">{this.props.vendorsList.length}</div>
                                 </div>
                                 <div className="col-md-3 col-6 text-center">
                                     <p>Clients</p>
-                                    <div className="h1 text-truncate">200</div>
+                                    <div className="h1 text-truncate">{this.props.clientsList.length}</div>
                                 </div>
                             </div>
                         </div>
@@ -494,4 +478,25 @@ class DashboardV2 extends Component {
 
 }
 
-export default withNamespaces('translations')(DashboardV2);
+const mapStateToProps = state => {
+    return {
+        orgData: state.organization.orgData,
+        projects: state.projects.projects,
+        clientsList: state.clientReducer.clientData,
+        vendorsList: state.vendorReducer.vendorData,
+
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onGetOrganizations: (event) => dispatch(orgActions.getOrganization(event)),
+        getProjects: (event) => dispatch(projectActions.getProjects(event)),
+        getClient: (event) => dispatch(clientActions.getClient(event)),
+        getVendor: (event) => dispatch(vendorActions.getVendor(event)),
+
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardV2);
+
+// export default withNamespaces('translations')(DashboardV2);

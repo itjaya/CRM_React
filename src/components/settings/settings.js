@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem,Input,Button } from 'reactstrap';
+import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, Input, Button } from 'reactstrap';
 import $ from 'jquery';
 import FormValidator from '../Forms/FormValidator';
 import 'jquery-validation/dist/jquery.validate.js';
@@ -17,11 +17,20 @@ class Settings extends Component {
     state = {
         activeTab: 'profile',
         userForm: {
-            oldPassword : "",
+            oldPassword: "",
             password: '',
             password2: '',
         },
-        passwordMsg : ""
+        profileForm: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            company: "",
+            role: ""
+        },
+        passwordMsg: "",
+        orgName: "",
+        divStyle: { visibility: "visible" }
     }
 
     toggleTab = tab => {
@@ -32,8 +41,22 @@ class Settings extends Component {
         }
     }
 
-    handleClick = () =>{
+    handleClick = () => {
         $('#myfile').click()
+    }
+    onSubmit1 = e => {
+        e.preventDefault()
+        const form = $(this.refs.profileForm)
+        if (form.valid()) {
+            let data = {
+                id : this.props.user._id,
+                firstName : this.state.profileForm.firstName,
+                lastName : this.state.profileForm.lastName,
+                email : this.state.profileForm.email
+            }
+            // console.log("data", data)
+            this.props.userRegister(data)
+        }
     }
     onSubmit = e => {
         e.preventDefault()
@@ -75,26 +98,45 @@ class Settings extends Component {
             this.state[formName].errors[inputName][method]
     }
     componentDidUpdate(prevProps) {
-        if(prevProps.userPassword !== this.props.userPassword){
-            if(this.props.userPassword.condition){
+        if (prevProps.userPassword !== this.props.userPassword) {
+            if (this.props.userPassword.condition) {
                 swal({
                     text: this.props.userPassword.msg,
                     icon: "success",
                     // buttons: true,
                 })
-                .then((password) => {
-                    if (password) {
-                        this.setState({ activeTab: 'profile' })
-                    }
-                }) 
+                    .then((password) => {
+                        if (password) {
+                            this.setState({ activeTab: 'profile' })
+                        }
+                    })
             }
-            else{
-                this.setState({ passwordMsg : this.props.userPassword.msg})
+            else {
+                this.setState({ passwordMsg: this.props.userPassword.msg })
             }
         }
+        if(prevProps.userResult !== this.props.userResult){
+            swal({
+                text: this.props.userResult.msg,
+                icon: "success",
+                // buttons: true,
+            })
+                .then((user) => {
+                    if (user) {
+                        this.setState({ activeTab: 'profile' })
+                    }
+                })
+        }
+    }
+    componentDidMount() {
+        if (this.props.user.role.label === "superAdmin") {
+            this.setState({ divStyle: { display: "none" }, orgName: "" })
+
+        }
+        this.setState({ profileForm: this.props.user, orgName: this.props.user.organization[0].label })
     }
     render() {
-        let userData = this.props.user;
+        // let profileForm = this.props.user;
         return (
             <ContentWrapper>
                 <div>
@@ -103,10 +145,10 @@ class Settings extends Component {
                             <div className="card card-default">
                                 <div className="card-body text-center">
                                     <div className="py-4">
-                                        <img className="img-fluid img-thumbnail thumb96" src="img/upload-icon.png" alt="Contact" onClick = {this.handleClick}/>
+                                        <img className="img-fluid img-thumbnail thumb96" src="img/upload-icon.png" alt="Contact" onClick={this.handleClick} />
                                         <input type="file" id="myfile" style={{ display: "none" }} />
                                     </div>
-                                    <h3 className="m-0 text-bold">{userData.firstName}&nbsp;{userData.lastName}</h3>
+                                    <h3 className="m-0 text-bold">{this.state.profileForm.firstName}&nbsp;{this.state.profileForm.lastName}</h3>
                                     <div className="my-3">
                                         <p>Hello, Ithis is my presentation text. Have fun!</p>
                                     </div>
@@ -124,7 +166,7 @@ class Settings extends Component {
                                                 onClick={() => { this.toggleTab('profile'); }}>
                                                 Profile
                                             </ListGroupItem>
-                                             <ListGroupItem action
+                                            <ListGroupItem action
                                                 className={this.state.activeTab === 'account' ? 'active' : ''}
                                                 onClick={() => { this.toggleTab('account'); }}>
                                                 Account
@@ -149,41 +191,81 @@ class Settings extends Component {
 
                                             <div className="row py-4 justify-content-center">
                                                 <div className="col-12 col-sm-10">
-                                                    <form className="form-horizontal">
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">First Name</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact1" type="text" placeholder="" defaultValue={userData.firstName} />
-                                                            </div>
+                                                    <form onSubmit={this.onSubmit1} name="profileForm" ref="profileForm" >
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">First Name</label>
+                                                            <Col md={8}>
+                                                                <Input type="text"
+                                                                    name="firstName"
+                                                                    invalid={this.hasError('profileForm', 'firstName', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter Firstname"
+                                                                    value={this.state.profileForm.firstName}
+                                                                    className="required"
+                                                                />
+                                                            </Col>
                                                         </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Last Name</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact2" type="text" placeholder="" defaultValue={userData.lastName} />
-                                                            </div>
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">Last Name</label>
+                                                            <Col md={8}>
+                                                                <Input type="text"
+                                                                    name="lastName"
+                                                                    invalid={this.hasError('profileForm', 'lastName', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter Lastname"
+                                                                    value={this.state.profileForm.lastName}
+                                                                    className="required"
+                                                                />
+                                                            </Col>
                                                         </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Email</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact3" type="email" defaultValue={userData.email} />
-                                                            </div>
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">Email</label>
+                                                            <Col md={8}>
+                                                                <Input type="email"
+                                                                    name="email"
+                                                                    invalid={this.hasError('profileForm', 'email', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter email"
+                                                                    value={this.state.profileForm.email}
+                                                                    className="required"
+                                                                />
+                                                            </Col>
                                                         </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Company</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact4" type="text" placeholder="" defaultValue={userData.organization[0].label} disabled />
-                                                            </div>
+                                                        <div className="form-group row align-items-center" style={this.state.divStyle}>
+                                                            <label className="col-md-4 col-form-label">Company</label>
+                                                            <Col md={8}>
+                                                                <Input type="text"
+                                                                    name="company"
+                                                                    invalid={this.hasError('profileForm', 'company', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter company"
+                                                                    value={this.state.orgName}
+                                                                    className="required"
+                                                                    disabled
+                                                                />
+                                                            </Col>
                                                         </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Role</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact5" type="text" placeholder="" defaultValue={userData.role.label} disabled />
-                                                            </div>
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">Role</label>
+                                                            <Col md={8}>
+                                                                <Input type="text"
+                                                                    name="role"
+                                                                    invalid={this.hasError('profileForm', 'role', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter role"
+                                                                    value={this.state.profileForm.role.label}
+                                                                    className="required"
+                                                                    disabled
+                                                                />
+                                                            </Col>
                                                         </div>
-                                                        <div className="form-group row text-right">
-                                                            <div className="col-md-12">
-                                                                <button className="btn btn-info" type="submit">Update</button>
-                                                            </div>
+                                                        <div style={{ float: "right" }}>
+                                                            <Button color="success" type="submit" >Save</Button>{' '}
                                                         </div>
                                                     </form>
                                                 </div>
@@ -191,7 +273,7 @@ class Settings extends Component {
                                         </div>
                                     </div>
                                 </TabPane>
-                               <TabPane tabId="account">
+                                <TabPane tabId="account">
                                     <div className="card card-default">
                                         <div className="card-header d-flex align-items-center">
                                             <div className="d-flex justify-content-center col">
@@ -278,13 +360,14 @@ class Settings extends Component {
 const mapStateToProps = state => {
     // console.log(state)
     return {
-        user: state.user.userLogin.userData, 
-        userPassword : state.user.userPassword
+        user: state.user.userLogin.userData,
+        userPassword: state.user.userPassword,
+        userResult: state.user.userRegister
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-       
+        userRegister: (event) => dispatch(userActions.userRegister(event)),
         userPasswordUpdate: (event) => dispatch(userActions.userUpdatePassword(event)),
 
 
