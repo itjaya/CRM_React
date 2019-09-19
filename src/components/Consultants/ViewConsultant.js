@@ -1,29 +1,23 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ContentWrapper from '../Layout/ContentWrapper';
-import FormValidator from '../Forms/FormValidator';
-import { Card, CardBody, Col, Row, Input, ListGroup, ListGroupItem, TabContent, TabPane } from 'reactstrap';
+import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, Nav, NavItem, NavLink, Card } from 'reactstrap';
+import $ from 'jquery';
+import Datetime from 'react-datetime';
+import moment from 'moment';
+
+import AddressDetails from '../Dashboard/AddressDetails';
+import EducationDetails from '../Dashboard/EducationDetails';
+import AdminTimesheet from '../Timesheets/AdminTimesheet';
+// Filestyle
 import 'bootstrap-filestyle';
+import 'react-datetime/css/react-datetime.css';
 
 
-class ViewConsultant extends Component {
+class Settings extends Component {
+
     state = {
-        activeTab: 'profile',
-        formDemo: {
-            text: '',
-            email: '',
-            number: '',
-            integer: '',
-            alphanum: '',
-            url: '',
-            password: '',
-            password2: '',
-            minlength: '',
-            maxlength: '',
-            length: '',
-            minval: '',
-            maxval: '',
-            list: ''
-        }
+        activeTab: 'profile'
     }
 
     toggleTab = tab => {
@@ -34,423 +28,273 @@ class ViewConsultant extends Component {
         }
     }
 
-    validateOnChange = event => {
-        const input = event.target;
-        const form = input.form
-        const value = input.type === 'checkbox' ? input.checked : input.value;
-    
-        const result = FormValidator.validate(input);
-    
-        this.setState({
-            [form.name]: {
-                ...this.state[form.name],
-                [input.name]: value,
-                errors: {
-                    ...this.state[form.name].errors,
-                    [input.name]: result
-                }
-            }
-        });
-    
+    handleClick = () => {
+        $('#myfile').click()
     }
-
-    /* Simplify error check */
-    hasError = (formName, inputName, method) => {
-        return this.state[formName] &&
-            this.state[formName].errors &&
-            this.state[formName].errors[inputName] &&
-            this.state[formName].errors[inputName][method]
+    validateOnChange = () => {
     }
-
     render() {
+        let userData = {};
+        let userRole = this.props.user.role.label
+        if (this.props.location.state) {
+            userData = this.props.location.state
+        }
+        else {
+            userData = this.props.user
+        }
         return (
-            <div>
-                <ContentWrapper>
-                    {/* <div className="container-md"> */}
-                        <Row>
-                            <Col lg="2">
-                                <div className="card b">
-                                    {/* <div className="card-header bg-gray-lighter text-bold">Personal Settings</div> */}
-                                    <ListGroup>
-                                        <ListGroupItem action
-                                            className={this.state.activeTab === 'profile' ? 'active' : ''}
-                                            onClick={() => { this.toggleTab('profile'); }}>
-                                            Personal Details
-                                    </ListGroupItem>
-                                        <ListGroupItem action
-                                            className={this.state.activeTab === 'account' ? 'active' : ''}
-                                            onClick={() => { this.toggleTab('account'); }}>
-                                            Work Experience
-                                    </ListGroupItem>
-                                        <ListGroupItem action
-                                            className={this.state.activeTab === 'emails' ? 'active' : ''}
-                                            onClick={() => { this.toggleTab('emails'); }}>
-                                            Education Details
-                                    </ListGroupItem>
-                                        <ListGroupItem action
-                                            className={this.state.activeTab === 'notifications' ? 'active' : ''}
-                                            onClick={() => { this.toggleTab('notifications'); }}>
-                                            Certificates
-                                    </ListGroupItem>
-                                        <ListGroupItem action
-                                            className={this.state.activeTab === 'applications' ? 'active' : ''}
-                                            onClick={() => { this.toggleTab('applications'); }}>
-                                            Documents
-                                    </ListGroupItem>
-                                    </ListGroup>
+            <ContentWrapper>
+                <div className="content-heading">{userData.firstName}&nbsp;{userData.lastName}</div>
+                {/* <Row> */}
+                <Card>
+                    <form className="ie-fix-flex">
+                        <div role="tabpanel">
+                            <Nav tabs justified>
+                                <NavItem className="cursor">
+                                    <NavLink
+                                        className={this.state.activeTab === 'profile' ? 'active' : ''}
+                                        onClick={() => { this.toggleTab('profile'); }}>
+                                        Profile
+                                            </NavLink>
+                                </NavItem>
+                                <NavItem className="cursor">
+                                    <NavLink
+                                        className={this.state.activeTab === 'personal' ? 'active' : ''}
+                                        onClick={() => { this.toggleTab('personal'); }}>
+                                        Personal Details
+                                            </NavLink>
+                                </NavItem>
+                                <NavItem className="cursor">
+                                    <NavLink
+                                        className={this.state.activeTab === 'address' ? 'active' : ''}
+                                        onClick={() => { this.toggleTab('address'); }}>
+                                        Address Details
+                                            </NavLink>
+                                </NavItem>
+                                <NavItem className="cursor">
+                                    <NavLink
+                                        className={this.state.activeTab === 'education' ? 'active' : ''}
+                                        onClick={() => { this.toggleTab('education'); }}>
+                                        Education Details
+                                            </NavLink>
+                                </NavItem>
+                                {userRole === "superAdmin" ?
+                                    <NavItem className="cursor">
+                                        <NavLink
+                                            className={this.state.activeTab === 'timesheets' ? 'active' : ''}
+                                            onClick={() => { this.toggleTab('timesheets'); }}>
+                                            Timesheets
+                                                </NavLink>
+                                    </NavItem> : ""}
+                            </Nav>
+                        </div>
+                    </form>
+                    <TabContent activeTab={this.state.activeTab} className="p-0 b0">
+
+                        <TabPane tabId="profile">
+                            <div className="row py-4 justify-content-center">
+                                <div className="col-12 col-sm-10">
+                                    <form className="form-horizontal">
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">First Name</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="inputContact1" type="text" placeholder="" defaultValue={userData.firstName} />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Last Name</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="inputContact2" type="text" placeholder="" defaultValue={userData.lastName} />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Email</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="inputContact3" type="email" defaultValue={userData.email} />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Company</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="inputContact4" type="text" placeholder="" defaultValue={userData.organization[0].label} disabled />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Role</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="inputContact5" type="text" placeholder="" defaultValue={userData.role.label} disabled />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row text-right">
+                                            <div className="col-md-12">
+                                                <button className="btn btn-info" type="submit">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </Col>
-                            <Col lg="10">
-                                <TabContent activeTab={this.state.activeTab} className="p-0 b0" style = {{ padding : "0px"}}>
-                                    <TabPane tabId="profile">
-                                        <Card className="card-default" >
-                                            <CardBody>
-                                                <form onSubmit={this.onSubmit} action="" name="formDemo">
-                                                    <legend className="mb-4">Personal Details</legend>
-                                                    <fieldset>
-                                                        <div className="form-group row align-items-center">
-                                                            <label className="col-md-1 col-form-label">First Name</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="text"
-                                                                    invalid={this.hasError('formDemo', 'text', 'required')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["required"]'
-                                                                    value={this.state.formDemo.text}
-                                                                />
-                                                                <span className="invalid-feedback">Field is required</span>
-                                                            </Col>
-                                                            <label className="col-md-1 col-form-label">Middle Name</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="text"
-                                                                    invalid={this.hasError('formDemo', 'text', 'required')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["required"]'
-                                                                    value={this.state.formDemo.text}
-                                                                />
-                                                                <span className="invalid-feedback">Field is required</span>
-                                                            </Col>
-                                                        </div>
-                                                    </fieldset>
-                                                    <fieldset>
-                                                        <div className="form-group row align-items-center">
-                                                            <label className="col-md-1 col-form-label">Last Name</label>
-                                                            <Col md={5}>
-                                                                <Input type="email"
-                                                                    name="email"
-                                                                    invalid={this.hasError('formDemo', 'email', 'required') || this.hasError('formDemo', 'email', 'email')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["required", "email"]'
-                                                                    value={this.state.formDemo.email} />
-                                                                {this.hasError('formDemo', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
-                                                                {this.hasError('formDemo', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>}
-                                                            </Col>
-                                                            <label className="col-md-1 col-form-label">Email Id</label>
-                                                            <Col md={5}>
-                                                                <Input type="email"
-                                                                    name="email"
-                                                                    invalid={this.hasError('formDemo', 'email', 'required') || this.hasError('formDemo', 'email', 'email')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["required", "email"]'
-                                                                    value={this.state.formDemo.email} />
-                                                                {this.hasError('formDemo', 'email', 'required') && <span className="invalid-feedback">Field is required</span>}
-                                                                {this.hasError('formDemo', 'email', 'email') && <span className="invalid-feedback">Field must be valid email</span>}
-                                                            </Col>                </div>
-                                                    </fieldset>
-                                                    <fieldset>
-                                                        <div className="form-group row align-items-center">
-                                                            <label className="col-md-1 col-form-label">Mobile Number</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="number"
-                                                                    invalid={this.hasError('formDemo', 'number', 'number')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["number"]'
-                                                                    value={this.state.formDemo.number} />
-                                                                <span className="invalid-feedback">Field must be valid number</span>
-                                                            </Col>
-                                                            <label className="col-md-1 col-form-label">Work Number</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="number"
-                                                                    invalid={this.hasError('formDemo', 'number', 'number')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["number"]'
-                                                                    value={this.state.formDemo.number} />
-                                                                <span className="invalid-feedback">Field must be valid number</span>
-                                                            </Col>
-                                                        </div>
-                                                    </fieldset>
-                                                    <fieldset>
-                                                        <div className="form-group row align-items-center">
-                                                            <label className="col-md-1 col-form-label">SSN</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="integer"
-                                                                    invalid={this.hasError('formDemo', 'integer', 'integer')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["integer"]'
-                                                                    value={this.state.formDemo.integer} />
-                                                                <span className="invalid-feedback">Field must be an integer</span>
-                                                            </Col>
-                                                            <label className="col-md-1 col-form-label">Work Authorization</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="integer"
-                                                                    invalid={this.hasError('formDemo', 'integer', 'integer')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["integer"]'
-                                                                    value={this.state.formDemo.integer} />
-                                                                <span className="invalid-feedback">Field must be an integer</span>
-                                                            </Col>
-                                                        </div>
-                                                    </fieldset>
-                                                    <fieldset>
-                                                        <div className="form-group row align-items-center">
-                                                            <label className="col-md-1 col-form-label">Country</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="alphanum"
-                                                                    invalid={this.hasError('formDemo', 'alphanum', 'alphanum')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["alphanum"]'
-                                                                    value={this.state.formDemo.alphanum} />
-                                                                <span className="invalid-feedback">Field must be alpha numeric</span>
-                                                            </Col>
-                                                            <label className="col-md-1 col-form-label">State</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="alphanum"
-                                                                    invalid={this.hasError('formDemo', 'alphanum', 'alphanum')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["alphanum"]'
-                                                                    value={this.state.formDemo.alphanum} />
-                                                                <span className="invalid-feedback">Field must be alpha numeric</span>
-                                                            </Col>
-                                                        </div>
-                                                    </fieldset>
-                                                    <fieldset>
-                                                        <div className="form-group row align-items-center">
-                                                            <label className="col-md-1 col-form-label">Marital Status</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="url"
-                                                                    invalid={this.hasError('formDemo', 'url', 'url')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["url"]'
-                                                                    value={this.state.formDemo.url} />
-                                                                <span className="invalid-feedback">Field must be valid url</span>
-                                                            </Col>
-                                                            <label className="col-md-1 col-form-label">Payroll Id</label>
-                                                            <Col md={5}>
-                                                                <Input type="text"
-                                                                    name="url"
-                                                                    invalid={this.hasError('formDemo', 'url', 'url')}
-                                                                    onChange={this.validateOnChange}
-                                                                    data-validate='["url"]'
-                                                                    value={this.state.formDemo.url} />
-                                                                <span className="invalid-feedback">Field must be valid url</span>
-                                                            </Col>
-                                                        </div>
-                                                    </fieldset>
+                            </div>
+                        </TabPane>
+                        
+                        <TabPane tabId="personal">
+                            <div className="row py-4 justify-content-center">
+                                <div className="col-12 col-sm-10">
+                                    <form className="form-horizontal">
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Job Title</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="jobTitle" type="text" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Alternate Email</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="alternateEmail" type="text" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Date of Joining</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <Datetime
+                                                    inputProps={{
+                                                        name: 'dateOfJoining',
+                                                        className: 'form-control required',
+                                                        // placeholder: 'Enter project start date'
+                                                    }}
+                                                    onChange={this.validateOnChange.bind(this, "doj")}
+                                                    timeFormat={false}
+                                                // value={moment().toDate()}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Gender</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="gender" type="text" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Phone No</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="phoneNo" type="text" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">SSN</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="SSN" type="text" placeholder="" />
+                                            </div>
+                                        </div>  <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Date of Birth</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <Datetime
+                                                    inputProps={{
+                                                        name: 'dateOfBirth',
+                                                        className: 'form-control required',
+                                                        // placeholder: 'Enter project start date'
+                                                    }}
+                                                    timeFormat={false}
+                                                    onChange={this.validateOnChange.bind(this, "dob")}
+                                                // value={moment().toDate()}
+                                                />
+                                            </div>
+                                        </div>  <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Visa Type</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="visaType" type="text" placeholder="" />
+                                            </div>
+                                        </div>  <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Country</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="country" type="text" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">State</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="state" type="text" placeholder="" />
+                                            </div>
+                                        </div>  <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Marital Status</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="maritalStatus" type="text" placeholder="" />
+                                            </div>
+                                        </div>  <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Payroll Id</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="payrollId" type="text" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row text-right">
+                                            <div className="col-md-12">
+                                                <button className="btn btn-info" type="submit">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
 
-                                                <fieldset>
-                                                    <div className="form-group row">
-                                                        <div className="col-sm-4 col-sm-offset-2">
-                                                            <button type="submit" className="btn btn-danger">Cancel</button>&nbsp;
-                                                            <button type="submit" className="btn btn-success">Save</button>
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
+                        </TabPane>
+                        
+                        <TabPane tabId="address">
+                            <AddressDetails />
+                        </TabPane>
 
-                                                <small>Note: Fill in the mandatory fields, and click Save. User gets email invitation sent to the email id mentioned. Once the invitation is accepted, the user becomes part of the organization.</small>
-                                                </form>
-                                            </CardBody>
-                                        </Card>
-                                    </TabPane>
-                                    <TabPane tabId="account">
-                                        <div className="card b">
-                                            <div className="card-header bg-gray-lighter text-bold">Account</div>
-                                            <div className="card-body">
-                                                <form action="">
-                                                    <div className="form-group">
-                                                        <label>Current password</label>
-                                                        <input className="form-control" type="password" />
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label>New password</label>
-                                                        <input className="form-control" type="password" />
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label>Confirm new password</label>
-                                                        <input className="form-control" type="password" />
-                                                    </div>
-                                                    <button className="btn btn-info" type="button">Update password</button>
-                                                    <p>
-                                                        <small className="text-muted">* Integer fermentum accumsan metus, id sagittis ipsum molestie vitae</small>
-                                                    </p>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div className="card b">
-                                            <div className="card-header bg-danger text-bold">Delete account</div>
-                                            <div className="card-body bt">
-                                                <p>You will be asked for confirmation before delete account.</p>
-                                                <button className="btn btn-secondary" type="button">
-                                                    <span className="text-danger">Delete account</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </TabPane>
-                                    <TabPane tabId="emails">
-                                        <div className="card b">
-                                            <div className="card-header bg-gray-lighter text-bold">Emails</div>
-                                            <div className="card-body">
-                                                <p>Etiam eros nibh, condimentum in auctor et, aliquam quis elit. Donec id libero eros. Ut fringilla, justo id fringilla pretium, nibh nunc suscipit mauris, et suscipit nulla nisl ac dolor. Nam egestas, leo eu gravida tincidunt, sem ipsum pellentesque quam, vel iaculis est quam et eros.</p>
-                                                <p>
-                                                    <strong>Your email addresses</strong>
-                                                </p>
-                                                <p>
-                                                    <span className="mr-2">email@someaddress.com</span>
-                                                    <span className="badge badge-success">primary</span>
-                                                </p>
-                                                <p>
-                                                    <span className="mr-2">another.email@someaddress.com</span>
-                                                    <span className="badge bg-gray">private</span>
-                                                </p>
-                                            </div>
-                                            <div className="card-body bt">
-                                                <p>
-                                                    <strong>Add email address</strong>
-                                                </p>
-                                                <form action="">
-                                                    <Row className="mb-2">
-                                                        <Col xl="6">
-                                                            <div className="form-group">
-                                                                <div className="input-group">
-                                                                    <input className="form-control" type="email" placeholder="email@server.com" />
-                                                                    <span className="input-group-btn">
-                                                                        <button className="btn btn-secondary" type="button">Add</button>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" id="defaultCheck1" type="checkbox" value="" />
-                                                                <label className="form-check-label">Keep my email address private</label>
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <button className="btn btn-info" type="button">Update email</button>
-                                                    <p>
-                                                        <small className="text-muted">* Integer fermentum accumsan metus, id sagittis ipsum molestie vitae</small>
-                                                    </p>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </TabPane>
-                                    <TabPane tabId="notifications">
-                                        <form action="">
-                                            <div className="card b">
-                                                <div className="card-header bg-gray-lighter text-bold">Notifications</div>
-                                                <div className="card-body bb">
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" id="defaultCheck2" type="checkbox" value="" />
-                                                        <label className="form-check-label">
-                                                            <strong>Disable email notifications</strong>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div className="card-body">
-                                                    <p>
-                                                        <strong>Interaction</strong>
-                                                    </p>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" id="defaultCheck3" type="checkbox" value="" />
-                                                        <label className="form-check-label">Alert me when someone start to follow me</label>
-                                                    </div>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" id="defaultCheck4" type="checkbox" value="" />
-                                                        <label className="form-check-label">Alert me when someone star my work</label>
-                                                    </div>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" id="defaultCheck5" type="checkbox" value="" />
-                                                        <label className="form-check-label">Alert me when post a new comment</label>
-                                                    </div>
-                                                    <p className="my-2">
-                                                        <strong>Marketing</strong>
-                                                    </p>
-                                                    <div className="form-check mb-2">
-                                                        <input className="form-check-input" id="defaultCheck6" type="checkbox" value="" />
-                                                        <label className="form-check-label">Send me news and interesting updates</label>
-                                                    </div>
-                                                    <button className="mb-3 btn btn-info" type="button">Update notifications</button>
-                                                    <p>
-                                                        <small className="text-muted">Mauris sodales accumsan erat, ut dapibus erat faucibus vitae.</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </TabPane>
-                                    <TabPane tabId="applications">
-                                        <div className="card b">
-                                            <div className="card-header bg-gray-lighter text-bold">Applications</div>
-                                            <div className="card-body">
-                                                <p>
-                                                    <span>You have granted access for</span>
-                                                    <strong>3 applications</strong>
-                                                    <span>to your account.</span>
-                                                </p>
-                                                <ListGroup>
-                                                    <ListGroupItem className="d-flex align-items-center">
-                                                        <img className="mr-2 img-fluid thumb48" src="img/dummy.png" alt="App" />
-                                                        <div>
-                                                            <p className="text-bold mb-0">Application #1</p>
-                                                            <small>Ut turpis urna, tristique sed adipiscing nec, luctus quis leo.</small>
-                                                        </div>
-                                                        <div className="ml-auto">
-                                                            <button className="btn btn-secondary" type="button">
-                                                                <strong>Revoke</strong>
-                                                            </button>
-                                                        </div>
-                                                    </ListGroupItem>
-                                                    <ListGroupItem className="d-flex align-items-center">
-                                                        <img className="mr-2 img-fluid thumb48" src="img/dummy.png" alt="App" />
-                                                        <div>
-                                                            <p className="text-bold mb-0">Application #2</p>
-                                                            <small>Ut turpis urna, tristique sed adipiscing nec, luctus quis leo.</small>
-                                                        </div>
-                                                        <div className="ml-auto">
-                                                            <button className="btn btn-secondary" type="button">
-                                                                <strong>Revoke</strong>
-                                                            </button>
-                                                        </div>
-                                                    </ListGroupItem>
-                                                    <ListGroupItem className="d-flex align-items-center">
-                                                        <img className="mr-2 img-fluid thumb48" src="img/dummy.png" alt="App" />
-                                                        <div>
-                                                            <p className="text-bold mb-0">Application #3</p>
-                                                            <small>Ut turpis urna, tristique sed adipiscing nec, luctus quis leo.</small>
-                                                        </div>
-                                                        <div className="ml-auto">
-                                                            <button className="btn btn-secondary" type="button">
-                                                                <strong>Revoke</strong>
-                                                            </button>
-                                                        </div>
-                                                    </ListGroupItem>
-                                                </ListGroup>
-                                            </div>
-                                        </div>
-                                    </TabPane>
-                                </TabContent>
-                            </Col>
-                        </Row>
-                    {/* </div> */}
-                </ContentWrapper>
+                        <TabPane tabId="education">
+                            <EducationDetails />
+                        </TabPane>
 
-            </div>
-        )
+                        <TabPane tabId="account">
+                            <div className="row py-4 justify-content-center">
+                                <div className="col-12 col-sm-10">
+                                    <form className="form-horizontal">
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Old Password</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="oldPwd" type="password" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">New Password</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="newPwd" type="password" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Confirm Password</label>
+                                            <div className="col-xl-10 col-md-9 col-8">
+                                                <input className="form-control" id="pwd" type="password" />
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group row text-right">
+                                            <div className="col-md-12">
+                                                <button className="btn btn-info" type="submit">Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </TabPane>
+                        
+                        <TabPane tabId="timesheets">
+                            <AdminTimesheet user = {userData}/>
+                        </TabPane>
+
+                    </TabContent>
+                    {/* </Row> */}
+                </Card>
+            </ContentWrapper>
+        );
     }
 }
 
-export default ViewConsultant;
+const mapStateToProps = state => {
+    return {
+        user: state.user.userLogin.userData
+    }
+}
+
+export default connect(mapStateToProps, null)(Settings);
+
+

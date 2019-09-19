@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, FormGroup, Input, Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Row, Col, FormGroup, Input, Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter, Container, Table } from 'reactstrap';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import BigCalendar from 'react-big-calendar';
@@ -14,24 +14,28 @@ import swal from 'sweetalert';
 import * as projectActions from '../../store/actions/projectActions';
 import * as timesheetActions from '../../store/actions/timesheet';
 
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import "./timesheet.css"
+
 
 BigCalendar.momentLocalizer(moment);
 
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
-class Calendar extends Component {
+class AdminTimesheet extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            divStyle: { minHeight: 100 },
+            divStyle: { minHeight: 50 },
             files: [],
             selectedOption: '',
             projects: [],
+            days : [],
             events: [],
+            monthEvents : [],
             projectDetails: {},
             buttonName: '',
             navigatedDate: moment(),
@@ -52,42 +56,64 @@ class Calendar extends Component {
     setEvents = (events, dates) => {
         let counter = 0;
         let mon, tue, wed, thur, fri;
+        var days1 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var today = moment(dates).toDate()
+        var startDate = moment([today.getFullYear(), today.getMonth()]);
+        var date = moment(startDate).toDate();
+        var daysInaMonth = dates.daysInMonth();
 
-            for (var k = 0; k < events.length; k++) {
-                let eventsDates = moment(new Date(events[k].start)).format("MM-DD-YY");
+        var days = [];
+        let monthEve = [];
+        let sample = []
 
-                if (eventsDates === moment(dates.day(0).toDate()).format("MM-DD-YY")) {
-                    document.getElementById("input1").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(1).toDate()).format("MM-DD-YY")) {
-                    mon = counter + events[k].title;
-                    this.setState({ value1: events[k].title })
-                    document.getElementById("input2").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(2).toDate()).format("MM-DD-YY")) {
-                    tue = counter + events[k].title;
-                    this.setState({ value2: events[k].title })
-                    document.getElementById("input3").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(3).toDate()).format("MM-DD-YY")) {
-                    wed = counter + events[k].title;
-                    this.setState({ value3: events[k].title })
-                    document.getElementById("input4").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(4).toDate()).format("MM-DD-YY")) {
-                    thur = counter + events[k].title;
-                    this.setState({ value4: events[k].title })
-                    document.getElementById("input5").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(5).toDate()).format("MM-DD-YY")) {
-                    fri = counter + events[k].title;
-                    this.setState({ value5: events[k].title })
-                    document.getElementById("input6").disabled = events[k].lock;
-                }
-                if (eventsDates === moment(dates.day(6).toDate()).format("MM-DD-YY")) {
-                    document.getElementById("input7").disabled = events[k].lock;
-                }
+        for (var k = 0; k < events.length; k++) {
+
+            let eventsDates = moment(new Date(events[k].start)).format("M-DD-YYYY");
+            let monthNo = moment(new Date(events[k].start)).toDate().getMonth()+1;
+
+            if(monthNo === dates.toDate().getMonth()+1) {
+                monthEve.push(events[k])
             }
+         
+            if (eventsDates === moment(dates.day(0).toDate()).format("M-DD-YYYY")) {
+                document.getElementById("input1").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(1).toDate()).format("M-DD-YYYY")) {
+                mon = counter + events[k].title;
+                this.setState({ value1: events[k].title })
+                document.getElementById("input2").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(2).toDate()).format("M-DD-YYYY")) {
+                tue = counter + events[k].title;
+                this.setState({ value2: events[k].title })
+                document.getElementById("input3").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(3).toDate()).format("M-DD-YYYY")) {
+                wed = counter + events[k].title;
+                this.setState({ value3: events[k].title })
+                document.getElementById("input4").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(4).toDate()).format("M-DD-YYYY")) {
+                thur = counter + events[k].title;
+                this.setState({ value4: events[k].title })
+                document.getElementById("input5").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(5).toDate()).format("M-DD-YYYY")) {
+                fri = counter + events[k].title;
+                this.setState({ value5: events[k].title })
+                document.getElementById("input6").disabled = events[k].lock;
+            }
+            if (eventsDates === moment(dates.day(6).toDate()).format("M-DD-YYYY")) {
+                document.getElementById("input7").disabled = events[k].lock;
+            }
+        }
+         console.log("month", monthEve)
+        for (let i = 1; i <= daysInaMonth; i++) {
+         
+            days.push(days1[date.getDay(i)] + " " + date.getDate());
+            date.setDate(date.getDate() + 1);
+        }
+
         if (mon && tue && wed && thur && fri !== undefined) {
             let totalHours = mon + tue + wed + thur + fri
             this.setState({ counter: totalHours })
@@ -95,6 +121,7 @@ class Calendar extends Component {
         else {
             this.setState({ counter: 0 })
         }
+        this.setState({ days: days, monthEvents : monthEve })
     }
 
     toggle = () => {
@@ -104,8 +131,9 @@ class Calendar extends Component {
     }
 
     componentDidMount() {
-        var dates = moment(new Date);
 
+        document.getElementById("monthView").style.display = "none";
+        var dates = moment(new Date);
         this.setState({
             sun: dates.day(0).toDate().getDate(), date1: dates.day(0).toDate(),
             mon: dates.day(1).toDate().getDate(), date2: dates.day(1).toDate(),
@@ -114,9 +142,9 @@ class Calendar extends Component {
             thur: dates.day(4).toDate().getDate(), date5: dates.day(4).toDate(),
             fri: dates.day(5).toDate().getDate(), date6: dates.day(5).toDate(),
             sat: dates.day(6).toDate().getDate(), date7: dates.day(6).toDate(),
-        })
+        });
 
-        let userId = this.props.userData._id;
+        let userId = this.props.user._id;
         this.props.getUserProjects(userId);
     }
 
@@ -173,7 +201,7 @@ class Calendar extends Component {
     refreshData = () => {
 
         let obj = {
-            userId: this.props.userData._id,
+            userId: this.props.user._id,
             project: this.state.selectedOption
         }
         this.props.getTimesheets(obj)
@@ -182,14 +210,17 @@ class Calendar extends Component {
     handleView = (view) => {
 
         if (view === "week") {
-            this.setState({ divStyle: { minHeight: 100 }, defaultView: "week" })
+            this.setState({ divStyle: { minHeight: 50 }, defaultView: "week" })
             document.getElementById("hide/show").style.display = "block";
+            document.getElementById("monthView").style.display = "none";
+
             let dates = moment(new Date());
             this.setEvents(this.state.events, dates)
         }
         else {
-            this.setState({ divStyle: { minHeight: 500 }, defaultView: "month" })
-            document.getElementById("hide/show").style.display = "none"
+            document.getElementById("monthView").style.display = "block";
+            // this.setState({ divStyle: { minHeight: 500 }, defaultView: "month" })
+            document.getElementById("hide/show").style.display = "none";
 
         }
     }
@@ -272,7 +303,7 @@ class Calendar extends Component {
 
         let submitData = {
             type: "save",
-            userId: this.props.userData,
+            userId: this.props.user,
             weekData: weekData,
             projectId: this.state.selectedOption,
             weekNo: moment(this.state.date1).week()
@@ -295,7 +326,7 @@ class Calendar extends Component {
             formdata.append("file", files[i])
         }
         formdata.append("type", JSON.stringify(this.state.selectedType))
-        formdata.append("userData", JSON.stringify(this.props.userData))
+        formdata.append("userData", JSON.stringify(this.props.user))
 
         this.props.uploadDocs(formdata, this.state.selectedType, this.state.navigatedDate)
     }
@@ -326,7 +357,7 @@ class Calendar extends Component {
                 .then(value => {
                     let submitData = {
                         type: "submit",
-                        userId: this.props.userData,
+                        userId: this.props.user,
                         weekData: weekData,
                         projectId: this.state.selectedOption,
                         weekNo: moment(this.state.date1).week()
@@ -344,6 +375,7 @@ class Calendar extends Component {
     }
 
     render() {
+        // console.log("mon", this.state.monthEvents)
         const options = [
             { label: "Client", value: "Client" },
             { label: "Vendor", value: "Vendor" }
@@ -351,27 +383,25 @@ class Calendar extends Component {
         let allFiles = this.state.files;
         return (
             <div>
-                <ContentWrapper>
-                    <div className="content-heading">
-                        <div>Timesheet
-                      {/* <small>React gcal/outlook like calendar component</small> */}
-                        </div>
-                    </div>
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to="/userdashboard">Dashboard</Link></li>
-                        <li className="breadcrumb-item active">Timesheet</li>
-                    </ol>
-                    { /* START row */}
+                <Container className="mt--7" fluid>
                     <div className="calendar-app">
                         { /* START panel */}
-                        <Card className="card-default">
+                        <Card >
                             <CardBody>
                                 <BigCalendar
                                     style={this.state.divStyle}
                                     defaultView={this.state.defaultView}
                                     localizer={localizer}
                                     views={["month", "week"]}
-                                    events={this.state.events}
+                                    events={
+                                        [{
+                                            "title": "ashok",
+                                            "allDay": false,
+                                            "start": new Date(2018, 0, 1, 10, 0),
+                                            "end": new Date(2018, 0, 1, 10, 0)
+                                        }]
+                                    }
+                                    // events={this.state.events}
                                     startAccessor="start"
                                     endAccessor="end"
                                     defaultDate={new Date()}
@@ -379,104 +409,138 @@ class Calendar extends Component {
                                     onView={this.handleView}
                                     onNavigate={(date, flipUnit, prevOrNext) => this.onNavigate(date, flipUnit, prevOrNext)}
                                 />
+
+                                <div className="" style={{ paddingTop: "5px", width: "30%" }}>
+                                    <FormGroup >
+                                        <label className="form-control-label" htmlFor="input-Sun">Select Project</label>
+                                        <Select
+                                            name="projectUser"
+                                            placeholder="Select project"
+                                            value={this.state.selectedOption}
+                                            onChange={this.handleChangeSelect}
+                                            options={this.state.projects}
+                                        />
+                                    </FormGroup>
+                                </div>
+
+                                <div id="monthView">
+                                    <Table responsive className="table table-bordered ">
+                                        <thead>
+                                            <tr>
+                                                <th className="text-center text-info"> Date</th>
+                                                {this.state.days.map((data, i) => {
+                                                    return (
+                                                        <th className="text-center text-info">{data.split(" ")[1]}</th>
+                                                    )
+                                                })}
+                                                <th className="text-center text-info">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td className="text-center">Time (Hrs)</td>
+                                                {this.state.days.map(day => {
+                                                    let dayDate = parseInt(day.split(" ")[1]);
+                                                    let dates = []
+                                                    for(let date1 of this.state.monthEvents) {
+                                                        let monDate = moment(new Date(date1.start)).toDate().getDate();
+                                                        dates.push(monDate)
+                                                    }
+                                                    if(dates.includes(dayDate)) {
+                                                        return <td>{2}</td>
+                                                    }
+                                                    else {
+                                                        return <td>{5}</td>
+                                                    }
+                                                })}
+                                                <td>45</td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </div>
+
                                 <AvForm onValidSubmit={this.handleSubmit}>
                                     <div id="hide/show">
+
+
                                         <Row>
-                                            <Col lg="4">
-                                                <br />
-                                                <div className="row" style={{ paddingTop: "5px" }}>
-                                                    <FormGroup className="col-lg-12">
-                                                        <label className="form-control-label" htmlFor="input-Sun">Select Project</label>
-                                                        <Select
-                                                            name="projectUser"
-                                                            placeholder="Select project"
-                                                            value={this.state.selectedOption}
-                                                            onChange={this.handleChangeSelect}
-                                                            options={this.state.projects}
-                                                        />
-                                                    </FormGroup>
-                                                </div>
-
-                                                <div className="row">
-                                                    <div className="form-group col-lg-12">
-                                                        <label className="form-control-label" htmlFor="input-Sun">Upload Documents</label><br />
-                                                        <Button type="button" color="info" value="Upload Documents" onClick={this.toggle}>Upload</Button>&nbsp;
-                                                    </div>
-                                                </div>
+                                            <Col>
+                                                <FormGroup className="text-center">
+                                                    <div className="px-2 badge badge-success text-center">{this.state.sun}</div><br />
+                                                    <label className="form-control-label" htmlFor="input-Sun">Sun</label>
+                                                    <AvInput className="form-control text-center" name="input1" id="input1" placeholder="Time" type="number" min={0} value="0" disabled />
+                                                </FormGroup>
                                             </Col>
-
-                                            <Col lg="8">
-                                                <Row>
-                                                    <Col>
-                                                        <FormGroup className="text-center">
-                                                            <div className="px-2 badge badge-success text-center">{this.state.sun}</div><br />
-                                                            <label className="form-control-label" htmlFor="input-Sun">Sun</label>
-                                                            <AvInput className="form-control text-center" name="input1" id="input1" placeholder="Time" type="number" min={0} value="0" disabled />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col>
-                                                        <FormGroup className="text-center">
-                                                            <div className="px-2 badge badge-success text-center">{this.state.mon}</div><br />
-                                                            <label className="form-control-label" htmlFor="input-Mon">Mon</label>
-                                                            <AvInput className="form-control text-center" name="input2" id="input2" placeholder="Time" type="number" min={0} value={this.state.value1} />
-                                                        </FormGroup >
-                                                    </Col>
-                                                    <Col>
-                                                        <FormGroup className="text-center">
-                                                            <div className="px-2 badge badge-success text-center">{this.state.tue}</div><br />
-                                                            <label className="form-control-label" htmlFor="input-Tue">Tue</label>
-                                                            <AvInput className="form-control text-center" name="input3" id="input3" placeholder="Time" type="number" min={0} value={this.state.value2} />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col>
-                                                        <FormGroup className="text-center">
-                                                            <div className="px-2 badge badge-success text-center">{this.state.wed}</div><br />
-                                                            <label className="form-control-label" htmlFor="input-Wes">Wed </label>
-                                                            <AvInput className="form-control text-center" name="input4" id="input4" placeholder="Time" type="number" min={0} value={this.state.value3} />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col>
-                                                        <FormGroup className="text-center">
-                                                            <div className="px-2 badge badge-success text-center">{this.state.thur}</div><br />
-                                                            <label className="form-control-label" htmlFor="input-Thur">Thu</label>
-                                                            <AvInput className="form-control text-center" name="input5" id="input5" placeholder="Time" type="number" min={0} value={this.state.value4} />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col>
-                                                        <FormGroup className="text-center">
-                                                            <div className="px-2 badge badge-success text-center">{this.state.fri}</div><br />
-                                                            <label className="form-control-label" htmlFor="input-Fri"> Fri </label>
-                                                            <AvInput className="form-control text-center" name="input6" id="input6" placeholder="Time" type="number" min={0} value={this.state.value5} />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col>
-                                                        <FormGroup className="text-center">
-                                                            <div className="px-2 badge badge-success text-center">{this.state.sat}</div><br />
-                                                            <label className="form-control-label" htmlFor="input-Sat">Sat </label>
-                                                            <AvInput className="form-control text-center" name="input7" id="input7" placeholder="Time" type="number" min={0} value="0" disabled />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col>
-                                                        <FormGroup className="text-center" style={{ paddingTop: "27px" }}>
-                                                            <div className="px-2 badge badge-success text-center"></div>
-                                                            <label className="form-control-label total-hours" htmlFor="input-Total">Total</label>
-                                                            {/* <p>{this.state.counter}</p> */}
-                                                            <Input className="form-control text-center" name="input8" placeholder="Time" type="text" value={this.state.counter} disabled />
-                                                        </FormGroup>
-                                                    </Col>
-                                                </Row>
-                                                <div className="row">
-                                                    <div className="form-group col-lg-12">
-                                                        <label className="">Description:</label>
-                                                        <textarea className="form-control" cols="5" placeholder="Short description.." spellCheck="false"></textarea></div>
-                                                </div>
-
-                                                <div style={{ float: "right" }}>
-                                                    <Button type="submit" color="primary" id="savedata" value="save" >Save</Button>&nbsp;
-                                                    <Button color="success" id="submitdata" value="submit" onClick={this.handleClick}>Submit</Button>
-                                                </div>
+                                            <Col>
+                                                <FormGroup className="text-center">
+                                                    <div className="px-2 badge badge-success text-center">{this.state.mon}</div><br />
+                                                    <label className="form-control-label" htmlFor="input-Mon">Mon</label>
+                                                    <AvInput className="form-control text-center" name="input2" id="input2" placeholder="Time" type="number" min={0} value={this.state.value1} />
+                                                </FormGroup >
+                                            </Col>
+                                            <Col>
+                                                <FormGroup className="text-center">
+                                                    <div className="px-2 badge badge-success text-center">{this.state.tue}</div><br />
+                                                    <label className="form-control-label" htmlFor="input-Tue">Tue</label>
+                                                    <AvInput className="form-control text-center" name="input3" id="input3" placeholder="Time" type="number" min={0} value={this.state.value2} />
+                                                </FormGroup>
+                                            </Col>
+                                            <Col>
+                                                <FormGroup className="text-center">
+                                                    <div className="px-2 badge badge-success text-center">{this.state.wed}</div><br />
+                                                    <label className="form-control-label" htmlFor="input-Wes">Wed </label>
+                                                    <AvInput className="form-control text-center" name="input4" id="input4" placeholder="Time" type="number" min={0} value={this.state.value3} />
+                                                </FormGroup>
+                                            </Col>
+                                            <Col>
+                                                <FormGroup className="text-center">
+                                                    <div className="px-2 badge badge-success text-center">{this.state.thur}</div><br />
+                                                    <label className="form-control-label" htmlFor="input-Thur">Thu</label>
+                                                    <AvInput className="form-control text-center" name="input5" id="input5" placeholder="Time" type="number" min={0} value={this.state.value4} />
+                                                </FormGroup>
+                                            </Col>
+                                            <Col>
+                                                <FormGroup className="text-center">
+                                                    <div className="px-2 badge badge-success text-center">{this.state.fri}</div><br />
+                                                    <label className="form-control-label" htmlFor="input-Fri"> Fri </label>
+                                                    <AvInput className="form-control text-center" name="input6" id="input6" placeholder="Time" type="number" min={0} value={this.state.value5} />
+                                                </FormGroup>
+                                            </Col>
+                                            <Col>
+                                                <FormGroup className="text-center">
+                                                    <div className="px-2 badge badge-success text-center">{this.state.sat}</div><br />
+                                                    <label className="form-control-label" htmlFor="input-Sat">Sat </label>
+                                                    <AvInput className="form-control text-center" name="input7" id="input7" placeholder="Time" type="number" min={0} value="0" disabled />
+                                                </FormGroup>
+                                            </Col>
+                                            <Col>
+                                                <FormGroup className="text-center" style={{ paddingTop: "27px" }}>
+                                                    <div className="px-2 badge badge-success text-center"></div>
+                                                    <label className="form-control-label total-hours" htmlFor="input-Total">Total</label>
+                                                    {/* <p>{this.state.counter}</p> */}
+                                                    <Input className="form-control text-center" name="input8" placeholder="Time" type="text" value={this.state.counter} disabled />
+                                                </FormGroup>
                                             </Col>
                                         </Row>
+                                        <div className="row">
+                                            <div className="form-group col-lg-12">
+                                                <label className="">Description:</label>
+                                                <textarea className="form-control" cols="5" placeholder="Short description.." spellCheck="false"></textarea></div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="form-group col-lg-12">
+                                                <label className="form-control-label" htmlFor="input-Sun">Upload Documents</label><br />
+                                                <Button type="button" color="info" value="Upload Documents" onClick={this.toggle}>Upload</Button>&nbsp;
+                                                    </div>
+                                        </div>
+
+
+                                        <div style={{ float: "right" }}>
+                                            <Button type="submit" color="primary" id="savedata" value="save" >Save</Button>&nbsp;
+                                                    <Button color="success" id="submitdata" value="submit" onClick={this.handleClick}>Submit</Button>
+                                        </div>
+
                                     </div>
                                 </AvForm>
 
@@ -524,7 +588,7 @@ class Calendar extends Component {
                         </Card>
                         { /* END panel */}
                     </div>
-                </ContentWrapper>
+                </Container>
             </div>
         );
     }
@@ -549,5 +613,5 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Calendar);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminTimesheet);
 

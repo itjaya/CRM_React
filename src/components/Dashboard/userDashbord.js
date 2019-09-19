@@ -8,6 +8,7 @@ import moment from 'moment';
 
 import AddressDetails from './AddressDetails';
 import EducationDetails from './EducationDetails';
+import AdminTimesheet from '../Timesheets/AdminTimesheet';
 // Filestyle
 import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';
@@ -31,10 +32,16 @@ class Settings extends Component {
         $('#myfile').click()
     }
     validateOnChange = () => {
-
     }
     render() {
-        let userData = this.props.user;
+        let userData = {};
+        let userRole = this.props.user.role.label
+        if(this.props.location.state) {
+            userData = this.props.location.state
+        }
+        else {
+            userData = this.props.user
+        }
         return (
             <ContentWrapper>
                 <div>
@@ -48,7 +55,7 @@ class Settings extends Component {
                                     </div>
                                     <h3 className="m-0 text-bold">{userData.firstName}&nbsp;{userData.lastName}</h3>
                                     <div className="my-3">
-                                        <p>Hello, Ithis is my presentation text. Have fun!</p>
+                                        <p>Hello, this is my presentation text. Have fun!</p>
                                     </div>
                                 </div>
                             </div>
@@ -85,6 +92,12 @@ class Settings extends Component {
                                                 onClick={() => { this.toggleTab('account'); }}>
                                                 Account
                                             </ListGroupItem>
+                                            {userRole === "superAdmin" ?
+                                                <ListGroupItem action
+                                                    className={this.state.activeTab === 'timesheets' ? 'active' : ''}
+                                                    onClick={() => { this.toggleTab('timesheets'); }}>
+                                                    Timesheets
+                                                </ListGroupItem> : ""}
                                         </ListGroup>
                                     </div>
                                 </div>
@@ -315,6 +328,17 @@ class Settings extends Component {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </TabPane>
+                                <TabPane tabId="timesheets">
+                                    <div className="card card-default">
+                                        <div className="card-header d-flex align-items-center">
+                                            <div className="d-flex justify-content-center col">
+                                                <div className="h4 m-0 text-center">User Timesheets</div>
+                                            </div>
+                                        </div>
+                                        {/* <div className="card-header bg-gray-lighter text-bold">Profile</div> */}
+                                            <AdminTimesheet />
                                     </div>
                                 </TabPane>
                             </TabContent>
