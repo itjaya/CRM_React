@@ -1,8 +1,9 @@
 import { USER_ADD_START, USER_ADD_SUCCESS, 
         USER_LOGIN_SUCCESS, USER_LOGIN_START,
         GET_USERS_START, GET_USERS_SUCCESS, USER_LOGOUT,
-        GET_ACTIVATE_USERS_START, GET_USERS_ACTIVATE_SUCCESS, GET_USERS_ACTIVATE_FAIL
- 
+        GET_ACTIVATE_USERS_START, GET_USERS_ACTIVATE_SUCCESS, GET_USERS_ACTIVATE_FAIL,
+        UPDATE_USER_PASSWORD_START,UPDATE_USER_PASSWORD_SUCCESS,UPDATE_USER_PASSWORD_FAIL,
+        FORGET_USER_PASSWORD_START,FORGET_USER_PASSWORD_SUCCESS,FORGET_USER_PASSWORD_FAIL
 } from '../actions/userActions';
 
 let user = JSON.parse(sessionStorage.getItem('userData'));
@@ -14,7 +15,9 @@ const intialState = {
     allUsers : [],
     userLoading: false,
     loginLoading: false,
-    registerLoading: false
+    registerLoading: false,
+    userPassword : {},
+    forgetPassword : {}
 
 }
 
@@ -90,6 +93,55 @@ const userReducer = (state = intialState, action) => {
                 ...state,
                 orgLoading: false,
             }
+            
+            // Update Password
+
+            case UPDATE_USER_PASSWORD_START:
+
+            return {
+                ...state,
+                orgLoading: true
+            }
+
+
+        case UPDATE_USER_PASSWORD_SUCCESS:
+
+            return {
+                ...state,
+                orgLoading: false,
+                userPassword: action.payload
+            }
+
+        case UPDATE_USER_PASSWORD_FAIL:
+
+            return {
+                ...state,
+                orgLoading: false,
+            }
+             // forget Password
+
+             case FORGET_USER_PASSWORD_START:
+
+             return {
+                 ...state,
+                 orgLoading: true
+             }
+ 
+ 
+         case FORGET_USER_PASSWORD_SUCCESS:
+ 
+             return {
+                 ...state,
+                 orgLoading: false,
+                 forgetPassword: action.payload
+             }
+ 
+         case FORGET_USER_PASSWORD_FAIL:
+ 
+             return {
+                 ...state,
+                 orgLoading: false,
+             }
         default: {
             return state
         }

@@ -3,16 +3,12 @@ import { connect } from 'react-redux';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem,Input,Button } from 'reactstrap';
 import $ from 'jquery';
-import Datetime from 'react-datetime';
 import FormValidator from '../Forms/FormValidator';
 import 'jquery-validation/dist/jquery.validate.js';
-import swal from 'sweetalert';
-
-import AddressDetails from './AddressDetails';
-import EducationDetails from './EducationDetails';
 // Filestyle
 import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';
+import swal from 'sweetalert';
 
 import * as userActions from "../../store/actions/userActions"
 
@@ -98,14 +94,7 @@ class Settings extends Component {
         }
     }
     render() {
-        let userData = {};
-        let userRole = this.props.user.role.label
-        if(this.props.location.state) {
-            userData = this.props.location.state
-        }
-        else {
-            userData = this.props.user
-        }
+        let userData = this.props.user;
         return (
             <ContentWrapper>
                 <div>
@@ -119,7 +108,7 @@ class Settings extends Component {
                                     </div>
                                     <h3 className="m-0 text-bold">{userData.firstName}&nbsp;{userData.lastName}</h3>
                                     <div className="my-3">
-                                        <p>Hello, this is my presentation text. Have fun!</p>
+                                        <p>Hello, Ithis is my presentation text. Have fun!</p>
                                     </div>
                                 </div>
                             </div>
@@ -135,23 +124,7 @@ class Settings extends Component {
                                                 onClick={() => { this.toggleTab('profile'); }}>
                                                 Profile
                                             </ListGroupItem>
-                                            <ListGroupItem action
-                                                className={this.state.activeTab === 'personal' ? 'active' : ''}
-                                                onClick={() => { this.toggleTab('personal'); }}>
-                                                Personal Details
-                                            </ListGroupItem>
-                                            <ListGroupItem action
-                                                className={this.state.activeTab === 'address' ? 'active' : ''}
-                                                onClick={() => { this.toggleTab('address'); }}>
-                                                Address Details
-                                            </ListGroupItem>
-                            
-                                            <ListGroupItem action
-                                                className={this.state.activeTab === 'education' ? 'active' : ''}
-                                                onClick={() => { this.toggleTab('education'); }}>
-                                                Education Details
-                                            </ListGroupItem>
-                                            <ListGroupItem action
+                                             <ListGroupItem action
                                                 className={this.state.activeTab === 'account' ? 'active' : ''}
                                                 onClick={() => { this.toggleTab('account'); }}>
                                                 Account
@@ -218,135 +191,7 @@ class Settings extends Component {
                                         </div>
                                     </div>
                                 </TabPane>
-                                <TabPane tabId="personal">
-                                    <div className="card card-default">
-                                        <div className="card-header d-flex align-items-center">
-                                            <div className="d-flex justify-content-center col">
-                                                <div className="h4 m-0 text-center">Personal Details</div>
-                                            </div>
-                                        </div>
-                                        {/* <div className="card-header bg-gray-lighter text-bold">Profile</div> */}
-                                        <div className="card-body">
-                                            <div className="row py-4 justify-content-center">
-                                                <div className="col-12 col-sm-10">
-                                                    <form className="form-horizontal">
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Job Title</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="jobTitle" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Alternate Email</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="alternateEmail" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Date of Joining</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                            <Datetime
-                                                                    inputProps={{
-                                                                        name: 'dateOfJoining',
-                                                                        className: 'form-control required',
-                                                                        // placeholder: 'Enter project start date'
-                                                                    }}
-                                                                    onChange={this.validateOnChange.bind(this, "doj")}
-                                                                    timeFormat={false}
-                                                                    // value={moment().toDate()}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Gender</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="gender" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Phone No</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="phoneNo" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">SSN</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="SSN" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Date of Birth</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <Datetime
-                                                                    inputProps={{
-                                                                        name: 'dateOfBirth',
-                                                                        className: 'form-control required',
-                                                                        // placeholder: 'Enter project start date'
-                                                                    }}
-                                                                    timeFormat={false}
-                                                                    onChange={this.validateOnChange.bind(this, "dob")}
-                                                                    // value={moment().toDate()}
-                                                                />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Visa Type</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="visaType" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Country</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="country" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">State</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="state" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Marital Status</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="maritalStatus" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Payroll Id</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="payrollId" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row text-right">
-                                                            <div className="col-md-12">
-                                                                <button className="btn btn-info" type="submit">Update</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </TabPane>
-                                <TabPane tabId="address">
-                                    <div className="card card-default">
-                                        <div className="card-header d-flex align-items-center">
-                                            <div className="d-flex justify-content-center col">
-                                                <div className="h4 m-0 text-center">Address Details</div>
-                                            </div>
-                                        </div>
-                                        <AddressDetails />
-                                    </div>
-                                </TabPane>
-                                <TabPane tabId="education">
-                                    <div className="card card-default">
-                                        <div className="card-header d-flex align-items-center">
-                                            <div className="d-flex justify-content-center col">
-                                                <div className="h4 m-0 text-center">Education Details</div>
-                                            </div>
-                                        </div>
-                                        <EducationDetails />
-                                    </div>
-                                </TabPane>
-                                <TabPane tabId="account">
+                               <TabPane tabId="account">
                                     <div className="card card-default">
                                         <div className="card-header d-flex align-items-center">
                                             <div className="d-flex justify-content-center col">
@@ -357,7 +202,7 @@ class Settings extends Component {
                                         <div className="card-body">
                                             <div className="row py-4 justify-content-center">
                                                 <div className="col-12 col-sm-10">
-                                                <form onSubmit={this.onSubmit} name="userForm" ref="userForm" >
+                                                    <form onSubmit={this.onSubmit} name="userForm" ref="userForm" >
                                                         <p className="text-center text-danger">{this.state.passwordMsg}</p>
                                                         <div className="form-group row align-items-center">
                                                             <label className="col-md-4 col-form-label">Old Password</label>
@@ -447,3 +292,5 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+
+

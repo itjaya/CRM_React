@@ -155,7 +155,7 @@ class Login extends Component {
                                         <span className="fa fa-check"></span>Remember Me</label>
                                 </div>
                                 <div className="float-right">
-                                    <Link to="recover" className="text-muted">Forgot your password?</Link>
+                                    <Link to="forget" className="text-muted">Forgot your password?</Link>
                                 </div>
                             </div>
                             <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
