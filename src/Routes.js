@@ -34,6 +34,7 @@ const ManageConsultant = lazy(() => import('./components/Consultants/ManageConsu
 const ViewConsultant = lazy(() => import('./components/Consultants/ViewConsultant'));
 
 const Timesheets = lazy(() => import('./components/Timesheets/Timesheets'));
+const Settings = lazy(() => import('./components/settings/settings'));
 
 
 const Login = lazy(() => import('./components/Pages/Login'));
@@ -43,6 +44,9 @@ const Lock = lazy(() => import('./components/Pages/Lock'));
 const NotFound = lazy(() => import('./components/Pages/NotFound'));
 const Error500 = lazy(() => import('./components/Pages/Error500'));
 const Maintenance = lazy(() => import('./components/Pages/Maintenance'));
+const Forget = lazy(() => import("./components/Pages/Forget"));
+const Reset = lazy(() => import("./components/Pages/Reset"));
+
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -54,7 +58,9 @@ const listofPages = [
     '/lock',
     '/notfound',
     '/error500',
-    '/maintenance'
+    '/maintenance',
+    '/forget',
+    '/reset'
 ];
 
 const Routes = ({ location }) => {
@@ -84,6 +90,8 @@ const Routes = ({ location }) => {
                         <Route path="/notfound" component={waitFor(NotFound)} />
                         <Route path="/error500" component={waitFor(Error500)} />
                         <Route path="/maintenance" component={waitFor(Maintenance)} />
+                        <Route path="/forget" component={waitFor(Forget)} /> 
+                        <Route path="/reset" component={waitFor(Reset)} />
                     </Switch>
                 </Suspense>
             </BasePage>
@@ -133,7 +141,7 @@ const Routes = ({ location }) => {
 
                                         {/* Timesheets */}
                                         <Route path="/timesheets" component={waitFor(Timesheets)} />
-
+                                        <Route path="/settings" component={waitFor(Settings)} />
                                         <Redirect to="/login" />
                                     </Switch>
                                 </Suspense>

@@ -57,6 +57,12 @@ const Menu = [
         path: '/manageUsers',
         translate: 'sidebar.nav.element.USERS'
     },
+    {
+        name: 'Settings',
+        icon: 'fas fa-users',
+        path: '/settings',
+        translate: 'sidebar.nav.element.SETTINGS'
+    },
    
     // {
     //     name: 'Elements',

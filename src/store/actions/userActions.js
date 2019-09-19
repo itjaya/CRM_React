@@ -16,6 +16,14 @@ export const GET_ACTIVATE_USERS_START = "GET_ACTIVATE_USERS_START";
 export const GET_USERS_ACTIVATE_SUCCESS = "GET_USERS_ACTIVATE_SUCCESS";
 export const GET_USERS_ACTIVATE_FAIL = "GET_USERS_ACTIVATE_FAIL";
 
+export const UPDATE_USER_PASSWORD_START = "UPDATE_USER_PASSWORD_START";
+export const UPDATE_USER_PASSWORD_SUCCESS = "UPDATE_USER_PASSWORD_SUCCESS";
+export const UPDATE_USER_PASSWORD_FAIL = "UPDATE_USER_PASSWORD_FAIL";
+
+export const FORGET_USER_PASSWORD_START = "FORGET_USER_PASSWORD_START";
+export const FORGET_USER_PASSWORD_SUCCESS = "FORGET_USER_PASSWORD_SUCCESS";
+export const FORGET_USER_PASSWORD_FAIL = "FORGET_USER_PASSWORD_FAIL";
+
 
 export const USER_LOGOUT = 'USER_LOGOUT';
 
@@ -112,6 +120,56 @@ export const userActivate = (id) => {
         return (
             $.get(url.url + `userAcitivate?id=${id}`, (result) => {
                 dispatch(userActivateSuccess(result))
+            })
+        )
+    }
+ }
+
+ // Update User Password
+
+export const userUpdatePasswordStart = () => {
+    return { type: UPDATE_USER_PASSWORD_START };
+}
+
+export const userUpdatePasswordSuccess = (userPassword) => {
+    return { type: UPDATE_USER_PASSWORD_SUCCESS, payload: userPassword };
+}
+
+export const userUpdatePasswordFail = () => {
+    return { type: UPDATE_USER_PASSWORD_FAIL }
+}
+
+export const userUpdatePassword = (data) => {
+    return dispatch => {
+        dispatch(userUpdatePasswordStart())
+        return (
+            $.post(url.url + "passwordUpdate",data, (result) => {
+                dispatch(userUpdatePasswordSuccess(result))
+            })
+        )
+    }
+ }
+
+ // Forget Password
+
+ export const userForgetPasswordStart = () => {
+    return { type: FORGET_USER_PASSWORD_START };
+}
+
+export const userForgetPasswordSuccess = (forgetPassword) => {
+    return { type: FORGET_USER_PASSWORD_SUCCESS, payload: forgetPassword };
+}
+
+export const userForgetPasswordFail = () => {
+    return { type: FORGET_USER_PASSWORD_FAIL }
+}
+
+export const userForgetPassword = (data) => {
+    return dispatch => {
+        dispatch(userForgetPasswordStart())
+        return (
+            $.post(url.url + "forgetPassword",data, (result) => {
+                dispatch(userForgetPasswordSuccess(result))
             })
         )
     }
