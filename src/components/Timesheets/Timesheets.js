@@ -300,6 +300,10 @@ class Calendar extends Component {
 
         this.props.uploadDocs(formdata, this.state.selectedType, this.state.navigatedDate)
         this.setState({ modal : !this.state.modal })
+        setTimeout(() => {
+            this.refreshData();
+        },500)
+
     }
 
     handleClick = () => {
@@ -408,8 +412,10 @@ class Calendar extends Component {
                                                     <ol>
                                                         {this.state.uploads.map((upload, i) => {
                                                             let weekNo = moment(this.state.navigatedDate).week();
-                                                            let yearNo = moment(this.state.navigatedDate).year()
+                                                            let yearNo = moment(this.state.navigatedDate).year();
                                                             if (weekNo === parseInt(upload.weekNo) && yearNo === parseInt(upload.year)) {
+                                                                console.log("upload", upload)
+
                                                                 return (
                                                                     <>
                                                                         {upload.files.map((file, k) => {
