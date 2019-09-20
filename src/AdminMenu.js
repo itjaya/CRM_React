@@ -102,7 +102,7 @@ const AdminMenu = [
     // },
     {
         name: 'Settings',
-        icon: 'fas fa-users',
+        icon: 'fas fa-user',
         path: '/settings',
         translate: 'sidebar.nav.element.SETTINGS'
     },

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { withNamespaces, Trans } from 'react-i18next';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Tooltip, Progress } from 'reactstrap';
+import { Tooltip, Progress, Row } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import * as orgActions from '../../store/actions/orgActions';
 import * as projectActions from '../../store/actions/projectActions';
 import * as clientActions from '../../store/actions/client';
 import * as vendorActions from '../../store/actions/vendor';
+import * as userActions from '../../store/actions/userActions';
 
 // EasyPieChart
 import EasyPieChart from 'easy-pie-chart';
@@ -258,7 +259,8 @@ class DashboardV2 extends Component {
         this.props.onGetOrganizations();
         this.props.getProjects();
         this.props.getClient();
-        this.props.getVendor()
+        this.props.getVendor();
+        this.props.getUsers();
     }
     render() {
         return (
@@ -270,8 +272,7 @@ class DashboardV2 extends Component {
                     </div>
                 </div>
             
-               <div className="unwrap">
-                    {/* START chart */}
+               {/* <div className="unwrap">
                     <div className="card">
                         <div className="card-header">
                             <div className="card-title">Overall progress</div>
@@ -299,179 +300,66 @@ class DashboardV2 extends Component {
                             </div>
                         </div>
                     </div>
-                    {/* END chart */}
-                </div>
-                { /* START radial charts */ }
+                </div> */}
+                <Row>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                               
+                                <h3 className="mt-0">{this.props.orgData.length}</h3>
+                                <p className="text-muted">Organizations</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                               
+                                <h3 className="mt-0">{this.props.projects.length}</h3>
+                                <p className="text-muted">Projects</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                                
+                                <h3 className="mt-0">{this.props.vendorsList.length}</h3>
+                                <p className="text-muted">Vendors</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                               
+                                <h3 className="mt-0">{this.props.clientsList.length}</h3>
+                                <p className="text-muted">Clients</p>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
 
-                <div className="row mb-3">
-                    <div className="col-lg-3 col-6 text-center">
-                        <p>Current Project</p>
-                        <div className="text-center py-4">
-                            <div ref="easypiechart1" data-percent="60" className="easypie-chart easypie-chart-md">
-                                <span>60%</span>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                               
+                                <h3 className="mt-0">{this.props.allUsers.length}</h3>
+                                <p className="text-muted">Users</p>
                             </div>
                         </div>
+                        {/* END card */}
                     </div>
-                    <div className="col-lg-3 col-6 text-center">
-                        <p>Current Progress</p>
-                        <div className="text-center py-4">
-                            <div ref="easypiechart2" data-percent="30" className="easypie-chart easypie-chart-md">
-                                <span>30%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-3 col-6 text-center">
-                        <p>Space Usage</p>
-                        <div className="text-center py-4">
-                            <div ref="easypiechart3" data-percent="50" className="easypie-chart easypie-chart-md">
-                                <span>50%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-3 col-6 text-center">
-                        <p>Interactions</p>
-                        <div className="text-center py-4">
-                            <div ref="easypiechart4" data-percent="75" className="easypie-chart easypie-chart-md">
-                                <span>75%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                { /* START radial charts */ }
-                { /* START Multiple List group */ }
-                <div className="list-group mb-3">
-                    <div className="list-group-item list-group-item-action">
-                        <table className="wd-wide">
-                            <tbody>
-                                <tr>
-                                    <td className="wd-xs">
-                                        <div className="px-2">
-                                            <img className="img-fluid rounded thumb64" src="img/dummy.png" alt="Dummy" />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="px-2">
-                                            <h4 className="mb-2">Project A</h4>
-                                            <small className="text-muted">Vestibulum ante ipsum primis in faucibus orci</small>
-                                        </div>
-                                    </td>
-                                    <td className="wd-sm  d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0">Last change</p>
-                                            <small className="text-muted">4 weeks ago</small>
-                                        </div>
-                                    </td>
-                                    <td className="wd-xs d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0 text-muted">
-                                                <em className="icon-people mr-2 fa-lg"></em>26</p>
-                                        </div>
-                                    </td>
-                                    <td className="wd-xs d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0 text-muted">
-                                                <em className="icon-doc mr-2 fa-lg"></em>3500</p>
-                                        </div>
-                                    </td>
-                                    <td className="wd-sm">
-                                        <div className="px-2">
-                                            <Progress className="m-0 progress-xs" value="80" color="success"></Progress>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="list-group mb-3">
-                    <div className="list-group-item list-group-item-action">
-                        <table className="wd-wide">
-                            <tbody>
-                                <tr>
-                                    <td className="wd-xs">
-                                        <div className="px-2">
-                                            <img className="img-fluid rounded thumb64" src="img/dummy.png" alt="Dummy" />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="px-2">
-                                            <h4 className="mb-2">Project X</h4>
-                                            <small className="text-muted">Vestibulum ante ipsum primis in faucibus orci</small>
-                                        </div>
-                                    </td>
-                                    <td className="wd-sm d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0">Last change</p>
-                                            <small className="text-muted">Today at 06:23 am</small>
-                                        </div>
-                                    </td>
-                                    <td className="wd-xs d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0 text-muted">
-                                                <em className="icon-people mr-2 fa-lg"></em>3</p>
-                                        </div>
-                                    </td>
-                                    <td className="wd-xs d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0 text-muted">
-                                                <em className="icon-doc mr-2 fa-lg"></em>150</p>
-                                        </div>
-                                    </td>
-                                    <td className="wd-sm">
-                                        <div className="px-2">
-                                            <Progress className="m-0 progress-xs" value="50" color="purple"></Progress>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="list-group mb-3">
-                    <div className="list-group-item list-group-item-action">
-                        <table className="wd-wide">
-                            <tbody>
-                                <tr>
-                                    <td className="wd-xs">
-                                        <div className="px-2">
-                                            <img className="img-fluid rounded thumb64" src="img/dummy.png" alt="Dummy" />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="px-2">
-                                            <h4 className="mb-2">Project Z</h4>
-                                            <small className="text-muted">Vestibulum ante ipsum primis in faucibus orci</small>
-                                        </div>
-                                    </td>
-                                    <td className="wd-sm d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0">Last change</p>
-                                            <small className="text-muted">Yesterday at 10:20 pm</small>
-                                        </div>
-                                    </td>
-                                    <td className="wd-xs d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0 text-muted">
-                                                <em className="icon-people mr-2 fa-lg"></em>15</p>
-                                        </div>
-                                    </td>
-                                    <td className="wd-xs d-none d-lg-table-cell">
-                                        <div className="px-2">
-                                            <p className="m-0 text-muted">
-                                                <em className="icon-doc mr-2 fa-lg"></em>480</p>
-                                        </div>
-                                    </td>
-                                    <td className="wd-sm">
-                                        <div className="px-2">
-                                            <Progress className="m-0 progress-xs" value="20" color="green"></Progress>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                { /* END Multiple List group */ }
+                    </Row>
+               
             </ContentWrapper>
             );
     }
@@ -484,6 +372,7 @@ const mapStateToProps = state => {
         projects: state.projects.projects,
         clientsList: state.clientReducer.clientData,
         vendorsList: state.vendorReducer.vendorData,
+        allUsers: state.user.allUsers,
 
     }
 }
@@ -494,6 +383,7 @@ const mapDispatchToProps = dispatch => {
         getProjects: (event) => dispatch(projectActions.getProjects(event)),
         getClient: (event) => dispatch(clientActions.getClient(event)),
         getVendor: (event) => dispatch(vendorActions.getVendor(event)),
+        getUsers: (event) => dispatch(userActions.getUsers(event)),
 
     }
 }
