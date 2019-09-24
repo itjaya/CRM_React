@@ -4,8 +4,8 @@ import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, Nav, NavItem, NavLink, Card } from 'reactstrap';
 import $ from 'jquery';
 import Datetime from 'react-datetime';
-import moment from 'moment';
-
+import moment from 'moment'
+import {Link} from 'react-router-dom';
 import AddressDetails from '../Dashboard/AddressDetails';
 import EducationDetails from '../Dashboard/EducationDetails';
 import AdminTimesheet from '../Timesheets/AdminTimesheet';
@@ -42,20 +42,32 @@ class Settings extends Component {
         else {
             userData = this.props.user
         }
+
+        console.log("userrole", userRole)
         return (
             <ContentWrapper>
                 <div className="content-heading">{userData.firstName}&nbsp;{userData.lastName}</div>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        {userRole === "superAdmin" ?
+                            <Link to="/dashboard">Dashboard</Link> : userRole ==="Admin" ? <Link to="/admindashboard">Dashboard</Link> : ""}
+                        </li>
+                    <li class="breadcrumb-item"><Link to="/manageUsers">Users</Link></li>
+                    <li class="breadcrumb-item active">User</li>
+                </ol>
                 {/* <Row> */}
                 <Card>
                     <form className="ie-fix-flex">
                         <div role="tabpanel">
                             <Nav tabs justified>
-                                <NavItem className="cursor">
+                                
+                                <NavItem className="cursor">   
                                     <NavLink
                                         className={this.state.activeTab === 'profile' ? 'active' : ''}
                                         onClick={() => { this.toggleTab('profile'); }}>
                                         Profile
                                             </NavLink>
+                                            
                                 </NavItem>
                                 <NavItem className="cursor">
                                     <NavLink
@@ -78,14 +90,14 @@ class Settings extends Component {
                                         Education Details
                                             </NavLink>
                                 </NavItem>
-                                {userRole === "superAdmin" ?
-                                    <NavItem className="cursor">
-                                        <NavLink
-                                            className={this.state.activeTab === 'timesheets' ? 'active' : ''}
-                                            onClick={() => { this.toggleTab('timesheets'); }}>
-                                            Timesheets
+
+                                <NavItem className="cursor">
+                                    <NavLink
+                                        className={this.state.activeTab === 'timesheets' ? 'active' : ''}
+                                        onClick={() => { this.toggleTab('timesheets'); }}>
+                                        Timesheets
                                                 </NavLink>
-                                    </NavItem> : ""}
+                                </NavItem> 
                             </Nav>
                         </div>
                     </form>

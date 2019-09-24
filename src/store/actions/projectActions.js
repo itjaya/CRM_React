@@ -83,9 +83,7 @@ export const getUserProjects = (id) => {
     return dispatch => {
         dispatch(getUserProjectStart());
         $.get(url.url + `getUserProjects?id=${id}`, (result) => {
-            if(result) {
-                dispatch(getUserProjectSuccess(result));
-            }
+            dispatch(getUserProjectSuccess(result));
         })
     }
 }

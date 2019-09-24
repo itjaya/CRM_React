@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import ContentWrapper from '../Layout/ContentWrapper';
+
 import { Row, Col, FormGroup, Input, Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter, Container, Table } from 'reactstrap';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import BigCalendar from 'react-big-calendar';
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import moment from 'moment';
 import Dropzone from 'react-dropzone';
 import { AvForm, AvInput } from 'availity-reactstrap-validation';
@@ -19,9 +17,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import "./timesheet.css"
 
-
 BigCalendar.momentLocalizer(moment);
-
 
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -38,7 +34,7 @@ class AdminTimesheet extends Component {
             events: [],
             uploads : [],
             monthEvents : [],
-            projectDetails: {},
+            description: "",
             buttonName: '',
             navigatedDate: moment(),
             defaultView: "week",
@@ -52,7 +48,6 @@ class AdminTimesheet extends Component {
             value5: "",
             counter: 0,
             monthCounter : 0
-
         }
     }
 
@@ -72,6 +67,12 @@ class AdminTimesheet extends Component {
             // days.push(days1[date.getDay(i)] + " " + date.getDate());
             days.push(date.getDate());
             date.setDate(date.getDate() + 1);
+        }
+        let weekNo = dates.week();
+        for (let event of this.props.events.events) {
+            if (parseInt(event.weekNo) === weekNo) {
+                this.setState({ description : event.description })
+            }
         }
 
         for (var k = 0; k < events.length; k++) {
@@ -159,15 +160,18 @@ class AdminTimesheet extends Component {
                 let array = [];
                 let eventsArray = this.props.events.events;
                 for (let obj of eventsArray) {
-                    array.push({
-                        start: moment(obj.start).toDate(),
-                        end: moment(obj.end).toDate(),
-                        title: obj.title,
-                        isAllDay: obj.isAllDay,
-                        lock: obj.lock
-                    })
+
+                    for (let event of obj.dates) {
+                        array.push({
+                            start: new moment(event.start).toDate(),
+                            end: new moment(event.end).toDate(),
+                            title: event.title,
+                            isAllDay: event.isAllDay,
+                            lock: event.lock
+                        })
+                    }
                 }
-                this.setState({ events: array, uploads : this.props.events.uploads, projectDetails: this.props.events, projectDate: moment(this.props.events.prjStartDate).toDate() })
+                this.setState({ events: array, uploads : this.props.events.uploads })
                 var dates = moment(new Date());
                 await this.setEvents(array, dates);
             }
@@ -206,16 +210,12 @@ class AdminTimesheet extends Component {
             this.setState({ divStyle: { minHeight: 50 }, defaultView: "week" })
             document.getElementById("hide/show").style.display = "block";
             document.getElementById("monthView").style.display = "none";
-
-            let dates = moment(new Date());
-            this.setEvents(this.state.events, dates)
         }
         else {
             document.getElementById("monthView").style.display = "block";
-            // this.setState({ divStyle: { minHeight: 500 }, defaultView: "month" })
             document.getElementById("hide/show").style.display = "none";
-
         }
+        this.onNavigate(this.state.navigatedDate)
     }
 
     onNavigate = (navigate) => {
@@ -225,23 +225,20 @@ class AdminTimesheet extends Component {
         let monthStartDate = moment(projectDate).startOf('month')
         let range = dates.isSameOrAfter(monthStartDate)
 
-        if (range) {
+        this.setState({ value1: "", value2: "", value3: "", value4: "", value5: "", projectDate: dates.toDate(), description : "" })
+        let weekEndDate = moment().day(6);
 
-            this.setState({ value1: "", value2: "", value3: "", value4: "", value5: "", projectDate: dates.toDate() })
-            let weekEndDate = moment().day(6);
-
-            this.setState({
-                sun: dates.day(0).toDate().getDate(), date1: dates.day(0).toDate(),
-                mon: dates.day(1).toDate().getDate(), date2: dates.day(1).toDate(),
-                tue: dates.day(2).toDate().getDate(), date3: dates.day(2).toDate(),
-                wed: dates.day(3).toDate().getDate(), date4: dates.day(3).toDate(),
-                thur: dates.day(4).toDate().getDate(), date5: dates.day(4).toDate(),
-                fri: dates.day(5).toDate().getDate(), date6: dates.day(5).toDate(),
-                sat: dates.day(6).toDate().getDate(), date7: dates.day(6).toDate(),
-                navigatedDate: dates
-            });
-            this.setEvents(this.state.events, dates);
-        }
+        this.setState({
+            sun: dates.day(0).toDate().getDate(), date1: dates.day(0).toDate(),
+            mon: dates.day(1).toDate().getDate(), date2: dates.day(1).toDate(),
+            tue: dates.day(2).toDate().getDate(), date3: dates.day(2).toDate(),
+            wed: dates.day(3).toDate().getDate(), date4: dates.day(3).toDate(),
+            thur: dates.day(4).toDate().getDate(), date5: dates.day(4).toDate(),
+            fri: dates.day(5).toDate().getDate(), date6: dates.day(5).toDate(),
+            sat: dates.day(6).toDate().getDate(), date7: dates.day(6).toDate(),
+            navigatedDate: dates
+        });
+        this.setEvents(this.state.events, dates);
 
     }
 
@@ -264,27 +261,39 @@ class AdminTimesheet extends Component {
     }
 
     handleSubmit = (e, values) => {
-        e.preventDefault();
+        e.persist();
 
-        let weekData = [
-            { date: this.state.date1, title: values.input1 },
-            { date: this.state.date2, title: values.input2 },
-            { date: this.state.date3, title: values.input3 },
-            { date: this.state.date4, title: values.input4 },
-            { date: this.state.date5, title: values.input5 },
-            { date: this.state.date6, title: values.input6 },
-            { date: this.state.date7, title: values.input7 },
-        ]
-
-        let submitData = {
-            type: "save",
-            userId: this.props.user,
-            weekData: weekData,
-            projectId: this.state.selectedOption,
-            weekNo: moment(this.state.date1).week()
+        if (this.state.selectedOption === undefined) {
+            swal({
+                text: "No project has been assigned to the employee !",
+                icon: "warning",
+                button: "OK",
+            })
         }
-        // console.log("subm", submitData)
-        this.props.addTimesheets(submitData);
+        else {
+
+            let weekData = [
+                { date: this.state.date1, title: values.input1 },
+                { date: this.state.date2, title: values.input2 },
+                { date: this.state.date3, title: values.input3 },
+                { date: this.state.date4, title: values.input4 },
+                { date: this.state.date5, title: values.input5 },
+                { date: this.state.date6, title: values.input6 },
+                { date: this.state.date7, title: values.input7 },
+            ]
+
+            let submitData = {
+                type: "save",
+                userId: this.props.user,
+                weekData: weekData,
+                projectId: this.state.selectedOption,
+                weekNo: moment(this.state.date1).week(),
+                description : values.description
+            }
+            // console.log("subm", submitData)
+            this.props.addTimesheets(submitData);
+        }
+
 
     }
 
@@ -334,15 +343,7 @@ class AdminTimesheet extends Component {
                                     defaultView={this.state.defaultView}
                                     localizer={localizer}
                                     views={["month", "week"]}
-                                    events={
-                                        [{
-                                            "title": "ashok",
-                                            "allDay": false,
-                                            "start": new Date(2018, 0, 1, 10, 0),
-                                            "end": new Date(2018, 0, 1, 10, 0)
-                                        }]
-                                    }
-                                    // events={this.state.events}
+                                    events={this.state.events}
                                     startAccessor="start"
                                     endAccessor="end"
                                     defaultDate={new Date()}
@@ -489,7 +490,7 @@ class AdminTimesheet extends Component {
                                         <div className="row">
                                             <div className="form-group col-lg-12">
                                                 <label className="">Description:</label>
-                                                <textarea className="form-control" cols="5" placeholder="Short description.." spellCheck="false"></textarea></div>
+                                                <AvInput type ="textarea" name="description" className="form-control" cols="5" placeholder="Short description.." spellCheck="false" value = {this.state.description}/></div>
                                         </div>
 
                                         <div className="row">
@@ -562,7 +563,6 @@ const mapStateToProps = state => {
         userData: state.user.userLogin.userData,
         userProjects: state.projects.userProjects,
         events: state.timesheets.allEvents,
-        projectDetails: state.timesheets,
         timesheets: state.timesheets.timesheetResult
     }
 }

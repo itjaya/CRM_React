@@ -106,12 +106,12 @@ const AdminMenu = [
         path: '/settings',
         translate: 'sidebar.nav.element.SETTINGS'
     },
-    {
-        name: 'Timesheets',
-        icon: 'far fa-clock',
-        path: '/timesheets',
-        translate: 'sidebar.nav.element.TIMESHEETS'
-    },
+    // {
+    //     name: 'Timesheets',
+    //     icon: 'far fa-clock',
+    //     path: '/timesheets',
+    //     translate: 'sidebar.nav.element.TIMESHEETS'
+    // },
     // {
     //     name: 'Sales',
     //     icon: 'far fa-list-alt',

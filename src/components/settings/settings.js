@@ -9,6 +9,7 @@ import 'jquery-validation/dist/jquery.validate.js';
 import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';
 import swal from 'sweetalert';
+import {Link} from 'react-router-dom';
 
 import * as userActions from "../../store/actions/userActions"
 
@@ -139,8 +140,18 @@ class Settings extends Component {
     }
     render() {
         // let profileForm = this.props.user;
+        let userRole = this.props.user.role.label;
+
         return (
             <ContentWrapper>
+                <div class="content-heading"><div>Settings</div></div>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        {userRole === "superAdmin" ?
+                            <Link to="/dashboard">Dashboard</Link> : userRole === "Admin" ? <Link to="/admindashboard">Dashboard</Link> : ""}
+                    </li>
+                    <li class="breadcrumb-item active">Users</li>
+                </ol>
                 <div>
                     <Row>
                         <Col lg="3">

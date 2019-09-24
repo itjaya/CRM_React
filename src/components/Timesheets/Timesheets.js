@@ -17,7 +17,7 @@ import * as timesheetActions from '../../store/actions/timesheet';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 
-BigCalendar.momentLocalizer(moment);
+// BigCalendar.momentLocalizer(moment);
 
 
 const localizer = BigCalendar.momentLocalizer(moment)
@@ -33,10 +33,11 @@ class Calendar extends Component {
             projects: [],
             events: [],
             uploads : [],
-            projectDetails: {},
+            description: "",
             buttonName: '',
             navigatedDate: moment(),
             defaultView: "week",
+            views : ["month", "week" ],
             projectDate: moment(),
             selectedType: "",
             modal: false,
@@ -52,6 +53,13 @@ class Calendar extends Component {
 
     setEvents = (events, dates) => {
         let counter = 0;
+
+        let weekNo = dates.week();
+        for (let event of this.props.events.events) {
+            if (parseInt(event.weekNo) === weekNo) {
+                this.setState({ description : event.description })
+            }
+        }
 
         for (var k = 0; k < events.length; k++) {
             let eventsDates = moment(new Date(events[k].start)).format("MM-DD-YY");
@@ -88,8 +96,9 @@ class Calendar extends Component {
                 document.getElementById("input7").disabled = events[k].lock;
             }
         }
-        // let totalHours = mon + tue + wed + thur + fri
-        this.setState({ counter: counter })
+
+        this.setState({ counter: counter });
+       
     }
 
     toggle = () => {
@@ -98,7 +107,7 @@ class Calendar extends Component {
         }));
     }
 
-    componentDidMount() {
+    componentDidMount = async() => {
         var dates = moment(new Date);
 
         this.setState({
@@ -112,41 +121,50 @@ class Calendar extends Component {
         })
 
         let userId = this.props.userData._id;
-        this.props.getUserProjects(userId);
+        await this.props.getUserProjects(userId);
     }
 
     componentDidUpdate = async (prevProps) => {
-        if (prevProps.userProjects !== this.props.userProjects) {
+        if (prevProps.userProjects !== await this.props.userProjects) {
             let array = [];
-            this.props.userProjects.map((projects, i) => {
+            this.props.userProjects.map((project, i) => {
                 array.push({
-                    label: projects.projectName + ` (${projects.clientId.label})`,
-                    value: projects._id
+                    label: project.projectName + ` (${project.clientId.label})`,
+                    value: project._id
                 })
             })
             this.setState({ projects: array });
             this.handleChangeSelect(array[0]);
         }
-        if (prevProps.events !== this.props.events) {
+        if (prevProps.events !== await this.props.events) {
 
-            if (this.props.events !== undefined) {
+            if (this.props.events.events !== undefined) {
 
                 let array = [];
                 let eventsArray = this.props.events.events;
                 for (let obj of eventsArray) {
-                    array.push({
-                        start: moment(obj.start).toDate(),
-                        end: moment(obj.end).toDate(),
-                        title: obj.title,
-                        isAllDay: obj.isAllDay,
-                        lock: obj.lock
-                    })
+
+                    for (let event of obj.dates) {
+                        array.push({
+                            start: new moment(event.start).toDate(),
+                            end: new moment(event.end).toDate(),
+                            title: event.title,
+                            isAllDay: event.isAllDay,
+                            lock: event.lock
+                        })
+
+                    }
+
                 }
-                this.setState({ events: array, uploads : this.props.events.uploads, projectDetails: this.props.events, projectDate: moment(this.props.events.prjStartDate).toDate() })
+                this.setState({ events: array, uploads : this.props.events.uploads })
                 var dates = moment(new Date());
-                await this.setEvents(array, dates);
+                this.setEvents(array, dates);
+            }
+            else {
+                this.setState({ views: ["week"] })
             }
         }
+     
         if (prevProps.timesheets !== this.props.timesheets) {
             swal({
                 text: this.props.timesheets.msg,
@@ -178,16 +196,14 @@ class Calendar extends Component {
     handleView = (view) => {
 
         if (view === "week") {
-            this.setState({ divStyle: { minHeight: 100 }, defaultView: "week" })
             document.getElementById("hide/show").style.display = "block";
-            let dates = moment(new Date());
-            this.setEvents(this.state.events, dates)
+            this.setState({ divStyle: { minHeight: 100 }, defaultView: "week" })
         }
         else {
-            this.setState({ divStyle: { minHeight: 500 }, defaultView: "month" })
             document.getElementById("hide/show").style.display = "none"
-
+            this.setState({ divStyle: { minHeight: 500 }, defaultView: "month" })
         }
+        this.onNavigate(this.state.navigatedDate)
     }
 
     onNavigate = (navigate) => {
@@ -199,7 +215,7 @@ class Calendar extends Component {
 
         if (range) {
 
-            this.setState({ value1: "", value2: "", value3: "", value4: "", value5: "", projectDate: dates.toDate() })
+            this.setState({ value1: "", value2: "", value3: "", value4: "", value5: "", projectDate: dates.toDate(), description : "" })
             let weekEndDate = moment().day(6);
 
             this.setState({
@@ -219,6 +235,8 @@ class Calendar extends Component {
             document.getElementById("input5").disabled = false;
             document.getElementById("input6").disabled = false;
             document.getElementById("input7").disabled = false;
+            document.getElementById("uploadBtn").disabled = false;
+
 
             this.setEvents(this.state.events, dates);
 
@@ -230,9 +248,9 @@ class Calendar extends Component {
                 document.getElementById("input5").disabled = true;
                 document.getElementById("input6").disabled = true;
                 document.getElementById("input7").disabled = true;
+                document.getElementById("uploadBtn").disabled = true;
             }
         }
-
     }
 
     onDrop = files => {
@@ -254,27 +272,37 @@ class Calendar extends Component {
     }
 
     handleSubmit = (e, values) => {
-        e.preventDefault();
+        e.persist();
 
-        let weekData = [
-            { date: this.state.date1, title: values.input1 },
-            { date: this.state.date2, title: values.input2 },
-            { date: this.state.date3, title: values.input3 },
-            { date: this.state.date4, title: values.input4 },
-            { date: this.state.date5, title: values.input5 },
-            { date: this.state.date6, title: values.input6 },
-            { date: this.state.date7, title: values.input7 },
-        ]
-
-        let submitData = {
-            type: "save",
-            userId: this.props.userData,
-            weekData: weekData,
-            projectId: this.state.selectedOption,
-            weekNo: moment(this.state.date1).week()
+        if (this.state.selectedOption === undefined) {
+            swal({
+                text: "No project has been assigned to you !",
+                icon: "warning",
+                button: "OK",
+            })
         }
-        // console.log("subm", submitData)
-        this.props.addTimesheets(submitData);
+        else {
+
+            let weekData = [
+                { date: this.state.date1, title: values.input1 },
+                { date: this.state.date2, title: values.input2 },
+                { date: this.state.date3, title: values.input3 },
+                { date: this.state.date4, title: values.input4 },
+                { date: this.state.date5, title: values.input5 },
+                { date: this.state.date6, title: values.input6 },
+                { date: this.state.date7, title: values.input7 },
+            ]
+
+            let submitData = {
+                type: "save",
+                userId: this.props.userData,
+                weekData: weekData,
+                projectId: this.state.selectedOption,
+                weekNo: moment(this.state.date1).week(),
+                description : values.description
+            }
+            this.props.addTimesheets(submitData);
+        }
 
     }
 
@@ -323,7 +351,7 @@ class Calendar extends Component {
                 counter += 1;
             }
         }
-        if (counter === 7) {
+        if (counter === 7 && this.state.uploads.length > 0) {
             swal({
                 text: "Are you sure to submit timesheet data ?",
                 icon: "success",
@@ -335,7 +363,8 @@ class Calendar extends Component {
                         userId: this.props.userData,
                         weekData: weekData,
                         projectId: this.state.selectedOption,
-                        weekNo: moment(this.state.date1).week()
+                        weekNo: moment(this.state.date1).week(),
+                        description : document.getElementById("description").value
                     }
                     this.props.addTimesheets(submitData);
                 })
@@ -377,8 +406,8 @@ class Calendar extends Component {
                                     style={this.state.divStyle}
                                     defaultView={this.state.defaultView}
                                     localizer={localizer}
-                                    views={["month", "week"]}
-                                    events={this.state.events}
+                                    views={this.state.views}
+                                    events={this.state.events }
                                     startAccessor="start"
                                     endAccessor="end"
                                     defaultDate={new Date()}
@@ -407,15 +436,13 @@ class Calendar extends Component {
                                                 <div className="row">
                                                     <div className="form-group col-lg-12">
                                                         <label className="form-control-label" htmlFor="input-Sun">Upload Documents</label><br />
-                                                        <Button type="button" color="info" value="Upload Documents" onClick={this.toggle}>Upload</Button>&nbsp;
+                                                        <Button type="button" color="info" value="Upload Documents" id="uploadBtn" onClick={this.toggle}>Upload</Button>&nbsp;
                                                     </div>
                                                     <ol>
                                                         {this.state.uploads.map((upload, i) => {
                                                             let weekNo = moment(this.state.navigatedDate).week();
                                                             let yearNo = moment(this.state.navigatedDate).year();
                                                             if (weekNo === parseInt(upload.weekNo) && yearNo === parseInt(upload.year)) {
-                                                                console.log("upload", upload)
-
                                                                 return (
                                                                     <>
                                                                         {upload.files.map((file, k) => {
@@ -494,8 +521,10 @@ class Calendar extends Component {
                                                 </Row>
                                                 <div className="row">
                                                     <div className="form-group col-lg-12">
-                                                        <label className="">Description:</label>
-                                                        <textarea className="form-control" cols="5" placeholder="Short description.." spellCheck="false"></textarea></div>
+                                                        <label className="">Notes:</label>
+                                                        <AvInput type="textarea" name="description" id = "description" className="form-control" cols="5" placeholder="Add notes.." spellCheck="false"  value = {this.state.description}/>
+
+                                                    </div>
                                                 </div>
 
                                                 <div style={{ float: "right" }}>
@@ -562,7 +591,6 @@ const mapStateToProps = state => {
         userData: state.user.userLogin.userData,
         userProjects: state.projects.userProjects,
         events: state.timesheets.allEvents,
-        projectDetails: state.timesheets,
         timesheets: state.timesheets.timesheetResult
     }
 }

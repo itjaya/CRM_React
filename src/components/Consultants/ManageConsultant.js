@@ -232,6 +232,7 @@ class ManageConsultant extends Component {
             { label : "User", value : "user"},
         ]
         let array = [];
+        let userRole = this.props.user.role.label;
 
         return (
             <div>
@@ -241,9 +242,12 @@ class ManageConsultant extends Component {
                         </div>
                     </div>
                     <ol className="breadcrumb">
-                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
-                      <li className="breadcrumb-item active">Users</li>
-                  </ol>
+                        <li className="breadcrumb-item">
+                            {userRole === "superAdmin" ?
+                                <Link to="/dashboard">Dashboard</Link> : userRole === "Admin" ? <Link to="/admindashboard">Dashboard</Link> : ""}
+                        </li>
+                        <li className="breadcrumb-item active">Users</li>
+                    </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>
@@ -282,8 +286,8 @@ class ManageConsultant extends Component {
                                                         <td>{user.email}</td>
                                                         <td>{user.role.value}</td>
                                                         <td>{user.account ?
-                                                            <i class="far fa-check-circle text-success cursor" style={{ size: "9px" }} onClick={this.handleActivate.bind(this, user)}></i> :
-                                                            <i class="far fa-times-circle text-danger cursor" style={{ size: "9px" }} onClick={this.handleActivate.bind(this, user)}></i>}&nbsp;
+                                                            <i className="far fa-check-circle text-success cursor" style={{ size: "9px" }} onClick={this.handleActivate.bind(this, user)}></i> :
+                                                            <i className="far fa-times-circle text-danger cursor" style={{ size: "9px" }} onClick={this.handleActivate.bind(this, user)}></i>}&nbsp;
                                                     </td>
                                                     </tr>
                                                 )
@@ -424,6 +428,7 @@ class ManageConsultant extends Component {
 }
 const mapStateToProps = state => {
     return {
+        user: state.user.userLogin.userData,
         allUsers: state.user.allUsers,
         loading: state.user.userLoading,
         orgData: state.organization,

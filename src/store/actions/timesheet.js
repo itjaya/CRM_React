@@ -67,7 +67,6 @@ export const timesheetUploadSuccess = (result) => {
 }
 
 export const uploadTimesheets = (data, type, navigatedDate) => {
-    console.log("Data", type)
     let userData = JSON.parse(sessionStorage.getItem("userData"));
     let userId = userData.userData._id;
     return dispatch => {
@@ -84,10 +83,6 @@ export const uploadTimesheets = (data, type, navigatedDate) => {
                 }
 
             })
-            // $.post(url.url + "upload", data, (result) => {
-            //     console.log("Result", result)
-            //     // dispatch(timesheetUploadSuccess(result))
-            // })
         )
     }
 }
