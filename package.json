@@ -34,6 +34,7 @@
     "bootstrap-filestyle": "github:markusslima/bootstrap-filestyle#v2.1.0",
     "chart.js": "2.7.3",
     "chartist": "0.11.0",
+    "cities": "^2.0.0",
     "core-js": "2.5.7",
     "cropper": "4.0.0",
     "d3": "3.5.16",
@@ -58,6 +59,7 @@
     "i18next-browser-languagedetector": "2.2.4",
     "i18next-xhr-backend": "1.5.1",
     "ika.jvectormap": "themicon/ika.jvectormap",
+    "indian-states-cities": "^1.0.2",
     "jqcloud2": "2.0.3",
     "jquery": "3.4.1",
     "jquery-knob": "1.2.11",
@@ -112,6 +114,7 @@
     "simple-line-icons": "2.4.1",
     "spinkit": "1.2.5",
     "sweetalert": "2.1.2",
+    "usa-states": "0.0.5",
     "validator": "10.9.0",
     "weather-icons": "github:erikflowers/weather-icons",
     "whirl": "github:themicon/whirl"

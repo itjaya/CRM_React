@@ -11,7 +11,7 @@ import 'react-datetime/css/react-datetime.css';
 import swal from 'sweetalert';
 import {Link} from 'react-router-dom';
 
-import * as userActions from "../../store/actions/userActions"
+import * as userActions from "../../store/actions/userActions";
 
 class Settings extends Component {
 
