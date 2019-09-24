@@ -10,6 +10,8 @@ import swal from 'sweetalert';
 
 import AddressDetails from './AddressDetails';
 import EducationDetails from './EducationDetails';
+import PersonalDetails from "./personalDetails";
+
 // Filestyle
 import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';
@@ -25,6 +27,13 @@ class Settings extends Component {
             password: '',
             password2: '',
         },
+        profileForm: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            company: "",
+            role: ""
+        },
         passwordMsg : ""
     }
 
@@ -39,6 +48,20 @@ class Settings extends Component {
     handleClick = () =>{
         $('#myfile').click()
     }
+    onSubmit1 = e => {
+        e.preventDefault()
+        const form = $(this.refs.profileForm)
+        if (form.valid()) {
+            let data = {
+                id : this.props.user._id,
+                firstName : this.state.profileForm.firstName,
+                lastName : this.state.profileForm.lastName,
+                email : this.state.profileForm.email
+            }
+            // console.log("data", data)
+            this.props.userRegister(data)
+        }
+    }
     onSubmit = e => {
         e.preventDefault()
         const form = $(this.refs.userForm)
@@ -50,6 +73,8 @@ class Settings extends Component {
                 password: this.state.userForm.password
             }
             this.props.userPasswordUpdate(data)
+            this.setState({ passwordMsg : ""})
+
         }
     }
     validateOnChange = event => {
@@ -88,7 +113,7 @@ class Settings extends Component {
                 })
                 .then((password) => {
                     if (password) {
-                        this.setState({ activeTab: 'profile' })
+                        this.setState({ activeTab: 'profile'})
                     }
                 }) 
             }
@@ -96,6 +121,21 @@ class Settings extends Component {
                 this.setState({ passwordMsg : this.props.userPassword.msg})
             }
         }
+        if(prevProps.userResult !== this.props.userResult){
+            swal({
+                text: this.props.userResult.msg,
+                icon: "success",
+                // buttons: true,
+            })
+                .then((user) => {
+                    if (user) {
+                        this.setState({ activeTab: 'profile' })
+                    }
+                })
+        }
+    }
+    componentDidMount () {
+        this.setState({ profileForm: this.props.user})
     }
     render() {
         let userData = {};
@@ -176,7 +216,69 @@ class Settings extends Component {
 
                                             <div className="row py-4 justify-content-center">
                                                 <div className="col-12 col-sm-10">
-                                                    <form className="form-horizontal">
+                                                <form onSubmit={this.onSubmit1} name="profileForm" ref="profileForm" >
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">First Name</label>
+                                                            <Col md={8}>
+                                                                <Input type="text"
+                                                                    name="firstName"
+                                                                    invalid={this.hasError('profileForm', 'firstName', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter Firstname"
+                                                                    value={this.state.profileForm.firstName}
+                                                                    className="required"
+                                                                />
+                                                            </Col>
+                                                        </div>
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">Last Name</label>
+                                                            <Col md={8}>
+                                                                <Input type="text"
+                                                                    name="lastName"
+                                                                    invalid={this.hasError('profileForm', 'lastName', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter Lastname"
+                                                                    value={this.state.profileForm.lastName}
+                                                                    className="required"
+                                                                />
+                                                            </Col>
+                                                        </div>
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">Email</label>
+                                                            <Col md={8}>
+                                                                <Input type="email"
+                                                                    name="email"
+                                                                    invalid={this.hasError('profileForm', 'email', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter email"
+                                                                    value={this.state.profileForm.email}
+                                                                    className="required"
+                                                                />
+                                                            </Col>
+                                                        </div>
+                                                        <div className="form-group row align-items-center">
+                                                            <label className="col-md-4 col-form-label">Role</label>
+                                                            <Col md={8}>
+                                                                <Input type="text"
+                                                                    name="role"
+                                                                    invalid={this.hasError('profileForm', 'role', 'required')}
+                                                                    onChange={this.validateOnChange}
+                                                                    data-validate='["required"]'
+                                                                    placeholder="Enter role"
+                                                                    value={this.state.profileForm.role.label}
+                                                                    className="required"
+                                                                    disabled
+                                                                />
+                                                            </Col>
+                                                        </div>
+                                                        <div style={{ float: "right" }}>
+                                                            <Button color="success" type="submit" >Save</Button>{' '}
+                                                        </div>
+                                                    </form>
+                                                    {/* <form className="form-horizontal">
                                                         <div className="form-group row">
                                                             <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">First Name</label>
                                                             <div className="col-xl-10 col-md-9 col-8">
@@ -212,7 +314,7 @@ class Settings extends Component {
                                                                 <button className="btn btn-info" type="submit">Update</button>
                                                             </div>
                                                         </div>
-                                                    </form>
+                                                    </form> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -226,104 +328,7 @@ class Settings extends Component {
                                             </div>
                                         </div>
                                         {/* <div className="card-header bg-gray-lighter text-bold">Profile</div> */}
-                                        <div className="card-body">
-                                            <div className="row py-4 justify-content-center">
-                                                <div className="col-12 col-sm-10">
-                                                    <form className="form-horizontal">
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Job Title</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="jobTitle" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Alternate Email</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="alternateEmail" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Date of Joining</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                            <Datetime
-                                                                    inputProps={{
-                                                                        name: 'dateOfJoining',
-                                                                        className: 'form-control required',
-                                                                        // placeholder: 'Enter project start date'
-                                                                    }}
-                                                                    onChange={this.validateOnChange.bind(this, "doj")}
-                                                                    timeFormat={false}
-                                                                    // value={moment().toDate()}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Gender</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="gender" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Phone No</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="phoneNo" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">SSN</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="SSN" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Date of Birth</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <Datetime
-                                                                    inputProps={{
-                                                                        name: 'dateOfBirth',
-                                                                        className: 'form-control required',
-                                                                        // placeholder: 'Enter project start date'
-                                                                    }}
-                                                                    timeFormat={false}
-                                                                    onChange={this.validateOnChange.bind(this, "dob")}
-                                                                    // value={moment().toDate()}
-                                                                />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Visa Type</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="visaType" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Country</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="country" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">State</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="state" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Marital Status</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="maritalStatus" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>  <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Payroll Id</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="payrollId" type="text" placeholder="" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row text-right">
-                                                            <div className="col-md-12">
-                                                                <button className="btn btn-info" type="submit">Update</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                       <PersonalDetails />
                                     </div>
                                 </TabPane>
                                 <TabPane tabId="address">
@@ -434,12 +439,15 @@ const mapStateToProps = state => {
     // console.log(state)
     return {
         user: state.user.userLogin.userData, 
-        userPassword : state.user.userPassword
+        userPassword : state.user.userPassword,
+        userResult: state.user.userRegister
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
         userPasswordUpdate: (event) => dispatch(userActions.userUpdatePassword(event)),
+        userRegister: (event) => dispatch(userActions.userRegister(event)),
+
     }
 }
 

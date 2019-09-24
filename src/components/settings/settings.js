@@ -10,7 +10,7 @@ import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';
 import swal from 'sweetalert';
 
-import * as userActions from "../../store/actions/userActions"
+import * as userActions from "../../store/actions/userActions";
 
 class Settings extends Component {
 
