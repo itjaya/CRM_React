@@ -143,13 +143,13 @@ class ManageConsultant extends Component {
             this.props.onGetOrganizations();
             setTimeout(()=>{
                 this.props.getUsers();
-            },1000/2)
+            },1000/4)
             
         }
         else {
             setTimeout(()=>{
                 this.props.getUsers(orgId);
-            },1000/2)
+            },1000/4)
         }
     }
 

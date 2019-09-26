@@ -16,6 +16,7 @@ import * as addressActions from "../../store/actions/address";
 import { country } from "../CountryAndStates/country";
 import Select from 'react-select'
 import indiaStates from "indian-states-cities";
+
 var UsaStates = require('usa-states').UsaStates;
 var cities = require('cities');
 
@@ -173,6 +174,7 @@ class AddressDetails extends Component {
         this.props.getUserDetailes(this.props.user._id)
     }
     componentDidUpdate (prevProps) {
+
         if(prevProps.userDetails !== this.props.userDetails){
             // console.log("ASHOK", this.props.userDetails)
             this.setState({addDetails : this.props.userDetails.addDetails})
@@ -205,7 +207,7 @@ class AddressDetails extends Component {
                                             <td>{k + 1}</td>
                                             <td>{data.street1}</td>
                                             <td>{data.country}</td>
-                                            <td>{data.State}</td>
+                                            <td>{data.state}</td>
                                             <td>{data.city}</td>
                                             <td>{data.zipcode}</td>
                                         </tr>
@@ -213,7 +215,7 @@ class AddressDetails extends Component {
                                 })
                                 : 
                                 <tr>
-                                    <td className="text-center" colspan="6"> No Data</td>
+                                    <td className="text-center" colSpan="6"> No Data</td>
                                 </tr>}
                             </tbody>
                         </table>
@@ -240,7 +242,7 @@ class AddressDetails extends Component {
                                                     />
                                                 </Col>
                                             </div>
-                                            {/* <div className="form-group row align-items-center">
+                                            <div className="form-group row align-items-center">
                                                 <label className="col-md-4 col-form-label">Street 2</label>
                                                 <Col md={8}>
                                                     <Input type="text"
@@ -253,7 +255,7 @@ class AddressDetails extends Component {
                                                         className="required"
                                                     />
                                                 </Col>
-                                            </div> */}
+                                            </div>
                                             <div className="form-group row align-items-center">
                                                 <label className="col-md-4 col-form-label">Country</label>
                                                 <Col md={8}>
@@ -323,7 +325,8 @@ class AddressDetails extends Component {
                                                             className: 'form-control required',
                                                             // placeholder: 'Enter project start date'
                                                         }}
-                                                        onChange={this.validateOnChange.bind(this, "start")}                                                        timeFormat={false}
+                                                        onChange={this.validateOnChange.bind(this, "start")}                                                        
+                                                        timeFormat={false}
                                                         value = {moment(this.state.AddressForm.addressStartDate).toDate()}
                                                     />
                                                     </Col>
@@ -337,7 +340,8 @@ class AddressDetails extends Component {
                                                             className: 'form-control required',
                                                             // placeholder: 'Enter project start date'
                                                         }}
-                                                        onChange={this.validateOnChange.bind(this, "end")}                                                        timeFormat={false}
+                                                        onChange={this.validateOnChange.bind(this, "end")}                                                        
+                                                        timeFormat={false}
                                                         value = {moment(this.state.AddressForm.addressEndDate).toDate()}
                                                     />
                                                     </Col>

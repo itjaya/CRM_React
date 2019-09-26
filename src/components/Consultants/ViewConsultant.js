@@ -6,9 +6,12 @@ import $ from 'jquery';
 import Datetime from 'react-datetime';
 import moment from 'moment'
 import {Link} from 'react-router-dom';
+
 import AddressDetails from '../Dashboard/AddressDetails';
 import EducationDetails from '../Dashboard/EducationDetails';
+import PersonalDetails from '../Dashboard/personalDetails';
 import AdminTimesheet from '../Timesheets/AdminTimesheet';
+
 // Filestyle
 import 'bootstrap-filestyle';
 import 'react-datetime/css/react-datetime.css';
@@ -43,17 +46,16 @@ class Settings extends Component {
             userData = this.props.user
         }
 
-        console.log("userrole", userRole)
         return (
             <ContentWrapper>
                 <div className="content-heading">{userData.firstName}&nbsp;{userData.lastName}</div>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
                         {userRole === "superAdmin" ?
                             <Link to="/dashboard">Dashboard</Link> : userRole ==="Admin" ? <Link to="/admindashboard">Dashboard</Link> : ""}
                         </li>
-                    <li class="breadcrumb-item"><Link to="/manageUsers">Users</Link></li>
-                    <li class="breadcrumb-item active">User</li>
+                    <li className="breadcrumb-item"><Link to="/manageUsers">Users</Link></li>
+                    <li className="breadcrumb-item active">User</li>
                 </ol>
                 {/* <Row> */}
                 <Card>
@@ -148,103 +150,7 @@ class Settings extends Component {
                         </TabPane>
                         
                         <TabPane tabId="personal">
-                            <div className="row py-4 justify-content-center">
-                                <div className="col-12 col-sm-10">
-                                    <form className="form-horizontal">
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Job Title</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="jobTitle" type="text" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Alternate Email</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="alternateEmail" type="text" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Date of Joining</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <Datetime
-                                                    inputProps={{
-                                                        name: 'dateOfJoining',
-                                                        className: 'form-control required',
-                                                        // placeholder: 'Enter project start date'
-                                                    }}
-                                                    onChange={this.validateOnChange.bind(this, "doj")}
-                                                    timeFormat={false}
-                                                // value={moment().toDate()}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Gender</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="gender" type="text" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Phone No</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="phoneNo" type="text" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">SSN</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="SSN" type="text" placeholder="" />
-                                            </div>
-                                        </div>  <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Date of Birth</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <Datetime
-                                                    inputProps={{
-                                                        name: 'dateOfBirth',
-                                                        className: 'form-control required',
-                                                        // placeholder: 'Enter project start date'
-                                                    }}
-                                                    timeFormat={false}
-                                                    onChange={this.validateOnChange.bind(this, "dob")}
-                                                // value={moment().toDate()}
-                                                />
-                                            </div>
-                                        </div>  <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Visa Type</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="visaType" type="text" placeholder="" />
-                                            </div>
-                                        </div>  <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Country</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="country" type="text" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">State</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="state" type="text" placeholder="" />
-                                            </div>
-                                        </div>  <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Marital Status</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="maritalStatus" type="text" placeholder="" />
-                                            </div>
-                                        </div>  <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Payroll Id</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="payrollId" type="text" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row text-right">
-                                            <div className="col-md-12">
-                                                <button className="btn btn-info" type="submit">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
+                            <PersonalDetails userData = {userData}/>
                         </TabPane>
                         
                         <TabPane tabId="address">
@@ -253,40 +159,6 @@ class Settings extends Component {
 
                         <TabPane tabId="education">
                             <EducationDetails />
-                        </TabPane>
-
-                        <TabPane tabId="account">
-                            <div className="row py-4 justify-content-center">
-                                <div className="col-12 col-sm-10">
-                                    <form className="form-horizontal">
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Old Password</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="oldPwd" type="password" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">New Password</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="newPwd" type="password" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Confirm Password</label>
-                                            <div className="col-xl-10 col-md-9 col-8">
-                                                <input className="form-control" id="pwd" type="password" />
-                                            </div>
-                                        </div>
-
-                                        <div className="form-group row text-right">
-                                            <div className="col-md-12">
-                                                <button className="btn btn-info" type="submit">Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
                         </TabPane>
                         
                         <TabPane tabId="timesheets">

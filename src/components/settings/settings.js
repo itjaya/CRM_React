@@ -108,7 +108,11 @@ class Settings extends Component {
                 })
                     .then((password) => {
                         if (password) {
-                            this.setState({ activeTab: 'profile' })
+                            this.setState({ passwordMsg: "",activeTab: 'profile',   userForm: {
+                                oldPassword: "",
+                                password: '',
+                                password2: '',
+                            } })
                         }
                     })
             }
@@ -144,13 +148,13 @@ class Settings extends Component {
 
         return (
             <ContentWrapper>
-                <div class="content-heading"><div>Settings</div></div>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
+                <div className="content-heading"><div>Settings</div></div>
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
                         {userRole === "superAdmin" ?
                             <Link to="/dashboard">Dashboard</Link> : userRole === "Admin" ? <Link to="/admindashboard">Dashboard</Link> : ""}
                     </li>
-                    <li class="breadcrumb-item active">Users</li>
+                    <li className="breadcrumb-item active">Users</li>
                 </ol>
                 <div>
                     <Row>

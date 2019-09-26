@@ -39,6 +39,8 @@ class Calendar extends Component {
             defaultView: "week",
             views : ["month", "week" ],
             projectDate: moment(),
+            cardStyle : {},
+            divStyle1 : {},
             selectedType: "",
             modal: false,
             value1: "",
@@ -127,14 +129,19 @@ class Calendar extends Component {
     componentDidUpdate = async (prevProps) => {
         if (prevProps.userProjects !== await this.props.userProjects) {
             let array = [];
-            this.props.userProjects.map((project, i) => {
-                array.push({
-                    label: project.projectName + ` (${project.clientId.label})`,
-                    value: project._id
+            if (this.props.userProjects.length === 0) {
+                this.setState({ cardStyle: { display: "none" }, divStyle1: { display: "block" } })
+            }
+            else {
+                this.props.userProjects.map((project, i) => {
+                    array.push({
+                        label: project.projectName + ` (${project.clientId.label})`,
+                        value: project._id
+                    })
                 })
-            })
-            this.setState({ projects: array });
-            this.handleChangeSelect(array[0]);
+                this.setState({ projects: array });
+                this.handleChangeSelect(array[0]);
+            }
         }
         if (prevProps.events !== await this.props.events) {
 
@@ -143,7 +150,6 @@ class Calendar extends Component {
                 let array = [];
                 let eventsArray = this.props.events.events;
                 for (let obj of eventsArray) {
-
                     for (let event of obj.dates) {
                         array.push({
                             start: new moment(event.start).toDate(),
@@ -351,7 +357,7 @@ class Calendar extends Component {
                 counter += 1;
             }
         }
-        if (counter === 7 && this.state.uploads.length > 0) {
+        if (counter === 7 && this.state.uploads.length > 0 && document.getElementById("description").value.length > 0) {
             swal({
                 text: "Are you sure to submit timesheet data ?",
                 icon: "success",
@@ -400,8 +406,15 @@ class Calendar extends Component {
                     { /* START row */}
                     <div className="calendar-app">
                         { /* START panel */}
-                        <Card className="card-default">
+                        <Card style = {this.state.divStyle1}>
                             <CardBody>
+                                <div className="text-center" >No projects assigned.</div>
+
+                            </CardBody>
+                        </Card>
+                        <Card className="card-default" style = {this.state.cardStyle}>
+                            <CardBody>
+
                                 <BigCalendar
                                     style={this.state.divStyle}
                                     defaultView={this.state.defaultView}

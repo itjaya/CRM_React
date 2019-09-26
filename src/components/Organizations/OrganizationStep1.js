@@ -57,7 +57,6 @@ class organizationStep1 extends Component {
 
   componentDidMount () {
     if(this.props !== undefined) {
-      console.log("wizard", this.props.wizardData)
       this.setState({organizationStep1 : this.props.wizardData})
     }
   }
@@ -77,7 +76,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="organizationName"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.organizationName}
+                      value={this.state.organizationStep1.organizationName || ""}
                       className = "required"
                     />
                   </Col>
@@ -86,7 +85,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="website"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.website}
+                      value={this.state.organizationStep1.website || ""}
                       className = "required"
                     />
                   </Col>
@@ -99,7 +98,7 @@ class organizationStep1 extends Component {
                     <Input type="textarea"
                       name="description"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.description}
+                      value={this.state.organizationStep1.description  || ""}
                       className = "required"
                       />
                    </Col>
@@ -112,7 +111,7 @@ class organizationStep1 extends Component {
                     <Input type="email"
                       name="orgEmail"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.orgEmail}
+                      value={this.state.organizationStep1.orgEmail || ""}
                       className = "required"
                       />
                   </Col>
@@ -121,7 +120,7 @@ class organizationStep1 extends Component {
                     <Input type="number"
                       name="orgPhNo"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.orgPhNo}
+                      value={this.state.organizationStep1.orgPhNo || ""}
                       className = "required"
                       />
                   </Col>
@@ -134,7 +133,7 @@ class organizationStep1 extends Component {
                     <Input type="number"
                       name="altPhNo"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.altPhNo}
+                      value={this.state.organizationStep1.altPhNo || ""}
                     //   className = "required"
                       />
                   </Col>
@@ -143,7 +142,7 @@ class organizationStep1 extends Component {
                     <Input type="number"
                       name="orgFaxNo"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.orgFaxNo}
+                      value={this.state.organizationStep1.orgFaxNo || ""}
                       className = "required"
                       />
                   </Col>
@@ -156,7 +155,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="stAddress1"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.stAddress1}
+                      value={this.state.organizationStep1.stAddress1 || ""}
                       className = "required"
                       />
                   </Col>
@@ -165,7 +164,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="stAddress2"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.stAddress2}
+                      value={this.state.organizationStep1.stAddress2 || ""}
                       className = "required"
                       />
                   </Col>
@@ -178,7 +177,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="country"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.country}
+                      value={this.state.organizationStep1.country || ""}
                       className = "required"
                       />
                   </Col>
@@ -187,7 +186,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="state"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.state}
+                      value={this.state.organizationStep1.state || ""}
                       className = "required"
                       />
                   </Col>
@@ -200,7 +199,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="city"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.city}
+                      value={this.state.organizationStep1.city || ""}
                       className = "required"
                       />
                   </Col>
@@ -209,7 +208,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="zipcode"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.zipcode}
+                      value={this.state.organizationStep1.zipcode || ""}
                       className = "required"
                       />
                   </Col>
@@ -222,7 +221,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="type"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.type}
+                      value={this.state.organizationStep1.type || ""}
                       className = "required"
                       />
                   </Col>
@@ -231,7 +230,7 @@ class organizationStep1 extends Component {
                     <Input type="text"
                       name="personName"
                       onChange={this.validateOnChange}
-                      value={this.state.organizationStep1.personName}
+                      value={this.state.organizationStep1.personName || ""}
                       className = "required"
                       />
                   </Col>

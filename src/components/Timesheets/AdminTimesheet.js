@@ -34,6 +34,8 @@ class AdminTimesheet extends Component {
             events: [],
             uploads : [],
             monthEvents : [],
+            cardStyle : {},
+            divStyle1 : {},
             description: "",
             buttonName: '',
             navigatedDate: moment(),
@@ -145,14 +147,19 @@ class AdminTimesheet extends Component {
     componentDidUpdate = async (prevProps) => {
         if (prevProps.userProjects !== this.props.userProjects) {
             let array = [];
-            this.props.userProjects.map((projects, i) => {
-                array.push({
-                    label: projects.projectName + ` (${projects.clientId.label})`,
-                    value: projects._id
+            if(this.props.userProjects.length === 0) {
+                this.setState({ cardStyle : { display : "none"}, divStyle1 : { display : "block"}})
+            }
+            else {
+                this.props.userProjects.map((projects, i) => {
+                    array.push({
+                        label: projects.projectName + ` (${projects.clientId.label})`,
+                        value: projects._id
+                    })
                 })
-            })
-            this.setState({ projects: array });
-            this.handleChangeSelect(array[0]);
+                this.setState({ projects: array, cardStyle : { display : "block"}, divStyle1 : { display : "none"} });
+                this.handleChangeSelect(array[0]);
+            }
         }
         if (prevProps.events !== this.props.events) {
 
@@ -335,8 +342,14 @@ class AdminTimesheet extends Component {
             <div>
                 <Container className="mt--7" fluid>
                     <div className="calendar-app">
+                    <Card style = {this.state.divStyle1}>
+                            <CardBody>
+                            <div className = "text-center" >No projects assigned to the user.</div>
+
+                                </CardBody>
+                                </Card>
                         { /* START panel */}
-                        <Card >
+                        <Card style = {this.state.cardStyle}>
                             <CardBody>
                                 <BigCalendar
                                     style={this.state.divStyle}

@@ -150,6 +150,7 @@ class EducationDetails extends Component {
             <div>
                 <div className="card-body">
                     <Container fluid>
+
                         <div style={{ float: "right" }}>
                             <Button color="primary" onClick={this.toggleModal}>Add Education</Button>
                         </div>
@@ -161,7 +162,7 @@ class EducationDetails extends Component {
                                     <th>degree</th>
                                     <th>country</th>
                                     <th >state</th>
-                                    <th className="sort-alpha">yearofCompleted</th>
+                                    <th className="sort-alpha">year of Completion</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -179,7 +180,7 @@ class EducationDetails extends Component {
                                 })
                                 : 
                                 <tr>
-                                    <td className="text-center" colspan="6"> No Data</td>
+                                    <td className="text-center" colSpan="6"> No Data</td>
                                 </tr>
                                 }
                             </tbody>
@@ -310,7 +311,6 @@ class EducationDetails extends Component {
     }
 }
 const mapStateToProps = state => {
-    // console.log(state)
     return {
         user: state.user.userLogin.userData,
         userDetails : state.addressReducer.userDetails

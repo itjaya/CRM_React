@@ -175,7 +175,6 @@ class AddProject extends Component {
                 selectedVendorOption: projectData.vendorId
             })
         }
-        
     }
 
     componentDidUpdate(prevProps) {
@@ -183,10 +182,12 @@ class AddProject extends Component {
         if (prevProps.users !== this.props.users) {
             let array = [];
             this.props.users.map((user) => {
-                array.push({
-                    label: user.firstName,
-                    value: user._id
-                })
+                if(user.role.value !== "admin") {
+                    array.push({
+                        label: user.firstName,
+                        value: user._id
+                    })
+                }
             })
             this.setState({ users: array })
         }

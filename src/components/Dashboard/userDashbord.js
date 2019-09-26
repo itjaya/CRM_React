@@ -113,7 +113,11 @@ class Settings extends Component {
                 })
                 .then((password) => {
                     if (password) {
-                        this.setState({ activeTab: 'profile'})
+                        this.setState({ passwordMsg : "",activeTab: 'profile', userForm: {
+                            oldPassword : "",
+                            password: '',
+                            password2: '',
+                        }})
                     }
                 }) 
             }
@@ -278,43 +282,6 @@ class Settings extends Component {
                                                             <Button color="success" type="submit" >Save</Button>{' '}
                                                         </div>
                                                     </form>
-                                                    {/* <form className="form-horizontal">
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">First Name</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact1" type="text" placeholder="" defaultValue={userData.firstName} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact1">Last Name</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact2" type="text" placeholder="" defaultValue={userData.lastName} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact2">Email</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact3" type="email" defaultValue={userData.email} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Company</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact4" type="text" placeholder="" defaultValue={userData.organization[0].label} disabled />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row">
-                                                            <label className="text-bold col-xl-2 col-md-3 col-4 col-form-label text-right" htmlFor="inputContact8">Role</label>
-                                                            <div className="col-xl-10 col-md-9 col-8">
-                                                                <input className="form-control" id="inputContact5" type="text" placeholder="" defaultValue={userData.role.label} disabled />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group row text-right">
-                                                            <div className="col-md-12">
-                                                                <button className="btn btn-info" type="submit">Update</button>
-                                                            </div>
-                                                        </div>
-                                                    </form> */}
                                                 </div>
                                             </div>
                                         </div>

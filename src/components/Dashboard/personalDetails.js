@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-    Container, Modal,
-    ModalHeader,
-    ModalBody,
+    Container,
     Button, Col, Input
 } from 'reactstrap';
+import swal from 'sweetalert';
 import FormValidator from '../Forms/FormValidator';
 import 'jquery-validation/dist/jquery.validate.js';
 import $ from 'jquery';
@@ -16,68 +15,69 @@ import { country } from "../CountryAndStates/country";
 
 import Select from 'react-select'
 import indiaStates from "indian-states-cities";
+import { stat } from 'fs';
 var UsaStates = require('usa-states').UsaStates;
 var cities = require('cities');
 
 const Gender = [
     { value: 'Male', label: 'Male' },
-    { value: 'FeMale', label: 'FeMale' }
+    { value: 'Female', label: 'Female' }
 ]
 class PersonalDetails extends Component {
 
     state = {
-        modal: false,
-        perDetails : [],
-        PersonalForm : {
-            JobTitle : "",
-            Email : "",
-            PhoneNo : "",
-            SSN : "",
-            VisaType : "",
-            MaritalStatus : "",
-            PayrollId  : '',
-            doj : new Date(),
-            dob : new Date(),
+        perDetails: [],
+        PersonalForm: {
+            jobTitle: "",
+            alternateEmailId: "",
+            phoneNo: "",
+            SSN: "",
+            visaType: "",
+            maritalStatus: "",
+            payrollId: '',
+            dateOfBirth: new Date(),
+            dateOfJoining: new Date(),
         },
-        states : [],
-        cities : [],
-        stateName : "",
-        countryName : "",
-        cityName : "",
-       
+        states: [],
+        cities: [],
+        stateName: "",
+        countryName: "",
+        cityName: "",
+        country: {},
+        state: {},
+        gender: {}
+
     }
 
-    toggleModal = () => {
-        this.setState({ modal: !this.state.modal })
-    }
+
     validateOnChange = (event, data) => {
         if (moment.isMoment(data)) {
             let element = document.getElementsByName("PersonalForm")
             let form = element[0]
-            if (event === "dob") {
+            if (event === "dateOfBirth") {
                 this.setState({
                     [form.name]: {
                         ...this.state[form.name],
-                        ["dob"]: moment(data).toDate(),
+                        ["dateOfBirth"]: moment(data).toDate(),
                     }
                 });
             }
-            else if (event === "doj") {
+            else if (event === "dateOfJoining") {
                 this.setState({
                     [form.name]: {
                         ...this.state[form.name],
-                        ["doj"]: moment(data).toDate(),
+                        ["dateOfJoining"]: moment(data).toDate(),
                     }
-                });            
+                });
             }
         }
-        else{
+        else {
             const input = event.target;
             const form = input.form
             const value = input.type === 'checkbox' ? input.checked : input.value;
-    
+
             const result = FormValidator.validate(input);
-    
+
             this.setState({
                 [form.name]: {
                     ...this.state[form.name],
@@ -88,8 +88,8 @@ class PersonalDetails extends Component {
                     }
                 }
             });
-        
-        }   
+
+        }
     }
 
     /* Simplify error check */
@@ -108,25 +108,24 @@ class PersonalDetails extends Component {
             let data = {
                 type: "Personal",
                 id: this.props.user._id,
-                JobTitle : this.state.PersonalForm.JobTitle,
-                Email : this.state.PersonalForm.Email,
-                doj : this.state.PersonalForm.doj,
-                dob : this.state.PersonalForm.dob,
-                VisaType : this.state.PersonalForm.VisaType,
-                SSN : this.state.PersonalForm.SSN,
-                PhoneNo: this.state.PersonalForm.PhoneNo,
-                PayrollId: this.state.PersonalForm.PayrollId,
-                MaritalStatus: this.state.PersonalForm.MaritalStatus,
-                country : this.state.countryName,
-                State : this.state.stateName,
-                Gender : this.state.Gender
+                JobTitle: this.state.PersonalForm.jobTitle,
+                Email: this.state.PersonalForm.alternateEmailId,
+                doj: this.state.PersonalForm.dateOfJoining,
+                dob: this.state.PersonalForm.dateOfBirth,
+                VisaType: this.state.PersonalForm.visaType,
+                SSN: this.state.PersonalForm.SSN,
+                PhoneNo: this.state.PersonalForm.phoneNo,
+                PayrollId: this.state.PersonalForm.payrollId,
+                MaritalStatus: this.state.PersonalForm.maritalStatus,
+                country: this.state.country.label,
+                State: this.state.state.label,
+                Gender: this.state.gender.label
 
             }
             // console.log("data", data)
             this.props.addAddress(data);
-            this.setState({ modal : !this.state.modal})        
         }
-    } 
+    }
     handleCountry = (e) => {
 
         let stateArray = [];
@@ -146,7 +145,7 @@ class PersonalDetails extends Component {
             }
             this.setState({ states: stateArray })
         }
-        this.setState({ countryName: e.value })
+        this.setState({ country: e })
     }
 
     handleState = (e) => {
@@ -166,235 +165,227 @@ class PersonalDetails extends Component {
             }
             this.setState({ cities: citiesArray })
         }
-        this.setState({ stateName : e.label})
+        this.setState({ state: e })
 
     }
     hangleGender = (e) => {
-        this.setState({ Gender : e.value })
+        this.setState({ gender: e })
     }
-    componentDidMount () {
-        this.props.getUserDetailes(this.props.user._id)
+    componentDidMount() {
+       this.refreshData();
     }
-    componentDidUpdate (prevProps) {
-        if(prevProps.userDetails !== this.props.userDetails){
-            // console.log("ASHOK", this.props.userDetails)
-            this.setState({perDetails : this.props.userDetails.perDetails})
+    componentDidUpdate(prevProps) {
+        if (prevProps.userDetails !== this.props.userDetails) {
+            let data = this.props.userDetails.perDetails[0];
+            if (data !== undefined) {
+                let countryArray = [], stateArray = [], genderArray = []
+                countryArray.push({ label: data.country, value: data.country });
+                stateArray.push({ label: data.state, value: data.state })
+                genderArray.push({ label: data.gender, value: data.gender })
+                this.setState({ PersonalForm: data, country: countryArray, state: stateArray, gender: genderArray })
+            }
         }
-     }
+        if (prevProps.perData !== this.props.perData) {
+            swal({
+                text: this.props.perData.msg,
+                icon: "success",
+                // buttons: true,
+            })
+                .then((data) => {
+                    if (data) {
+                        this.refreshData()
+                    }
+                })
+        }
+    }
+    refreshData = () => {
+        setTimeout(() => {
+            if(this.props.userData) {
+                this.props.getUserDetailes(this.props.userData._id)
+            }
+            else {
+                this.props.getUserDetailes(this.props.user._id)
+            }
+        }, 1000 / 4);
+    }
     render() {
         return (
             <div>
                 <div className="card-body">
-                    <Container fluid>
-                        <div style={{ float: "right" }}>
-                            <Button color="primary" onClick={this.toggleModal}>Add Personal Details</Button>
+                    <form onSubmit={this.onSubmit} name="PersonalForm" ref="PersonalForm" >
+                        {/* <legend className="mb-4">Personal Details</legend> */}
+                        <div className="row py-4 justify-content-center">
+                            <div className="col-12 col-sm-10">
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Job Title</label>
+                                    <Col md={8}>
+                                        <Input type="text"
+                                            name="jobTitle"
+                                            invalid={this.hasError('PersonalForm', 'jobTitle', 'required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            placeholder="Enter Job Title"
+                                            value={this.state.PersonalForm.jobTitle}
+                                            className="required"
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Alternate Email</label>
+                                    <Col md={8}>
+                                        <Input type="email"
+                                            name="alternateEmailId"
+                                            invalid={this.hasError('PersonalForm', 'alternateEmailId', 'required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            placeholder="Enter Email"
+                                            value={this.state.PersonalForm.alternateEmailId}
+
+                                            className="required"
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Date of Joining</label>
+                                    <Col md={8}>
+                                        <Datetime
+                                            inputProps={{
+                                                name: 'dateOfJoining',
+                                                className: 'form-control required',
+                                                // placeholder: 'Enter project start date'
+                                            }}
+                                            onChange={this.validateOnChange.bind(this, "dateOfJoining")}
+                                            timeFormat={false}
+                                            value={this.state.PersonalForm.dateOfJoining}
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Gender</label>
+                                    <Col md={8}>
+                                        <Select options={Gender} onChange={this.hangleGender} value={this.state.gender} />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Phone No</label>
+                                    <Col md={8}>
+                                        <Input type="text"
+                                            name="phoneNo"
+                                            invalid={this.hasError('PersonalForm', 'phoneNo', 'required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            placeholder="Enter Phone No"
+                                            value={this.state.PersonalForm.phoneNo}
+                                            className="required"
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">SSN</label>
+                                    <Col md={8}>
+                                        <Input type="text"
+                                            name="SSN"
+                                            invalid={this.hasError('PersonalForm', 'SSN', 'required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            placeholder="Enter SSN"
+                                            value={this.state.PersonalForm.SSN}
+                                            className="required"
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Date of Birth</label>
+                                    <Col md={8}>
+                                        <Datetime
+                                            inputProps={{
+                                                name: 'dateOfBirth',
+                                                className: 'form-control required',
+                                                // placeholder: 'Enter project start date'
+                                            }}
+                                            onChange={this.validateOnChange.bind(this, "dateOfBirth")}
+                                            timeFormat={false}
+                                            value={this.state.PersonalForm.dateOfBirth}
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Visa Type</label>
+                                    <Col md={8}>
+                                        <Input type="text"
+                                            name="visaType"
+                                            invalid={this.hasError('PersonalForm', 'visaType', 'required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            placeholder="Enter Visa Type"
+                                            value={this.state.PersonalForm.visaType}
+                                            className="required"
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Country</label>
+                                    <Col md={8}>
+                                        <Select options={country} onChange={this.handleCountry} value={this.state.country} />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">State</label>
+                                    <Col md={8}>
+                                        <Select options={this.state.states} onChange={this.handleState} value={this.state.state} />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Marital Status</label>
+                                    <Col md={8}>
+                                        <Input type="text"
+                                            name="maritalStatus"
+                                            invalid={this.hasError('PersonalForm', 'maritalStatus', 'required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            placeholder="Enter Marital Status"
+                                            value={this.state.PersonalForm.maritalStatus}
+                                            className="required"
+                                        />
+                                    </Col>
+                                </div>
+                                <div className="form-group row align-items-center">
+                                    <label className="col-md-4 col-form-label">Payroll Id</label>
+                                    <Col md={8}>
+                                        <Input type="text"
+                                            name="payrollId"
+                                            invalid={this.hasError('PersonalForm', 'payrollId', 'required')}
+                                            onChange={this.validateOnChange}
+                                            data-validate='["required"]'
+                                            placeholder="Enter Payroll Id"
+                                            value={this.state.PersonalForm.payrollId}
+                                            className="required"
+                                        />
+                                    </Col>
+                                </div>
+                            </div>
                         </div>
-                        <table className="table table-striped my-4 w-100" id="usersTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>jobTitle</th>
-                                    <th>country</th>
-                                    <th >State</th>
-                                    <th className="sort-alpha">phoneNo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.perDetails.length >0 ? this.state.perDetails.map((data, k) => {
-                                    return (
-                                        <tr key={k}>
-                                            <td>{k + 1}</td>
-                                            <td>{data.jobTitle}</td>
-                                            <td>{data.country}</td>
-                                            <td>{data.state}</td>
-                                            <td>{data.phoneNo}</td>
-                                        </tr>
-                                    )
-                                })
-                                : <tr>
-                                    <td className="text-center" colspan="5"> No Data</td>
-                                </tr>}
-                            </tbody>
-                        </table>
-                    </Container>
-                    <Modal isOpen={this.state.modal} toggle={this.toggleModal} size="lg">
-                        <ModalHeader toggle={this.toggleModal}><strong>Add Personal Details</strong></ModalHeader>
-                        <ModalBody>
-                        <form onSubmit={this.onSubmit} name="PersonalForm" ref="PersonalForm" >
-                                {/* <legend className="mb-4">Personal Details</legend> */}
-                                <div className="row py-4 justify-content-center">
-                                    <div className="col-12 col-sm-10">
-                                        <div className="form-group row align-items-center">
-                                            <label className="col-md-4 col-form-label">Job Title</label>
-                                            <Col md={8}>
-                                                <Input type="text"
-                                                    name="JobTitle"
-                                                    invalid={this.hasError('PersonalForm', 'JobTitle', 'required')}
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required"]'
-                                                    placeholder="Enter Job Title"
-                                                    value={this.state.PersonalForm.JobTitle}
-                                                    className="required"
-                                                />
-                                            </Col>
-                                        </div>
-                                        <div className="form-group row align-items-center">
-                                            <label className="col-md-4 col-form-label">Alternate Email</label>
-                                            <Col md={8}>
-                                                <Input type="email"
-                                                    name="Email"
-                                                    invalid={this.hasError('PersonalForm', 'Email', 'required')}
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required"]'
-                                                    placeholder="Enter Email"
-                                                    value={this.state.PersonalForm.Email}
-                                                    className="required"
-                                                />
-                                            </Col>
-                                        </div>
-                                        <div className="form-group row align-items-center">
-                                            <label className="col-md-4 col-form-label">Date of Joining</label>
-                                            <Col md={8}>
-                                                <Datetime
-                                                    inputProps={{
-                                                        name: 'doj',
-                                                        className: 'form-control required',
-                                                        // placeholder: 'Enter project start date'
-                                                    }}
-                                                    onChange={this.validateOnChange.bind(this, "doj")}
-                                                    timeFormat={false}
-                                                    value={this.state.PersonalForm.doj}
-                                                    />
-                                            </Col>
-                                        </div>
-                                        <div className="form-group row align-items-center">
-                                            <label className="col-md-4 col-form-label">Gender</label>
-                                            <Col md={8}>
-                                            <Select options={Gender}  onChange={this.hangleGender}/>
-                                            </Col>
-                                        </div>
-                                        <div className="form-group row align-items-center">
-                                            <label className="col-md-4 col-form-label">Phone No</label>
-                                            <Col md={8}>
-                                                <Input type="text"
-                                                    name="PhoneNo"
-                                                    invalid={this.hasError('PersonalForm', 'PhoneNo', 'required')}
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required"]'
-                                                    placeholder="Enter Phone No"
-                                                    value={this.state.PersonalForm.PhoneNo}
-                                                    className="required"
-                                                />
-                                            </Col>
-                                        </div>
-                                        <div className="form-group row align-items-center">
-                                            <label className="col-md-4 col-form-label">SSN</label>
-                                            <Col md={8}>
-                                                <Input type="text"
-                                                    name="SSN"
-                                                    invalid={this.hasError('PersonalForm', 'SSN', 'required')}
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required"]'
-                                                    placeholder="Enter SSN"
-                                                    value={this.state.PersonalForm.SSN}
-                                                    className="required"
-                                                />
-                                            </Col>
-                                        </div>
-                                        <div className="form-group row align-items-center">
-                                                <label className="col-md-4 col-form-label">Date of Birth</label>
-                                                <Col md={8}>
-                                                <Datetime
-                                                    inputProps={{
-                                                        name: 'dob',
-                                                        className: 'form-control required',
-                                                        // placeholder: 'Enter project start date'
-                                                    }}
-                                                    onChange={this.validateOnChange.bind(this, "dob")}
-                                                    timeFormat={false}
-                                                value={this.state.PersonalForm.dob}
-                                                />                                                
-                                                </Col>
-                                            </div>
-                                            <div className="form-group row align-items-center">
-                                                <label className="col-md-4 col-form-label">Visa Type</label>
-                                                <Col md={8}>
-                                                <Input type="text"
-                                                    name="VisaType"
-                                                    invalid={this.hasError('PersonalForm', 'VisaType', 'required')}
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required"]'
-                                                    placeholder="Enter Visa Type"
-                                                    value={this.state.PersonalForm.VisaType}
-                                                    className="required"
-                                                />
-                                                </Col>
-                                            </div>
-                                            <div className="form-group row align-items-center">
-                                                <label className="col-md-4 col-form-label">Country</label>
-                                                <Col md={8}>
-                                                <Select options={country}  onChange={this.handleCountry}/>
-                                                </Col>
-                                            </div>
-                                            <div className="form-group row align-items-center">
-                                                <label className="col-md-4 col-form-label">State</label>
-                                                <Col md={8}>
-                                                <Select options={this.state.states} onChange={this.handleState}/>
-                                                </Col>
-                                            </div>
-                                            <div className="form-group row align-items-center">
-                                                <label className="col-md-4 col-form-label">Marital Status</label>
-                                                <Col md={8}>
-                                                <Input type="text"
-                                                    name="MaritalStatus"
-                                                    invalid={this.hasError('PersonalForm', 'MaritalStatus', 'required')}
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required"]'
-                                                    placeholder="Enter Marital Status"
-                                                    value={this.state.PersonalForm.MaritalStatus}
-                                                    className="required"
-                                                />
-                                                </Col>
-                                            </div>
-                                            <div className="form-group row align-items-center">
-                                                <label className="col-md-4 col-form-label">Payroll Id</label>
-                                                <Col md={8}>
-                                                <Input type="text"
-                                                    name="PayrollId"
-                                                    invalid={this.hasError('PersonalForm', 'PayrollId', 'required')}
-                                                    onChange={this.validateOnChange}
-                                                    data-validate='["required"]'
-                                                    placeholder="Enter Payroll Id"
-                                                    value={this.state.PersonalForm.PayrollId}
-                                                    className="required"
-                                                />
-                                                </Col>
-                                            </div>
-                                    </div>
-                                </div>
-                                 <div className="float-right">
-                                    <Button color="success" type="submit" >Save</Button>{' '}
-                                    <Button color="danger" onClick={this.toggleModal}>Cancel</Button>
-                                </div>
-                            </form>
-                        </ModalBody>
-                    </Modal>
+                        <div className="float-right">
+                            <Button color="success" type="submit" >Save</Button>{' '}
+                        </div>
+                    </form>
+                    <br /><br />
                 </div>
             </div>
         )
     }
 }
 const mapStateToProps = state => {
-    // console.log(state.addressReducer.userDetails)
     return {
         user: state.user.userLogin.userData,
-        userDetails : state.addressReducer.userDetails
+        userDetails: state.addressReducer.userDetails,
+        perData: state.addressReducer.addResult
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
         addAddress: (event) => dispatch(addressActions.addAddress(event)),
-        getUserDetailes : (event) => dispatch(addressActions.getUserDetailes(event))
+        getUserDetailes: (event) => dispatch(addressActions.getUserDetailes(event))
 
     }
 }
