@@ -82,11 +82,11 @@ class Forget extends Component {
                 <div className="card card-flat">
                     <div className="card-header text-center bg-dark">
                         <a href="">
-                            <img className="block-center rounded" src="img/logo.png" alt="Logo"/>
+                        <img className="img-fluid" src="img/project.png" alt="Logo"/>
                         </a>
                     </div>
                     <div className="card-body">
-                        <p className="text-center py-2">FORGET PASSWORD</p>
+                        <p className="text-center py-2">FORGET PASSWORD.</p>
                         <p className="text-center py-2 text-danger">{this.state.userMsg}</p>
                         <form className="mb-3" name="formLogin" onSubmit={this.onSubmit}>
                             <div className="form-group">
@@ -114,7 +114,7 @@ class Forget extends Component {
                                     <Link to="login" className="text-muted">Login?</Link>
                                 </div>
                             </div>
-                            <button className="btn btn-block btn-primary mt-3" type="submit">Submit</button>
+                            <button className="btn btn-block btn-info mt-3" type="submit">Submit</button>
                         </form>
                         {/* <p className="pt-3 text-center">Need to Signup?</p>
                         <Link to="register" className="btn btn-block btn-secondary">Register Now</Link> */}

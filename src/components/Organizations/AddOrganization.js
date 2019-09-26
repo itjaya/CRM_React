@@ -13,7 +13,7 @@ import * as orgActions from '../../store/actions/orgActions';
 class AddOrganization extends Component {
 
     state = {
-        redirect : false,
+        redirect: false,
     }
 
     finishButtonClick = (allStates) => {
@@ -22,17 +22,17 @@ class AddOrganization extends Component {
         this.props.onAddOrganization(postData)
     }
 
-    componentDidUpdate (prevProps) {
-        if(prevProps.orgData !== this.props.orgData) {
-            if(this.props.orgData.condition) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.orgData !== this.props.orgData) {
+            if (this.props.orgData.condition) {
                 swal({
                     text: this.props.orgData.msg,
                     icon: "success",
                     button: "Ok",
                 })
-                .then((value) => {
-                    this.setState({ redirect: true })
-                });            
+                    .then((value) => {
+                        this.setState({ redirect: true })
+                    });
             }
             else {
                 swal({
@@ -44,17 +44,17 @@ class AddOrganization extends Component {
         }
     }
 
-    render () {
+    render() {
 
-        if(this.state.redirect) {
-            return <Redirect to = "/manageOrganizations"/>
+        if (this.state.redirect) {
+            return <Redirect to="/manageOrganizations" />
         }
 
         var steps = [
             { stepName: "General_Information", component: OrganizationStep1 },
         ];
         return (
-            <div>   
+            <div>
                 <ContentWrapper>
                     <div className="content-heading">
                         <div>Add Organization
@@ -62,20 +62,20 @@ class AddOrganization extends Component {
                         </div>
                     </div>
                     <ol className="breadcrumb">
-                      <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
-                      <li className="breadcrumb-item active">Add Organization</li>
-                  </ol>
+                        <li className="breadcrumb-item"><Link to="/dashboard">Dashboard</Link></li>
+                        <li className="breadcrumb-item active">Add Organization</li>
+                    </ol>
                     <Card className="card-default">
                         <CardBody>
                             <ReactWizard
                                 steps={steps}
-                                wizardData = {this.props.location.state}
+                                wizardData={this.props.location.state}
                                 description=""
                                 headerTextCenter
                                 validate={true}
                                 color="primary"
                                 finishButtonClick={this.finishButtonClick}
-                                finishButtonText = "Save"
+                                finishButtonText="Save"
                             />
                         </CardBody>
                     </Card>
@@ -87,13 +87,13 @@ class AddOrganization extends Component {
 
 const mapStateToProps = state => {
     return {
-        orgData : state.organization.addResult
+        orgData: state.organization.addResult
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAddOrganization : event => dispatch(orgActions.addOrganization(event))
+        onAddOrganization: event => dispatch(orgActions.addOrganization(event))
     }
 }
 

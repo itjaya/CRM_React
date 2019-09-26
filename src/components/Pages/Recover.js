@@ -9,11 +9,11 @@ class Recover extends Component {
                 <div className="card card-flat">
                     <div className="card-header text-center bg-dark">
                         <a href="">
-                            <img className="block-center rounded" src="img/logo.png" alt="Logo"/>
+                        <img className="img-fluid" src="img/project.png" alt="Logo"/>
                         </a>
                     </div>
                     <div className="card-body">
-                        <p className="text-center py-2">PASSWORD RESET</p>
+                        <p className="text-center py-2">RESET PASSWORD.</p>
                         <form>
                             <p className="text-center">Fill with your mail to receive instructions on how to reset your password.</p>
                             <div className="form-group">
@@ -27,7 +27,7 @@ class Recover extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <button className="btn btn-danger btn-block" type="button">Reset</button>
+                            <button className="btn btn-danger btn-info" type="button">Reset</button>
                         </form>
                     </div>
                 </div>

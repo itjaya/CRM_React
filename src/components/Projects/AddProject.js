@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import Select from 'react-select';
 import { Row, Col, Input, Card, CardBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
@@ -237,6 +237,10 @@ class AddProject extends Component {
                         <div>Add Project
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                        <li className="breadcrumb-item active">Add Project</li>
+                    </ol>
                     <Card className="card-default">
                         <CardBody>
                             <Row>
@@ -306,6 +310,7 @@ class AddProject extends Component {
                                                             className: 'form-control required',
                                                             placeholder: 'Enter project start date'
                                                         }}
+                                                        timeFormat = {false}
                                                         onChange={this.validateOnChange.bind(this, "start")}
                                                         value = {moment(this.state.projectForm.projectStartDate).toDate()}
                                                     />
@@ -318,6 +323,7 @@ class AddProject extends Component {
                                                             className: 'form-control required',
                                                             placeholder: 'Enter project end date'
                                                         }}
+                                                        timeFormat = {false}
                                                         onChange={this.validateOnChange.bind(this, "end")}
                                                         value = {moment(this.state.projectForm.projectEndDate).toDate()}
 
@@ -396,7 +402,7 @@ class AddProject extends Component {
                                         <fieldset>
                                             <div style={{ float: "right" }}>
                                                 <Button color="success" type="submit" >Save</Button>{' '}
-                                                <Button color="danger" >Cancel</Button>
+                                                <Button color="danger" type = "button">Cancel</Button>
                                             </div>
                                         </fieldset>
                                     </form>

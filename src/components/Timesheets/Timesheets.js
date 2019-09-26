@@ -40,7 +40,7 @@ class Calendar extends Component {
             views : ["month", "week" ],
             projectDate: moment(),
             cardStyle : {},
-            divStyle1 : {},
+            divStyle1: { display: "none" },
             selectedType: "",
             modal: false,
             value1: "",

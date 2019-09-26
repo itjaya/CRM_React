@@ -55,7 +55,7 @@ class Settings extends Component {
                 lastName : this.state.profileForm.lastName,
                 email : this.state.profileForm.email
             }
-            // console.log("data", data)
+            console.log("data", data)
             this.props.userRegister(data)
         }
     }
@@ -251,7 +251,7 @@ class Settings extends Component {
                                                                 />
                                                             </Col>
                                                         </div>
-                                                        <div className="form-group row align-items-center" style={this.state.divStyle}>
+                                                        {/* <div className="form-group row align-items-center" style={this.state.divStyle}>
                                                             <label className="col-md-4 col-form-label">Company</label>
                                                             <Col md={8}>
                                                                 <Input type="text"
@@ -280,7 +280,7 @@ class Settings extends Component {
                                                                     disabled
                                                                 />
                                                             </Col>
-                                                        </div>
+                                                        </div> */}
                                                         <div style={{ float: "right" }}>
                                                             <Button color="success" type="submit" >Save</Button>{' '}
                                                         </div>

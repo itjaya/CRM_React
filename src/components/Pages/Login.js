@@ -102,7 +102,7 @@ class Login extends Component {
                 <div className="card card-flat">
                     <div className="card-header text-center bg-dark">
                         <a href="">
-                            <img className="block-center rounded" src="img/logo.png" alt="Logo"/>
+                            <img className="img-fluid" src="img/project.png" alt="Logo"/>
                         </a>
                     </div>
                     <div className="card-body">
@@ -149,16 +149,16 @@ class Login extends Component {
                                 </div>
                             </div>
                             <div className="clearfix">
-                                <div className="checkbox c-checkbox float-left mt-0">
+                                {/* <div className="checkbox c-checkbox float-left mt-0">
                                     <label>
                                         <input type="checkbox" value="" name="remember"/>
                                         <span className="fa fa-check"></span>Remember Me</label>
-                                </div>
+                                </div> */}
                                 <div className="float-right">
                                     <Link to="forget" className="text-muted">Forgot your password?</Link>
                                 </div>
                             </div>
-                            <button className="btn btn-block btn-primary mt-3" type="submit">Login</button>
+                            <button className="btn btn-block btn-info mt-3" type="submit">Login</button>
                         </form>
                         {/* <p className="pt-3 text-center">Need to Signup?</p>
                         <Link to="register" className="btn btn-block btn-secondary">Register Now</Link> */}

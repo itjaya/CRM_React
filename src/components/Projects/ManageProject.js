@@ -71,6 +71,10 @@ class ManageProjects extends Component {
                         <div>Projects
                         </div>
                     </div>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to="/admindashboard">Dashboard</Link></li>
+                        <li className="breadcrumb-item active">Manage Projects</li>
+                    </ol>
                     <Card className="card-default" >
                         <CardBody>
                             <Container fluid>
