@@ -1,5 +1,6 @@
 import * as url from '../../urlConstants';
-import $ from 'jquery';
+import axios from 'axios';
+import Auth from '../../helpers/Auth';
 
 export const ADD_ORGANIZATION_START = "ADD_ORGANIZATION_START";
 export const ADD_ORGANIZATION_SUCCESS = "ADD_ORGANIZATION_SUCCESS";
@@ -17,14 +18,15 @@ export const DELETE_ORGANIZATION_START = "DELETE_ORGANIZATION_START";
 export const DELETE_ORGANIZATION_SUCCESS = "DELETE_ORGANIZATION_SUCCESS";
 export const DELETE_ORGANIZATION_FAIL = "DELETE_ORGANIZATION_FAIL";
 
+let handleAuth = new Auth();
 
 // Add Organization
 export const addOrgStart = () => {
-    return { type : ADD_ORGANIZATION_START }
+    return { type: ADD_ORGANIZATION_START }
 }
 
 export const addOrgSuccess = (result) => {
-    return { type: ADD_ORGANIZATION_SUCCESS, payload : result }
+    return { type: ADD_ORGANIZATION_SUCCESS, payload: result }
 }
 
 export const addOrgFail = () => {
@@ -32,22 +34,26 @@ export const addOrgFail = () => {
 }
 
 export const addOrganization = (data) => {
+
     return dispatch => {
         dispatch(addOrgStart());
-        $.post(url.url + "addOrganization", data, (result) => {
-            dispatch(addOrgSuccess(result));
-       
+        handleAuth.getToken().then(value => {
+            axios.post(url.url + "addOrganization", data, value)
+                .then((result) => {
+                    dispatch(addOrgSuccess(result.data));
+                })
         })
+
     }
 }
 
 // Get Organizations
 export const getOrgStart = () => {
-    return { type : GET_ORGANIZATION_START }
+    return { type: GET_ORGANIZATION_START }
 }
 
 export const getOrgSuccess = (result) => {
-    return { type: GET_ORGANIZATION_SUCCESS, payload : result }
+    return { type: GET_ORGANIZATION_SUCCESS, payload: result }
 }
 
 export const getOrgFail = () => {
@@ -57,22 +63,29 @@ export const getOrgFail = () => {
 export const getOrganization = () => {
     return dispatch => {
         dispatch(getOrgStart());
-        $.get(url.url + "getOrganizations", (result) => {
-            if(result) {
-                dispatch(getOrgSuccess(result));
-            }
+        handleAuth.getToken().then(value => {
+            axios.get(url.url + "getOrganizations", value)
+                .then((result) => {
+                    if (result.status === 200) {
+                        dispatch(getOrgSuccess(result.data));
+                    }
+                    else {
+                        dispatch(getOrgFail());
+                    }
+                })
         })
+
     }
 }
 
 
 // Get organization by name
 export const getOrgByNameStart = () => {
-    return { type : GET_ORGDETAIL_START }
+    return { type: GET_ORGDETAIL_START }
 }
 
 export const getOrgByNameSuccess = (result) => {
-    return { type: GET_ORGDETAIL_SUCCESS, payload : result }
+    return { type: GET_ORGDETAIL_SUCCESS, payload: result }
 }
 
 export const getOrgByNameFail = () => {
@@ -82,22 +95,24 @@ export const getOrgByNameFail = () => {
 export const getOrganizationByName = (name) => {
     return dispatch => {
         dispatch(getOrgByNameStart());
-        $.get(url.url + `getOrganizationByName?name=${name}`, (result) => {
-            if(result) {
-                sessionStorage.setItem("orgId", result)
-                dispatch(getOrgByNameSuccess(result));
-            }
+        handleAuth.getToken().then(value => {
+            axios.get(url.url + `getOrganizationByName?name=${name}`, value)
+            .then((result) => {
+                sessionStorage.setItem("orgId", result.data)
+                dispatch(getOrgByNameSuccess(result.data));
+            })
         })
+
     }
 }
 
 // Remove organization data
 export const deleteOrgStart = () => {
-    return { type : DELETE_ORGANIZATION_START }
+    return { type: DELETE_ORGANIZATION_START }
 }
 
 export const deleteOrgSuccess = (result) => {
-    return { type: DELETE_ORGANIZATION_SUCCESS, payload : result }
+    return { type: DELETE_ORGANIZATION_SUCCESS, payload: result }
 }
 
 export const deleteOrgFail = () => {
@@ -107,14 +122,18 @@ export const deleteOrgFail = () => {
 export const deleteOrganization = (id) => {
     return dispatch => {
         dispatch(deleteOrgStart());
-        $.post(url.url + `deleteOrganization?id=${id}`, (result) => {
-            if(result.condition) {
-                dispatch(deleteOrgSuccess(result));
-            }
-            else {
-                dispatch(deleteOrgFail());
-            }
+        handleAuth.getToken().then(value => {
+            axios.post(url.url + `deleteOrganization?id=${id}`, value)
+            .then((result) => {
+                if (result.data.condition) {
+                    dispatch(deleteOrgSuccess(result.data));
+                }
+                else {
+                    dispatch(deleteOrgFail());
+                }
+            })
         })
+
     }
 }
 

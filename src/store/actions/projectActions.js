@@ -1,5 +1,6 @@
 import * as url from '../../urlConstants';
-import $ from 'jquery';
+import axios from 'axios';
+import Auth from '../../helpers/Auth';
 
 export const ADD_PROJECT_START = "ADD_PROJECT_START";
 export const ADD_PROJECT_SUCCESS = "ADD_PROJECT_SUCCESS";
@@ -16,6 +17,8 @@ export const GET_USER_PROJECT_FAIL = "GET_USER_PROJECT_FAIL";
 export const DELETE_PROJECT_START = "DELETE_PROJECT_START";
 export const DELETE_PROJECT_SUCCESS = "DELETE_PROJECT_SUCCESS";
 export const DELETE_PROJECT_FAIL = "DELETE_PROJECT_FAIL";
+
+let handleAuth = new Auth();
 
 // Add and Edit Project
 
@@ -34,13 +37,15 @@ export const projectAddFail = () => {
 export const addProject = (data) => {
     return dispatch => {
         dispatch(projectAddStart())
-        return (
-            $.post(url.url + "addProject", data, (result) => {
-                dispatch(projectAddSuccess(result))
-            })
-        )
+        handleAuth.getToken().then(value => {
+            axios.post(url.url + "addProject", data, value)
+                .then((result) => {
+                    dispatch(projectAddSuccess(result.data))
+                })
+        })
+
     }
- }
+}
 
  // Get Projects
 export const getProjectStart = () => {
@@ -58,11 +63,14 @@ export const getProjectFail = () => {
 export const getProjects = (id) => {
     return dispatch => {
         dispatch(getProjectStart());
-        $.get(url.url + `getProjects?id=${id}`, (result) => {
-            if(result) {
-                dispatch(getProjectSuccess(result));
-            }
-        })
+        handleAuth.getToken().then(value => {
+            axios.get(url.url + `getProjects?id=${id}`, value)
+            .then((result) => {
+                if(result) {
+                    dispatch(getProjectSuccess(result.data));
+                }
+            })
+        })   
     }
 }
 
@@ -82,8 +90,11 @@ export const getUserProjectFail = () => {
 export const getUserProjects = (id) => {
     return dispatch => {
         dispatch(getUserProjectStart());
-        $.get(url.url + `getUserProjects?id=${id}`, (result) => {
-            dispatch(getUserProjectSuccess(result));
+        handleAuth.getToken().then(value => {
+            axios.get(url.url + `getUserProjects?id=${id}`, value)
+            .then((result) => {
+                dispatch(getUserProjectSuccess(result.data));
+            })
         })
     }
 }
@@ -104,10 +115,13 @@ export const deleteProjectFail = () => {
 export const deleteProject = (id) => {
     return dispatch => {
         dispatch(deleteProjectStart());
-        $.post(url.url + `deleteProject?id=${id}`, (result) => {
-            if(result) {
-                dispatch(deleteProjectSuccess(result));
-            }
-        })
+        handleAuth.getToken().then(value => {
+            axios.post(url.url + `deleteProject?id=${id}`, value)
+            .then((result) => {
+                if(result) {
+                    dispatch(deleteProjectSuccess(result.data));
+                }
+            })
+        })   
     }
 }

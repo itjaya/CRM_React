@@ -32,8 +32,9 @@ class AdminTimesheet extends Component {
             projects: [],
             days : [],
             events: [],
-            uploads : [],
+            allEvents : [],
             monthEvents : [],
+            uploads : [],
             cardStyle : {},
             divStyle1 : {},
             description: "",
@@ -56,8 +57,8 @@ class AdminTimesheet extends Component {
     setEvents = (events, dates) => {
         let counter = 0;
         let monthCounter = 0;
-        let mon, tue, wed, thur, fri;
-        var days1 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        // let mon, tue, wed, thur, fri;
+        // var days1 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         var today = moment(dates).toDate()
         var startDate = moment([today.getFullYear(), today.getMonth()]);
         var date = moment(startDate).toDate();
@@ -71,7 +72,9 @@ class AdminTimesheet extends Component {
             date.setDate(date.getDate() + 1);
         }
         let weekNo = dates.week();
-        for (let event of this.props.events.events) {
+        console.log(this.state.allEvents)
+        for (let event of this.state.allEvents) {
+            console.log("weekNo", event.weekNo)
             if (parseInt(event.weekNo) === weekNo) {
                 this.setState({ description : event.description })
             }
@@ -129,7 +132,7 @@ class AdminTimesheet extends Component {
     componentDidMount() {
 
         document.getElementById("monthView").style.display = "none";
-        var dates = moment(new Date);
+        var dates = moment(new Date());
         this.setState({
             sun: dates.day(0).toDate().getDate(), date1: dates.day(0).toDate(),
             mon: dates.day(1).toDate().getDate(), date2: dates.day(1).toDate(),
@@ -162,6 +165,8 @@ class AdminTimesheet extends Component {
             }
         }
         if (prevProps.events !== this.props.events) {
+            console.log("eve", this.props.events)
+
 
             if (this.props.events.events !== undefined) {
                 let array = [];
@@ -178,7 +183,7 @@ class AdminTimesheet extends Component {
                         })
                     }
                 }
-                this.setState({ events: array, uploads : this.props.events.uploads })
+                this.setState({ events: array, allEvents : this.props.events, uploads: this.props.events.uploads })
                 var dates = moment(new Date());
                 await this.setEvents(array, dates);
             }
@@ -230,10 +235,10 @@ class AdminTimesheet extends Component {
         var dates = moment(navigate);
         let projectDate = moment(new Date(this.props.events.prjStartDate))
         let monthStartDate = moment(projectDate).startOf('month')
-        let range = dates.isSameOrAfter(monthStartDate)
+        // let range = dates.isSameOrAfter(monthStartDate)
 
         this.setState({ value1: "", value2: "", value3: "", value4: "", value5: "", projectDate: dates.toDate(), description : "" })
-        let weekEndDate = moment().day(6);
+        // let weekEndDate = moment().day(6);
 
         this.setState({
             sun: dates.day(0).toDate().getDate(), date1: dates.day(0).toDate(),
@@ -333,6 +338,7 @@ class AdminTimesheet extends Component {
 
     }
     render() {
+        console.log("de", this.state.description)
         const options = [
             { label: "Client", value: "Client" },
             { label: "Vendor", value: "Vendor" }

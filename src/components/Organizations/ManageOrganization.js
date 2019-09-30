@@ -21,6 +21,7 @@ class ManageOrganization extends Component {
 
     refreshData = () => {
         this.props.onGetOrganizations();
+        
     }
 
     async componentDidUpdate(prevProps) {

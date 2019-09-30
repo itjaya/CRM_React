@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-    Container,
-    Button, Col, Input
+import {    Button, Col, Input
 } from 'reactstrap';
 import swal from 'sweetalert';
 import FormValidator from '../Forms/FormValidator';
@@ -15,7 +13,6 @@ import { country } from "../CountryAndStates/country";
 
 import Select from 'react-select'
 import indiaStates from "indian-states-cities";
-import { stat } from 'fs';
 var UsaStates = require('usa-states').UsaStates;
 var cities = require('cities');
 
@@ -140,8 +137,8 @@ class PersonalDetails extends Component {
         else {
             var usStates = new UsaStates();
             let array = usStates
-            for (var i = 0; i < array.states.length; i++) {
-                stateArray.push({ label: array.states[i].name, value: array.states[i].abbreviation })
+            for (var j = 0; j < array.states.length; j++) {
+                stateArray.push({ label: array.states[j].name, value: array.states[j].abbreviation })
             }
             this.setState({ states: stateArray })
         }
@@ -160,8 +157,8 @@ class PersonalDetails extends Component {
         }
         else {
             let newArray = cities.findByState(e.value);
-            for (var k = 0; k < newArray.length; k++) {
-                citiesArray.push({ label: newArray[k].city, value: newArray[k].city })
+            for (var l = 0; l < newArray.length; l++) {
+                citiesArray.push({ label: newArray[l].city, value: newArray[l].city })
             }
             this.setState({ cities: citiesArray })
         }

@@ -5,7 +5,6 @@ import { Row, Col, FormGroup, Input, Card, CardBody, Button, Modal, ModalHeader,
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import BigCalendar from 'react-big-calendar';
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import moment from 'moment';
 import Dropzone from 'react-dropzone';
 import { AvForm, AvInput } from 'availity-reactstrap-validation';
@@ -110,7 +109,7 @@ class Calendar extends Component {
     }
 
     componentDidMount = async() => {
-        var dates = moment(new Date);
+        var dates = moment(new Date());
 
         this.setState({
             sun: dates.day(0).toDate().getDate(), date1: dates.day(0).toDate(),

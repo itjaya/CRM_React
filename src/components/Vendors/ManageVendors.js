@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import $ from "jquery"
 import { Link } from "react-router-dom"
-import {Container,Card, CardBody, Modal,ModalHeader,ModalBody,ModalFooter, Button} from 'reactstrap';
+import {Container,Card, CardBody} from 'reactstrap';
 import * as vendorActions from '../../store/actions/vendor';
 import ContentWrapper from '../Layout/ContentWrapper';
 import Datatable from '../Tables/Datatable';

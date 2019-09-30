@@ -47,9 +47,7 @@ class AddressDetails extends Component {
     toggleModal = () => {
         this.setState({ modal: !this.state.modal })
     }
-    componentDidMount () {
-       
-    }
+   
     validateOnChange = (event, data) => {
         if (moment.isMoment(data)) {
             let element = document.getElementsByName("AddressForm")
@@ -139,8 +137,8 @@ class AddressDetails extends Component {
         else {
             var usStates = new UsaStates();
             let array = usStates
-            for (var i = 0; i < array.states.length; i++) {
-                stateArray.push({ label: array.states[i].name, value: array.states[i].abbreviation })
+            for (var j = 0; j < array.states.length; j++) {
+                stateArray.push({ label: array.states[j].name, value: array.states[j].abbreviation })
             }
             this.setState({ states: stateArray })
         }
@@ -159,8 +157,8 @@ class AddressDetails extends Component {
         }
         else {
             let newArray = cities.findByState(e.value);
-            for (var k = 0; k < newArray.length; k++) {
-                citiesArray.push({ label: newArray[k].city, value: newArray[k].city })
+            for (var l = 0; l < newArray.length; l++) {
+                citiesArray.push({ label: newArray[l].city, value: newArray[l].city })
             }
             this.setState({ cities: citiesArray })
         }

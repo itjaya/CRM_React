@@ -2,6 +2,7 @@
 import * as url from '../../urlConstants';
 import $ from 'jquery';
 import Auth from '../../helpers/Auth';
+import axios from 'axios';
 
 export const USER_ADD_START = 'USER_ADD_START';
 export const USER_ADD_SUCCESS = 'USER_ADD_SUCCESS'; 
@@ -24,10 +25,10 @@ export const FORGET_USER_PASSWORD_START = "FORGET_USER_PASSWORD_START";
 export const FORGET_USER_PASSWORD_SUCCESS = "FORGET_USER_PASSWORD_SUCCESS";
 export const FORGET_USER_PASSWORD_FAIL = "FORGET_USER_PASSWORD_FAIL";
 
-
 export const USER_LOGOUT = 'USER_LOGOUT';
 
 let handleAuth = new Auth();
+
 
 // User Register
 
@@ -93,13 +94,16 @@ export const getUsersSuccess = (allUsers) => {
 export const getUsers = (id) => {
     return dispatch => {
         dispatch(getUsersStart())
-        return (
-            $.get(url.url + `getUsers?id=${id}`, (result) => {
-                dispatch(getUsersSuccess(result))
-            })
-        )
+        handleAuth.getToken().then(value => {
+            return (
+                axios.get(url.url + `getUsers?id=${id}`, value)
+                    .then((result) => {
+                        dispatch(getUsersSuccess(result.data))
+                    })
+            )
+        })
     }
- }
+}
 // Activate/Deactivate User
 
 export const userActivatStart = () => {
@@ -116,12 +120,15 @@ export const userActivateFail = () => {
 
 export const userActivate = (id) => {
     return dispatch => {
-        dispatch(userActivatStart())
-        return (
-            $.get(url.url + `userAcitivate?id=${id}`, (result) => {
-                dispatch(userActivateSuccess(result))
-            })
-        )
+        dispatch(userActivatStart());
+        handleAuth.getToken().then(value => {
+            return (
+                axios.get(url.url + `userAcitivate?id=${id}`, value)
+                .then((result) => {
+                    dispatch(userActivateSuccess(result.data))
+                })
+            )
+        })
     }
  }
 

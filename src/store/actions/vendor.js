@@ -1,5 +1,6 @@
 import * as url from '../../urlConstants';
-import $ from 'jquery';
+import axios from 'axios';
+import Auth from '../../helpers/Auth';
 
 export const ADD_VENDOR_START = "ADD_VENDOR_START";
 export const ADD_VENDOR_SUCCESS = "ADD_VENDOR_SUCCESS";
@@ -7,11 +8,14 @@ export const ADD_VENDOR_FAIL = "ADD_VENDOR_FAIL";
 
 export const GET_VENDOR_START = "GET_VENDOR_START";
 export const GET_VENDOR_SUCCESS = "GET_VENDOR_SUCCESS";
-export const GET_VENDOR_FAIL = "GET_VENDOR_FAIL";
+export const GET_VENDOR_FAIL = "GET_VENDOR_FAIL"; 
 
 export const DELETE_VENDOR_START = "DELETE_VENDOR_START";
 export const DELETE_VENDOR_SUCCESS = "DELETE_VENDOR_SUCCESS";
 export const DELETE_VENDOR_FAIL = "DELETE_VENDOR_FAIL";
+
+let handleAuth = new Auth();
+
 
 // Add VENDOR
 export const addVendorStart = () => {
@@ -27,12 +31,15 @@ export const addVendorFail = () => {
 }
 
 export const addVendor = (data) => {
-    console.log("haiiiii")
     return dispatch => {
         dispatch(addVendorStart());
-        $.post(url.url + "addVendor", data, (result) => {
-                dispatch(addVendorSuccess(result));
+        handleAuth.getToken().then(value => {
+            axios.post(url.url + "addVendor", data, value)
+                .then((result) => {
+                    dispatch(addVendorSuccess(result.data));
+                })
         })
+
     }
 }
 
@@ -52,10 +59,11 @@ export const getVendorFail = () => {
 export const getVendor = (id) => {
     return dispatch => {
         dispatch(getVendorStart());
-        $.get(url.url + `getVendors?id=${id}`, (result) => {
-            if(result) {
-                dispatch(getVendorSuccess(result));
-            }
+        handleAuth.getToken().then(value => {
+            axios.get(url.url + `getVendors?id=${id}`, value)
+            .then((result) => {
+                dispatch(getVendorSuccess(result.data));
+            })
         })
     }
 }
@@ -77,10 +85,11 @@ export const deleteVendorFail = () => {
 export const deleteVendor = (id) => {
     return dispatch => {
         dispatch(deleteVendorStart());
-        $.get(url.url + `deleteVendors?id=${id}`, (result) => {
-            if(result) {
-                dispatch(deleteVendorSuccess(result));
-            }
+        handleAuth.getToken().then(value => {
+            axios.get(url.url + `deleteVendors?id=${id}`, value)
+                .then((result) => {
+                    dispatch(deleteVendorSuccess(result.data));
+                })
         })
     }
 }

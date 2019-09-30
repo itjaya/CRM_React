@@ -1,31 +1,34 @@
 import $ from 'jquery';
 import * as url from '../urlConstants';
+import { async } from 'q';
 
 class Auth {
 
     constructor () {
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
+        this.getToken = this.getToken.bind(this);
       
     }
-    login = (loginInfo) => {
+    login = async(loginInfo) => {
          return (
-            $.post(url.url + "userLogin", loginInfo, (result) => {
+            await $.post(url.url + "userLogin", loginInfo, async(result) => {
                 if(result.condition) {
-                    sessionStorage.setItem("loggedIn", true)
-                    sessionStorage.setItem("userData", JSON.stringify(result))
+                    await sessionStorage.setItem("loggedIn", true)
+                    await sessionStorage.setItem("userData", JSON.stringify(result))
                 }
             })
         )
     }
 
-    logout = () => {
-        sessionStorage.removeItem("loggedIn");
-        sessionStorage.removeItem("userData")
+    logout = async() => {
+        await sessionStorage.removeItem("loggedIn");
+        await sessionStorage.removeItem("userData")
     }
 
-    getToken = () => {
-        sessionStorage.getItem('loggedIn')
+    getToken = async() => {
+        let userData = JSON.parse(sessionStorage.getItem('userData'));
+        return await  { headers: { 'Authorization': userData.token  }}
     }
 }
 

@@ -1,28 +1,13 @@
 import React, { Component } from 'react';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row } from 'reactstrap'
-// import { compose, withProps } from "recompose"
-// import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { connect } from 'react-redux';
 
-
-// // required props for HOCs (withScriptjs and withGoogleMap)
-// const requiredProps = {
-//     googleMapURL: '//maps.google.com/maps/api/js?key=AIzaSyBNs42Rt_CyxAqdbIBK0a5Ut83QiauESPA', // &libraries=geometry,drawing,places
-//     loadingElement: <div className='gmap gmap-sm'>Loading...</div>,
-//     containerElement: <div className='gmap gmap-sm'/>,
-//     mapElement: <div style={{ height: `100%` }}/>
-// }
-
-// // Demo classic
-// const DemoMapClassic = compose(
-//   withProps(requiredProps),
-//   withScriptjs,
-//   withGoogleMap
-// )(props => (
-//     <GoogleMap defaultZoom={14} defaultCenter={props.location}>
-//         <Marker position={props.location} />
-//     </GoogleMap>
-// ))
+import * as orgActions from '../../store/actions/orgActions';
+import * as projectActions from '../../store/actions/projectActions';
+import * as clientActions from '../../store/actions/client';
+import * as vendorActions from '../../store/actions/vendor';
+import * as userActions from '../../store/actions/userActions';
 
 class Widgets extends Component {
 
@@ -40,6 +25,20 @@ class Widgets extends Component {
         }
     }
 
+        componentDidMount() {
+            this.refreshData();
+        }
+    
+        refreshData = () => {
+            let orgId = this.props.orgData.orgResult._id
+            this.props.onGetOrganizations(orgId);
+            this.props.getProjects(orgId);
+            this.props.getClient(orgId);
+            this.props.getVendor(orgId);
+            this.props.getUsers(orgId);
+        }
+    
+
     render() {
         return (
             <ContentWrapper>
@@ -51,10 +50,10 @@ class Widgets extends Component {
                         <div className="card">
                             <div className="card-body">
                                 <div className="text-right text-muted">
-                                    <em className="fa fa-gamepad fa-2x"></em>
+                                    <em className="fas fa-project-diagram fa-2x"></em>
                                 </div>
                                 <h3 className="mt-0">Projects</h3>
-                                <p className="text-muted">Games played last month</p>
+                                <p className="text-muted">{this.props.projects.length}</p>
                                 <div className="progress progress-xs mb-3">
                                     <div className="progress-bar progress-bar-striped bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="70" style={{width: '60%'}}>
                                         <span className="sr-only">60% Complete</span>
@@ -69,10 +68,10 @@ class Widgets extends Component {
                         <div className="card">
                             <div className="card-body">
                                 <div className="text-right text-muted">
-                                    <em className="fa fa-coffee fa-2x"></em>
+                                    <em className="fas fa-industry fa-2x"></em>
                                 </div>
                                 <h3 className="mt-0">Vendors</h3>
-                                <p className="text-muted">Coffee cups per day</p>
+                                <p className="text-muted">{this.props.vendorsList.length}</p>
                                 <div className="progress progress-xs mb-3">
                                     <div className="progress-bar progress-bar-striped bg-green" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style={{width: '80%'}}>
                                         <span className="sr-only">80% Complete</span>
@@ -87,10 +86,10 @@ class Widgets extends Component {
                         <div className="card">
                             <div className="card-body">
                                 <div className="text-right text-muted">
-                                    <em className="fa fa-upload fa-2x"></em>
+                                    <em className="fas fa-user-clock fa-2x"></em>
                                 </div>
                                 <h3 className="mt-0">Clients</h3>
-                                <p className="text-muted">Average Monthly Uploads</p>
+                                <p className="text-muted">{this.props.clientsList.length}</p>
                                 <div className="progress progress-xs mb-3">
                                     <div className="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style={{width: '40%'}}>
                                         <span className="sr-only">40% Complete</span>
@@ -105,10 +104,10 @@ class Widgets extends Component {
                         <div className="card">
                             <div className="card-body">
                                 <div className="text-right text-muted">
-                                    <em className="fa fa-gamepad fa-2x"></em>
+                                    <em className="fas fa-users fa-2x"></em>
                                 </div>
                                 <h3 className="mt-0">Users</h3>
-                                <p className="text-muted">Games played last month</p>
+                                <p className="text-muted">{this.props.allUsers.length}</p>
                                 <div className="progress progress-xs mb-3">
                                     <div className="progress-bar progress-bar-striped bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="70" style={{width: '60%'}}>
                                         <span className="sr-only">60% Complete</span>
@@ -127,4 +126,26 @@ class Widgets extends Component {
 
 }
 
-export default Widgets;
+const mapStateToProps = state => {
+    return {
+        orgData: state.organization,
+        projects: state.projects.projects,
+        clientsList: state.clientReducer.clientData,
+        vendorsList: state.vendorReducer.vendorData,
+        allUsers: state.user.allUsers,
+
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onGetOrganizations: (event) => dispatch(orgActions.getOrganization(event)),
+        getProjects: (event) => dispatch(projectActions.getProjects(event)),
+        getClient: (event) => dispatch(clientActions.getClient(event)),
+        getVendor: (event) => dispatch(vendorActions.getVendor(event)),
+        getUsers: (event) => dispatch(userActions.getUsers(event)),
+
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Widgets);
+

@@ -13,7 +13,7 @@ const initialState = {
     orgLoading: false,
     orgData: [],
     addResult: {},
-    orgResult: orgData ? orgData : "",
+    orgResult: {},
     deleteResult : {}
 }
 
@@ -82,7 +82,7 @@ const orgReducer = (state = initialState, action) => {
             return {
                 ...state,
                 addLoading: false,
-                orgResult: action.payload
+                orgResult: action.payload ? action.payload : orgData
             }
 
         case GET_ORGDETAIL_FAIL:
@@ -90,6 +90,7 @@ const orgReducer = (state = initialState, action) => {
             return {
                 ...state,
                 addLoading: false,
+                orgResult : {}
             }
 
          // Delete Organization

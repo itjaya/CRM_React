@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { withNamespaces, Trans } from 'react-i18next';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Tooltip, Progress, Row } from 'reactstrap';
+import { Row } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import * as orgActions from '../../store/actions/orgActions';
@@ -9,11 +8,6 @@ import * as projectActions from '../../store/actions/projectActions';
 import * as clientActions from '../../store/actions/client';
 import * as vendorActions from '../../store/actions/vendor';
 import * as userActions from '../../store/actions/userActions';
-
-// EasyPieChart
-import EasyPieChart from 'easy-pie-chart';
-
-
 
 
 class DashboardV2 extends Component {
@@ -205,49 +199,6 @@ class DashboardV2 extends Component {
         });
     }
 
-    componentDidMount() {
-        let pieOptions1 = {
-             animate: {duration: 800, enabled: true},
-             barColor:"#23b7e5",
-             trackColor:"#edf2f6",
-             scaleColor:false,
-             lineWidth:2,
-             lineCap:'round',
-             size:130
-        };
-        new EasyPieChart(this.refs.easypiechart1, pieOptions1);
-        let pieOptions2 = {
-             animate: {duration: 800, enabled: true},
-             barColor:"#f532e5",
-             trackColor:"#edf2f6",
-             scaleColor:false,
-             lineWidth:2,
-             lineCap:'round',
-             size:130
-        };
-        new EasyPieChart(this.refs.easypiechart2, pieOptions2);
-        let pieOptions3 = {
-             animate: {duration: 800, enabled: true},
-             barColor:"#7266ba",
-             trackColor:"#edf2f6",
-             scaleColor:false,
-             lineWidth:2,
-             lineCap:'round',
-             size:130
-        };
-        new EasyPieChart(this.refs.easypiechart3, pieOptions3);
-        let pieOptions4 = {
-             animate: {duration: 800, enabled: true},
-             barColor:"#ff902b",
-             trackColor:"#edf2f6",
-             scaleColor:false,
-             lineWidth:2,
-             lineCap:'round',
-             size:130
-        };
-        new EasyPieChart(this.refs.easypiechart4, pieOptions4);
-    }
-
     changeLanguage = lng => {
         this.props.i18n.changeLanguage(lng);
     }
@@ -271,95 +222,101 @@ class DashboardV2 extends Component {
                         {/* <small><Trans i18nKey='dashboard.WELCOME'></Trans></small> */}
                     </div>
                 </div>
-            
-               {/* <div className="unwrap">
-                    <div className="card">
-                        <div className="card-header">
-                            <div className="card-title">Overall progress</div>
-                        </div>
-                        <div className="card-body">
-                        </div>
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-3 col-6 text-center">
-                                    <p>Organizations</p>
-                                    <div className="h1">{this.props.orgData.length}</div>
-                                </div>
-                                <div className="col-md-3 col-6 text-center">
-                                    <p>Projects</p>
-                                    <div className="h1">{this.props.projects.length}</div>
-                                </div>
-                                <div className="col-md-3 col-6 text-center">
-                                    <p>Vendors</p>
-                                    <div className="h1">{this.props.vendorsList.length}</div>
-                                </div>
-                                <div className="col-md-3 col-6 text-center">
-                                    <p>Clients</p>
-                                    <div className="h1 text-truncate">{this.props.clientsList.length}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-                <Row>
-                    <div className="col-xl-4">
-                        {/* START card */}
-                        <div className="card">
-                            <div className="card-body">
-                               
-                                <h3 className="mt-0">{this.props.orgData.length}</h3>
-                                <p className="text-muted">Organizations</p>
-                            </div>
-                        </div>
-                        {/* END card */}
-                    </div>
-                    <div className="col-xl-4">
-                        {/* START card */}
-                        <div className="card">
-                            <div className="card-body">
-                               
-                                <h3 className="mt-0">{this.props.projects.length}</h3>
-                                <p className="text-muted">Projects</p>
-                            </div>
-                        </div>
-                        {/* END card */}
-                    </div>
-                    <div className="col-xl-4">
-                        {/* START card */}
-                        <div className="card">
-                            <div className="card-body">
-                                
-                                <h3 className="mt-0">{this.props.vendorsList.length}</h3>
-                                <p className="text-muted">Vendors</p>
-                            </div>
-                        </div>
-                        {/* END card */}
-                    </div>
-                    <div className="col-xl-4">
-                        {/* START card */}
-                        <div className="card">
-                            <div className="card-body">
-                               
-                                <h3 className="mt-0">{this.props.clientsList.length}</h3>
-                                <p className="text-muted">Clients</p>
-                            </div>
-                        </div>
-                        {/* END card */}
-                    </div>
 
+                    <Row>
                     <div className="col-xl-4">
                         {/* START card */}
                         <div className="card">
                             <div className="card-body">
-                               
-                                <h3 className="mt-0">{this.props.allUsers.length}</h3>
-                                <p className="text-muted">Users</p>
+                                <div className="text-right text-muted">
+                                    <em className="fas fa-building fa-2x"></em>
+                                </div>
+                                <h3 className="mt-0">Organizations</h3>
+                                <p className="text-muted">{this.props.orgData.length}</p>
+                                <div className="progress progress-xs mb-3">
+                                    <div className="progress-bar progress-bar-striped bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="70" style={{width: '60%'}}>
+                                        <span className="sr-only">60% Complete</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         {/* END card */}
                     </div>
-                    </Row>
-               
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="text-right text-muted">
+                                    <em className="fas fa-project-diagram fa-2x"></em>
+                                </div>
+                                <h3 className="mt-0">Projects</h3>
+                                <p className="text-muted">{this.props.projects.length}</p>
+                                <div className="progress progress-xs mb-3">
+                                    <div className="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="70" style={{width: '60%'}}>
+                                        <span className="sr-only">60% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="text-right text-muted">
+                                    <em className="fas fa-industry fa-2x"></em>
+                                </div>
+                                <h3 className="mt-0">Vendors</h3>
+                                <p className="text-muted">{this.props.vendorsList.length}</p>
+                                <div className="progress progress-xs mb-3">
+                                    <div className="progress-bar progress-bar-striped bg-blue" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style={{width: '50%'}}>
+                                        <span className="sr-only">30% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="text-right text-muted">
+                                    <em className="fas fa-user-clock fa-2x"></em>
+                                </div>
+                                <h3 className="mt-0">Clients</h3>
+                                <p className="text-muted">{this.props.clientsList.length}</p>
+                                <div className="progress progress-xs mb-3">
+                                    <div className="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style={{width: '40%'}}>
+                                        <span className="sr-only">40% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
+                    <div className="col-xl-4">
+                        {/* START card */}
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="text-right text-muted">
+                                    <em className="fas fa-users fa-2x"></em>
+                                </div>
+                                <h3 className="mt-0">Users</h3>
+                                <p className="text-muted">{this.props.allUsers.length}</p>
+                                <div className="progress progress-xs mb-3">
+                                    <div className="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="70" style={{width: '60%'}}>
+                                        <span className="sr-only">60% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* END card */}
+                    </div>
+                </Row>
+                {/* END row */}
+                 
             </ContentWrapper>
             );
     }

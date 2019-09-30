@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ContentWrapper from '../Layout/ContentWrapper';
-import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem, Nav, NavItem, NavLink, Card } from 'reactstrap';
+import {TabContent, TabPane, Nav, NavItem, NavLink, Card } from 'reactstrap';
 import $ from 'jquery';
-import Datetime from 'react-datetime';
-import moment from 'moment'
 import {Link} from 'react-router-dom';
 
 import AddressDetails from '../Dashboard/AddressDetails';

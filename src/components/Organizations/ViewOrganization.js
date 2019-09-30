@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ContentWrapper from '../Layout/ContentWrapper';
 import FormValidator from '../Forms/FormValidator';
 import { connect } from 'react-redux';
-import { Card, CardBody, Col, Row, Input, ListGroup, ListGroupItem, TabContent, TabPane } from 'reactstrap';
+import { Card, CardBody, Col, Row, ListGroup, ListGroupItem, TabContent, TabPane } from 'reactstrap';
 import 'bootstrap-filestyle';
 import $ from 'jquery';
 import moment from 'moment';

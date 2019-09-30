@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import ContentWrapper from '../Layout/ContentWrapper';
 import { Row, Col, TabContent, TabPane, ListGroup, ListGroupItem,Input,Button } from 'reactstrap';
 import $ from 'jquery';
-import Datetime from 'react-datetime';
 import FormValidator from '../Forms/FormValidator';
 import 'jquery-validation/dist/jquery.validate.js';
 import swal from 'sweetalert';
@@ -143,7 +142,6 @@ class Settings extends Component {
     }
     render() {
         let userData = {};
-        let userRole = this.props.user.role.label
         if(this.props.location.state) {
             userData = this.props.location.state
         }

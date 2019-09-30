@@ -1,5 +1,7 @@
 import * as url from '../../urlConstants';
+import axios from 'axios';
 import $ from 'jquery';
+import Auth from '../../helpers/Auth';
 
 export const TIMESHEET_ADD_START = 'TIMESHEET_ADD_START';
 export const TIMESHEET_ADD_SUCCESS = 'TIMESHEET_ADD_SUCCESS'; 
@@ -13,6 +15,8 @@ export const TIMESHEETS_UPLOAD_SUCCESS = 'TIMESHEETS_UPLOAD_SUCCESS';
 export const TIMESHEETS_DOWNLOAD_START  = 'TIMESHEETS_DOWNLOAD_START';
 export const TIMESHEETS_DOWNLOAD_SUCCESS = 'TIMESHEETS_DOWNLOAD_SUCCESS';
 
+let handleAuth = new Auth();
+
 // Add Timesheet
 
 export const timesheetAddStart = () => {
@@ -24,14 +28,15 @@ export const timesheetAddSuccess = (result) => {
 }
 
 export const updateTimesheets = (data) => {
-    console.log("data", data)
     return dispatch => {
         dispatch(timesheetAddStart())
-        return (
-            $.post(url.url + "addTimesheet", data, (result) => {
-                dispatch(timesheetAddSuccess(result))
-            })
-        )
+        handleAuth.getToken().then(value => {
+            axios.post(url.url + "addTimesheet", data, value)
+                .then((result) => {
+                    dispatch(timesheetAddSuccess(result.data))
+                })
+        })
+
     }
 }
 
@@ -48,11 +53,14 @@ export const timesheetGetSuccess = (result) => {
 export const getTimesheets = (data) => {
     return dispatch => {
         dispatch(timesheetGetStart())
-        return (
-            $.get(url.url + "allEvents", data, (result) => {
-                dispatch(timesheetGetSuccess(result))
-            })
-        )
+        handleAuth.getToken().then(value => {
+            axios.get(url.url + "allEvents", data, value)
+                .then((result) => {
+                    console.log("result", result)
+                    dispatch(timesheetGetSuccess(result.data))
+                })
+        })
+
     }
 }
 
@@ -71,19 +79,21 @@ export const uploadTimesheets = (data, type, navigatedDate) => {
     let userId = userData.userData._id;
     return dispatch => {
         dispatch(timesheetUploadStart())
-        return (
-            $.ajax({
-                url: url.url + `upload?id=${userId}&type=${type.value}&navigatedDate=${navigatedDate}`,
-                type: "POST",
-                data: data,
-                processData: false,
-                contentType: false,
-                success: (result) => {
-                    dispatch(timesheetUploadSuccess(result))
-                }
-
-            })
-        )
+        handleAuth.getToken().then(value => {
+            return (
+                $.ajax({
+                    url: url.url + `upload?id=${userId}&type=${type.value}&navigatedDate=${navigatedDate}`,
+                    type: "POST",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    value,
+                    success: (result) => {
+                        dispatch(timesheetUploadSuccess(result))
+                    }
+                })
+            )
+        })
     }
 }
 
@@ -100,11 +110,13 @@ export const timesheetDownloadSuccess = (result) => {
 export const downloadTimesheets = (data) => {
     return dispatch => {
         dispatch(timesheetDownloadStart())
-        return (
-            $.post(url.url + "downloadtimesheet", data, (result) => {
-                dispatch(timesheetDownloadSuccess(result))
-            })
-        )
+        handleAuth.getToken().then(value => {
+            return (
+                axios.post(url.url + "downloadtimesheet", data, value)
+                    .then((result) => {
+                        dispatch(timesheetDownloadSuccess(result))
+                    })
+            )
+        })
     }
-  
 }

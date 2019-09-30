@@ -6,11 +6,9 @@ import { connect } from 'react-redux';
 import Datetime from 'react-datetime';
 import $ from 'jquery';
 import moment from 'moment';
-import { ToastContainer, toast } from 'react-toastify';
 import swal from 'sweetalert';
 
 import ContentWrapper from '../Layout/ContentWrapper';
-import FormValidator from '../Forms/FormValidator';
 import * as userActions from '../../store/actions/userActions';
 import * as clientActions from '../../store/actions/client';
 import * as vendorActions from '../../store/actions/vendor';
@@ -73,8 +71,6 @@ class AddProject extends Component {
             const input = event.target;
             const form = input.form
             const value = input.type === 'checkbox' ? input.checked : input.value;
-
-            const result = FormValidator.validate(input);
 
             this.setState({
                 [form.name]: {
@@ -177,17 +173,18 @@ class AddProject extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate = (prevProps) => {
        
         if (prevProps.users !== this.props.users) {
             let array = [];
             this.props.users.map((user) => {
-                if(user.role.value !== "admin") {
-                    array.push({
-                        label: user.firstName,
-                        value: user._id
-                    })
-                }
+                return (
+                    user.role.value !== "admin" ?
+                        array.push({
+                            label: user.firstName,
+                            value: user._id
+                        }) : []
+                )
             })
             this.setState({ users: array })
         }
@@ -410,7 +407,6 @@ class AddProject extends Component {
                             </Row>
                         </CardBody>
                     </Card>
-                    <ToastContainer />
                 </ContentWrapper>
             </div>
         )

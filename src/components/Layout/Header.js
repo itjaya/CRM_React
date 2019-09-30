@@ -149,13 +149,13 @@ class Header extends Component {
                                     <ListGroup>
                                     {this.state.organizations.map((org, i) => {
                                           return (
-                                            <ListGroupItem key = {i} action tag="a" href="" onClick={this.handleClick.bind(this, org.value)}>
+                                            <ListGroupItem key = {i} action tag="a" href="" onClick={this.handleClick.bind(this, org.label)}>
                                                <div className="media">
                                                   <div className="align-self-start mr-2">
                                                      <em className="far fa-building text-info"></em>
                                                   </div>
                                                   <div className="media-body">
-                                                     <p className="m-0">{org.value}</p>
+                                                     <p className="m-0">{org.label}</p>
                                                   </div>
                                                </div>
                                             </ListGroupItem>
